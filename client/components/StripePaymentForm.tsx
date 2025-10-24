@@ -260,11 +260,27 @@ const CardForm = ({
             />
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 flex gap-3">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <p className="text-sm text-red-200">{error}</p>
+          {/* Error Message - Dismissible */}
+          {(error || cardError) && (
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 flex gap-3 items-start">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-200 flex-1">
+                {error || cardError}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setError(null);
+                  setCardError(null);
+                  if (errorTimeout) {
+                    clearTimeout(errorTimeout);
+                    setErrorTimeout(null);
+                  }
+                }}
+                className="text-red-400 hover:text-red-300 flex-shrink-0"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           )}
 
