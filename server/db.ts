@@ -138,6 +138,14 @@ export async function initializeDatabase() {
       console.warn("Index idx_request_id already exists or has issues");
     }
 
+    try {
+      await pool.query(
+        `CREATE INDEX IF NOT EXISTS idx_payment_intent ON videos(payment_intent_id);`,
+      );
+    } catch (e) {
+      console.warn("Index idx_payment_intent already exists or has issues");
+    }
+
     console.log("Database initialized successfully");
   } catch (error) {
     console.error("Database initialization error:", error);
