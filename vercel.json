@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/spa",
-  "framework": "other",
+  "framework": "react-router",
   "rewrites": [
     {
       "source": "/api/(.*)",
