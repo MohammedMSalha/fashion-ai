@@ -88,6 +88,7 @@ export async function createServer() {
   // Video storage endpoints
   app.post("/api/save-video", videoLimiter, saveVideo);
   app.get("/api/videos/:email", getVideosByEmail);
+  app.get("/api/video-status/:videoId", getVideoStatus);
   app.delete("/api/videos/:videoId", deleteVideo);
 
   return app;
