@@ -7,6 +7,7 @@ import StripePaymentForm from "./StripePaymentForm";
 
 interface SmartVideoFormProps {
   onGenerate?: () => void;
+  onPaymentSuccess?: () => void;
 }
 
 const PRICING = {
