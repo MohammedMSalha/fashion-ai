@@ -146,7 +146,7 @@ export default function VideoSlider() {
       </div>
 
       {/* Side Info (Desktop) */}
-      <div className="hidden md:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
+      <div className="hidden lg:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
         {/* Like Button */}
         <button className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
           <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
