@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { generateVideo } from "./routes/video-generation";
+import { createPaymentIntent, confirmPayment } from "./routes/stripe-payment";
 
 export function createServer() {
   const app = express();
@@ -18,6 +20,13 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Video generation endpoint
+  app.post("/api/generate-video", generateVideo);
+
+  // Payment endpoints
+  app.post("/api/create-payment-intent", createPaymentIntent);
+  app.post("/api/confirm-payment", confirmPayment);
 
   return app;
 }
