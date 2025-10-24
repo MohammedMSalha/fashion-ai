@@ -33,7 +33,7 @@ function getStripeClient(): Stripe {
 
 export const createPaymentIntent: RequestHandler = async (req, res) => {
   try {
-    const { amount, email } = req.body as PaymentIntentRequest;
+    const { amount, email, imageUrl } = req.body as PaymentIntentRequest;
 
     // Validate required fields
     if (!amount || !email) {
