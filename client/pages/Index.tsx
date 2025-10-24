@@ -158,46 +158,75 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Floating Action Button */}
-          <div className="fixed bottom-8 right-8 z-40 flex flex-col items-end gap-3">
-            <button
-              onClick={() => setCurrentPage("my-videos")}
-              className="flex items-center gap-3 bg-white hover:bg-gray-100 text-black px-4 py-3 rounded-full font-semibold transition-all"
+          {/* Floating Action Button Menu */}
+          <div className="fixed bottom-8 right-8 z-40">
+            <div
+              className={`flex flex-col gap-3 mb-4 transition-all duration-300 ${
+                showFabMenu ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
             >
-              <Play className="w-5 h-5" />
-              <span className="text-sm">My Videos</span>
-            </button>
-            
-            <button
-              onClick={() => setCurrentPage("about")}
-              className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
-            >
-              <Info className="w-5 h-5" />
-              <span className="text-sm font-medium">About Us</span>
-            </button>
+              <button
+                onClick={() => {
+                  setCurrentPage("my-videos");
+                  setShowFabMenu(false);
+                }}
+                className="flex items-center gap-3 bg-white hover:bg-gray-100 text-black px-4 py-3 rounded-full font-semibold transition-all"
+              >
+                <Play className="w-5 h-5" />
+                <span className="text-sm">My Videos</span>
+              </button>
 
-            <button
-              onClick={() => setCurrentPage("contact")}
-              className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
-            >
-              <Mail className="w-5 h-5" />
-              <span className="text-sm font-medium">Contact</span>
-            </button>
+              <button
+                onClick={() => {
+                  setCurrentPage("about");
+                  setShowFabMenu(false);
+                }}
+                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+              >
+                <Info className="w-5 h-5" />
+                <span className="text-sm font-medium">About Us</span>
+              </button>
 
-            <button
-              onClick={() => setCurrentPage("terms")}
-              className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
-            >
-              <FileText className="w-5 h-5" />
-              <span className="text-sm font-medium">Terms</span>
-            </button>
+              <button
+                onClick={() => {
+                  setCurrentPage("contact");
+                  setShowFabMenu(false);
+                }}
+                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+              >
+                <Mail className="w-5 h-5" />
+                <span className="text-sm font-medium">Contact</span>
+              </button>
 
+              <button
+                onClick={() => {
+                  setCurrentPage("terms");
+                  setShowFabMenu(false);
+                }}
+                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+              >
+                <FileText className="w-5 h-5" />
+                <span className="text-sm font-medium">Terms</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setCurrentPage("privacy");
+                  setShowFabMenu(false);
+                }}
+                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+              >
+                <Lock className="w-5 h-5" />
+                <span className="text-sm font-medium">Privacy</span>
+              </button>
+            </div>
+
+            {/* Main FAB Button */}
             <button
-              onClick={() => setCurrentPage("privacy")}
-              className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+              onClick={() => setShowFabMenu(!showFabMenu)}
+              className="w-14 h-14 rounded-full bg-white hover:bg-gray-100 text-black flex items-center justify-center shadow-lg transition-all hover:scale-110"
             >
-              <Lock className="w-5 h-5" />
-              <span className="text-sm font-medium">Privacy</span>
+              <Sparkles className="w-6 h-6" />
             </button>
           </div>
         </section>
