@@ -306,12 +306,31 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           <Button
             variant="outline"
             className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800 h-12 font-bold flex items-center justify-center gap-2"
-            onClick={handleGenerateClick}
+            onClick={() => setStep("payment")}
           >
             <Check className="w-4 h-4" />
             Pay & Generate
           </Button>
         </div>
+      </div>
+    );
+  }
+
+  // PAYMENT STEP
+  if (step === "payment") {
+    return (
+      <div className="w-full space-y-6">
+        <h2 className="text-2xl font-bold text-white mb-6">Payment Details</h2>
+
+        <StripePaymentForm
+          amount={calculatePrice()}
+          email={email}
+          onSuccess={() => {
+            localStorage.setItem("fashionai_email", email);
+            onGenerate?.();
+          }}
+          onCancel={() => setStep("review")}
+        />
       </div>
     );
   }
