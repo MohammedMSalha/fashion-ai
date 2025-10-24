@@ -197,8 +197,7 @@ export default function Index() {
               </div>
 
               <p className="text-gray-300 mb-8 md:mb-10 max-w-3xl mx-auto text-base md:text-lg">
-                Upload a photo of yourself and let AI create stunning fashion
-                videos
+                Transform your photos into professional fashion videos
               </p>
               <Button
                 onClick={() => setCurrentPage("generate")}
