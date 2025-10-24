@@ -71,17 +71,17 @@ export default function Index() {
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-black border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-black" />
             </div>
-            <span className="text-xl font-bold text-white">FashionAI</span>
+            <span className="text-xl md:text-2xl font-bold text-white">FashionAI</span>
           </div>
           <Button
             variant="outline"
             onClick={() => navigate("/my-videos")}
-            className="gap-2 bg-transparent border-white text-white hover:bg-white hover:text-black"
+            className="gap-2 bg-transparent border-white text-white hover:bg-white hover:text-black text-sm md:text-base"
           >
             My Videos
           </Button>
