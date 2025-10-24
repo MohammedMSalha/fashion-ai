@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, Zap, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import StripePaymentForm from "./StripePaymentForm";
 
 interface SmartVideoFormProps {
   onGenerate?: () => void;
@@ -20,7 +21,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   const [duration, setDuration] = useState<"5s" | "10s">("10s");
   const [quality, setQuality] = useState<"720p" | "1080p">("1080p");
   const [dragActive, setDragActive] = useState(false);
-  const [step, setStep] = useState<"upload" | "review">("upload");
+  const [step, setStep] = useState<"upload" | "review" | "payment">("upload");
 
   // Load saved email from localStorage
   useEffect(() => {
