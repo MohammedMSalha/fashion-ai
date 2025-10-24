@@ -92,6 +92,9 @@ const CardForm = ({
       // Step 1: Create payment intent on backend FIRST (to get payment_intent_id)
       let paymentIntentResponse;
       try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
         paymentIntentResponse = await fetch("/api/create-payment-intent", {
           method: "POST",
           headers: {
@@ -102,9 +105,17 @@ const CardForm = ({
             email,
             imageUrl: image,
           }),
+          signal: controller.signal,
         });
+
+        clearTimeout(timeout);
       } catch (err) {
-        throw new Error("Network error: Unable to connect to payment service");
+        setProcessing(false);
+        const errorMsg =
+          err instanceof Error && err.name === "AbortError"
+            ? "Payment service request timed out"
+            : "Network error: Unable to connect to payment service";
+        throw new Error(errorMsg);
       }
 
       if (!paymentIntentResponse.ok) {
