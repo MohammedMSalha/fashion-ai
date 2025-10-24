@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loadStripe } from "@stripe/js";
+import { loadStripe } from "@stripe/stripe-js";
 import { CardElement, Elements, ElementsConsumer } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowLeft } from "lucide-react";
