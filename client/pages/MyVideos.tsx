@@ -16,12 +16,14 @@ type Step = "email" | "verification" | "videos";
 interface DatabaseVideo {
   id: number;
   email: string;
-  video_url: string;
+  video_url: string | null;
   duration: number;
   resolution: string;
-  status: string;
+  status: "processing" | "completed" | "failed";
+  error_message?: string;
   created_at: string;
   expires_at: string;
+  request_id?: string;
 }
 
 export default function MyVideos() {
