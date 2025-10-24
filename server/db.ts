@@ -43,6 +43,16 @@ export async function initializeDatabase() {
       );
     `);
 
+    // Add request_id column if it doesn't exist (for existing tables)
+    try {
+      await pool.query(`
+        ALTER TABLE videos
+        ADD COLUMN IF NOT EXISTS request_id VARCHAR(255);
+      `);
+    } catch (e) {
+      console.warn("Column request_id already exists");
+    }
+
     // Add payment columns if they don't exist (for existing tables)
     try {
       await pool.query(`
