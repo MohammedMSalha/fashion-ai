@@ -11,6 +11,9 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 interface StripePaymentFormProps {
   amount: number;
   email: string;
+  image: string;
+  duration: "5s" | "10s";
+  quality: "720p" | "1080p";
   onSuccess: () => void;
   onCancel: () => void;
 }
