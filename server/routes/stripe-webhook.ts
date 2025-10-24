@@ -18,14 +18,11 @@ function getStripeClient(): Stripe {
   return new Stripe(stripeSecretKey);
 }
 
-function verifySignature(
-  body: string,
-  signature: string,
-): StripeEvent {
+function verifySignature(body: string, signature: string): StripeEvent {
   try {
     const stripe = getStripeClient();
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    
+
     if (!webhookSecret) {
       throw new Error("STRIPE_WEBHOOK_SECRET not configured");
     }
@@ -52,7 +49,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
   try {
     // Get raw body for signature verification
     const rawBody = (req as any).rawBody || JSON.stringify(req.body);
-    
+
     // Verify and parse the event
     const event = verifySignature(rawBody, signature);
 
@@ -61,7 +58,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         console.log("Payment succeeded:", paymentIntent.id);
-        
+
         // Update payment status in database if needed
         const email = paymentIntent.metadata?.email;
         if (email) {
@@ -74,7 +71,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
       case "payment_intent.payment_failed": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         console.log("Payment failed:", paymentIntent.id);
-        
+
         const email = paymentIntent.metadata?.email;
         if (email) {
           console.log(`Payment failed for email: ${email}`);
@@ -86,7 +83,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
       case "charge.refunded": {
         const charge = event.data.object as Stripe.Charge;
         console.log("Charge refunded:", charge.id);
-        
+
         const email = charge.metadata?.email;
         if (email) {
           // Delete the generated video if payment is refunded
@@ -120,7 +117,8 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error("Webhook error:", error);
     return res.status(400).json({
-      error: error instanceof Error ? error.message : "Webhook processing failed",
+      error:
+        error instanceof Error ? error.message : "Webhook processing failed",
     });
   }
 };
