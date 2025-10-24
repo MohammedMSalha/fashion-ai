@@ -1,7 +1,10 @@
 import { RequestHandler } from "express";
 import Stripe from "stripe";
 import { query } from "../db.js";
-import { checkAndUpdateAllPendingVideos, generateVideoAsync } from "../services/video-status.js";
+import {
+  checkAndUpdateAllPendingVideos,
+  generateVideoAsync,
+} from "../services/video-status.js";
 
 interface StripeEvent {
   id: string;
@@ -136,7 +139,10 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     );
                   }
                 } catch (generateErr) {
-                  console.error("Error generating video in webhook:", generateErr);
+                  console.error(
+                    "Error generating video in webhook:",
+                    generateErr,
+                  );
                   // Update status to mark failure
                   await query(
                     `UPDATE videos

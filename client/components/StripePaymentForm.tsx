@@ -129,7 +129,8 @@ const CardForm = ({
         throw new Error("No payment secret received");
       }
 
-      const paymentIntentId = paymentIntentData.clientSecret?.split("_secret_")[0];
+      const paymentIntentId =
+        paymentIntentData.clientSecret?.split("_secret_")[0];
 
       // Step 1.5: Save pending payment record to database with payment_intent_id
       try {
