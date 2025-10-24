@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import { query } from "../db";
-import { updateVideoStatusFromFashn } from "../services/video-status";
+import { query } from "../db.js";
+import { updateVideoStatusFromFashn } from "../services/video-status.js";
 
 export const checkPendingVideos: RequestHandler = async (req, res) => {
   try {
