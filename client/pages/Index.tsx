@@ -437,22 +437,21 @@ export default function Index() {
 
           {myVideosStep === "videos" && (
             <div className="h-full flex items-center justify-center overflow-hidden">
-              <div className="relative w-full h-full md:w-[500px] bg-black">
+              <div className="relative w-full h-full md:w-[500px] bg-black flex flex-col">
                 <img
                   src={currentVideo.thumbnail}
                   alt={currentVideo.title}
-                  className="w-full h-full object-cover"
+                  className="flex-1 w-full h-full object-cover cursor-pointer hover:opacity-95 transition"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
 
                 {/* Video Info */}
-                <div className="absolute bottom-16 left-0 right-0 px-6 text-white z-10">
-                  <p className="text-xl font-bold mb-2">{currentVideo.title}</p>
-                  <div className="flex gap-2">
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-800 text-gray-300 border border-gray-700">
+                <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
+                  <div className="flex gap-4">
+                    <span className="inline-flex items-center px-3 py-1.5 rounded text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
                       {currentVideo.duration}
                     </span>
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-800 text-gray-300 border border-gray-700">
+                    <span className="inline-flex items-center px-3 py-1.5 rounded text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
                       {currentVideo.quality}
                     </span>
                   </div>
@@ -472,21 +471,30 @@ export default function Index() {
                 </div>
 
                 {/* Controls */}
-                <div className="absolute bottom-6 left-0 right-0 px-6 z-20 flex gap-2">
+                <div className="absolute bottom-6 left-0 right-0 px-6 z-20 space-y-3">
                   <Button
-                    variant="outline"
-                    onClick={handlePrevVideo}
-                    className="flex-1 bg-gray-900/80 border-gray-700 text-white text-sm h-10"
+                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-11 flex items-center justify-center gap-2"
+                    onClick={() => window.open(currentVideo.downloadUrl, '_blank')}
                   >
-                    ← Prev
+                    <Download className="w-4 h-4" />
+                    Download Video
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handleNextVideo}
-                    className="flex-1 bg-gray-900/80 border-gray-700 text-white text-sm h-10"
-                  >
-                    Next →
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={handlePrevVideo}
+                      className="flex-1 bg-gray-900/80 border-gray-700 text-white text-sm h-10"
+                    >
+                      ← Prev
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={handleNextVideo}
+                      className="flex-1 bg-gray-900/80 border-gray-700 text-white text-sm h-10"
+                    >
+                      Next →
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
