@@ -3,20 +3,20 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import { handleDemo } from "./routes/demo";
-import { generateVideo } from "./routes/video-generation";
-import { createPaymentIntent, confirmPayment } from "./routes/stripe-payment";
-import { handleStripeWebhook } from "./routes/stripe-webhook";
+import { handleDemo } from "./routes/demo.js";
+import { generateVideo } from "./routes/video-generation.js";
+import { createPaymentIntent, confirmPayment } from "./routes/stripe-payment.js";
+import { handleStripeWebhook } from "./routes/stripe-webhook.js";
 import {
   saveVideo,
   getVideosByEmail,
   deleteVideo,
   getVideoStatus,
-} from "./routes/save-video";
-import { checkPendingVideos } from "./routes/check-pending-videos";
-import { initializeDatabase } from "./db";
-import { startCleanupJob } from "./jobs/cleanup-videos";
-import { startVideoStatusCheckJob } from "./jobs/check-video-status";
+} from "./routes/save-video.js";
+import { checkPendingVideos } from "./routes/check-pending-videos.js";
+import { initializeDatabase } from "./db.js";
+import { startCleanupJob } from "./jobs/cleanup-videos.js";
+import { startVideoStatusCheckJob } from "./jobs/check-video-status.js";
 
 export async function createServer() {
   // Initialize database and background jobs
