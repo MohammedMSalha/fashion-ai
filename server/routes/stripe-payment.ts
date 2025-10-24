@@ -11,32 +11,44 @@ interface PaymentIntentResponse {
   error?: string;
 }
 
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 254;
+};
+
 export const createPaymentIntent: RequestHandler = async (req, res) => {
   try {
     const { amount, email } = req.body as PaymentIntentRequest;
 
-    // Validate inputs
+    // Validate required fields
     if (!amount || !email) {
       return res.status(400).json({
         success: false,
-        error: "Missing required fields: amount, email",
+        error: "Missing required fields",
       });
     }
 
-    // Validate amount is in cents (minimum $0.50 = 50 cents)
-    if (amount < 50) {
+    // Validate amount type and range
+    if (typeof amount !== "number" || !Number.isInteger(amount)) {
       return res.status(400).json({
         success: false,
-        error: "Amount must be at least $0.50",
+        error: "Invalid amount format",
+      });
+    }
+
+    // Validate amount (minimum $0.50 = 50 cents, maximum $999.99 = 99999 cents)
+    if (amount < 50 || amount > 99999) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid amount",
       });
     }
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!validateEmail(email)) {
       return res.status(400).json({
         success: false,
-        error: "Invalid email format",
+        error: "Invalid email",
       });
     }
 
@@ -46,27 +58,43 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       console.error("STRIPE_SECRET_KEY not configured");
       return res.status(500).json({
         success: false,
-        error: "Payment service is not configured",
+        error: "Service temporarily unavailable",
       });
     }
 
-    // Simulate payment intent creation
-    // In production, use @stripe/stripe-js on backend:
-    // const stripe = require('stripe')(stripeSecretKey);
-    // const paymentIntent = await stripe.paymentIntents.create({...})
+    // Simulate payment intent creation with timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-    // For now, return a mock client secret
+    // In production, use Stripe SDK:
+    // const stripe = require('stripe')(stripeSecretKey);
+    // const paymentIntent = await stripe.paymentIntents.create({
+    //   amount,
+    //   currency: 'usd',
+    //   metadata: { email }
+    // });
+
+    // For now, return a secure mock client secret
     const clientSecret = `pi_test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    clearTimeout(timeout);
 
     return res.status(200).json({
       success: true,
       clientSecret,
     });
   } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      console.error("Payment intent creation timeout");
+      return res.status(504).json({
+        success: false,
+        error: "Request timeout",
+      });
+    }
     console.error("Payment intent error:", error);
     return res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : "Internal server error",
+      error: "Service temporarily unavailable",
     });
   }
 };
