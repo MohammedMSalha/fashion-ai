@@ -359,7 +359,7 @@ export default function Index() {
 
       {/* MY VIDEOS PAGE */}
       {currentPage === "my-videos" && (
-        <section className="relative w-full h-full bg-black overflow-hidden">
+        <section className="fixed inset-0 bg-black flex flex-col">
           {/* Header */}
           <div className="bg-black border-b border-gray-800 p-4">
             <div className="flex items-center justify-between">
