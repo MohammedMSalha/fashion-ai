@@ -10,33 +10,28 @@ interface Video {
 const SAMPLE_VIDEOS: Video[] = [
   {
     id: "1",
-    thumbnail:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=900&fit=crop",
-    title: "Summer Collection",
+    thumbnail: "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
+    title: "Playful Monkey",
   },
   {
     id: "2",
-    thumbnail:
-      "https://images.unsplash.com/photo-1539571696357-5a69c006b15d?w=500&h=900&fit=crop",
-    title: "Urban Style",
+    thumbnail: "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
+    title: "Majestic Tiger",
   },
   {
     id: "3",
-    thumbnail:
-      "https://images.unsplash.com/photo-1595777707802-41d339d60b84?w=500&h=900&fit=crop",
-    title: "Evening Wear",
+    thumbnail: "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
+    title: "Striped Zebra",
   },
   {
     id: "4",
-    thumbnail:
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=900&fit=crop",
-    title: "Casual Vibes",
+    thumbnail: "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
+    title: "Wild Monkey Moves",
   },
   {
     id: "5",
-    thumbnail:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&h=900&fit=crop",
-    title: "Fashion Forward",
+    thumbnail: "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
+    title: "Gentle Elephant",
   },
 ];
 
