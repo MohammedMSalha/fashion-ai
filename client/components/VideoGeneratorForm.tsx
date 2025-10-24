@@ -129,7 +129,7 @@ export default function VideoGeneratorForm() {
       </div>
 
       {/* Step Content */}
-      <div className="bg-gray-900 rounded-2xl shadow-lg p-8 md:p-10 border border-gray-800">
+      <div className="bg-gray-900 rounded-2xl shadow-lg p-6 md:p-8 lg:p-12 border border-gray-800">
         {/* Upload Step */}
         {step === "upload" && (
           <div>
