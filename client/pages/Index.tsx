@@ -471,6 +471,47 @@ export default function Index() {
           </div>
         </div>
       )}
+
+      {/* About Us Modal */}
+      {activeModal === "about" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-md">
+            <div className="sticky top-0 bg-black border-b border-gray-800 p-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white">About Us</h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6 text-sm text-gray-300 space-y-4 max-h-[60vh] overflow-y-auto">
+              <p>
+                <strong className="text-white">FashionAI</strong> is a cutting-edge platform that leverages artificial intelligence to transform fashion photography.
+              </p>
+              <p>
+                We believe that everyone deserves access to professional-quality fashion content. Our mission is to make AI-generated fashion videos affordable, accessible, and easy to create.
+              </p>
+              <p>
+                <strong className="text-white">Our Technology:</strong> We use advanced AI models to analyze clothing, fabric dynamics, and movement patterns to create realistic fashion videos from static photos.
+              </p>
+              <p>
+                <strong className="text-white">Why Choose Us?</strong>
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-2">
+                <li>No subscriptions or hidden fees</li>
+                <li>Fast processing and instant delivery</li>
+                <li>Multiple quality and duration options</li>
+                <li>Privacy-focused platform</li>
+                <li>Affordable pricing (under $1 per video)</li>
+              </ul>
+              <p className="text-xs text-gray-500 pt-2">
+                © 2024 FashionAI. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
