@@ -268,161 +268,213 @@ export default function MyVideos() {
       {/* Videos Step - TikTok Style */}
       {step === "videos" && (
         <section className="min-h-screen bg-black flex items-center justify-center py-12 overflow-hidden">
-          <div
-            className="relative w-full h-screen bg-black flex items-center justify-center"
-            onWheel={handleWheel}
-            onTouchStart={handleTouchStart}
-          >
-            {/* Video Container */}
-            <div className="relative w-full h-full md:w-[500px] md:h-screen bg-black flex items-center justify-center">
-              {/* Current Video */}
-              <div className="relative w-full h-full">
-                <img
-                  src={currentVideo.thumbnail}
-                  alt={currentVideo.title}
-                  className="w-full h-full object-cover"
-                />
-
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
-
-                {/* Video Info Bottom */}
-                <div className="absolute bottom-32 left-0 right-0 px-6 text-white z-10">
-                  <h3 className="text-2xl font-bold mb-3">
-                    {currentVideo.title}
-                  </h3>
-                  <div className="flex gap-2 mb-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                      {currentVideo.duration}
-                    </span>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                      {currentVideo.quality}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-400">
-                    Created{" "}
-                    {new Date(currentVideo.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-
-                {/* Play/Pause Button */}
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 backdrop-blur-sm p-4 rounded-full transition-all z-20"
+          {videos.length === 0 ? (
+            <div className="w-full max-w-md px-4 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-900 mb-6 border border-gray-800">
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {isPlaying ? (
-                    <Pause className="w-8 h-8 text-white" />
-                  ) : (
-                    <Play className="w-8 h-8 text-white" />
-                  )}
-                </button>
-
-                {/* Download Button */}
-                <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
-                  <Button
-                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2 h-12"
-                    onClick={() => window.open(currentVideo.downloadUrl)}
-                  >
-                    <Download className="w-4 h-4" />
-                    Download
-                  </Button>
-                </div>
-
-                {/* Pagination Indicator */}
-                <div className="absolute top-8 left-0 right-0 px-6 text-white z-20">
-                  <p className="text-sm text-gray-300 text-center">
-                    {currentVideoIndex + 1} of {SAMPLE_VIDEOS.length}
-                  </p>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="absolute top-16 left-0 right-0 px-6 z-20">
-                  <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-white transition-all"
-                      style={{
-                        width: `${(currentVideoIndex / SAMPLE_VIDEOS.length) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Scroll Indicator */}
-                <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white z-20 animate-bounce">
-                  <ChevronDown className="w-6 h-6" />
-                </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
               </div>
+              <h2 className="text-2xl font-bold text-white mb-2">No Videos Yet</h2>
+              <p className="text-gray-400 mb-6">
+                You haven't generated any videos yet. Start by creating your first video!
+              </p>
+              <Button
+                onClick={() => navigate("/generate")}
+                className="bg-white hover:bg-gray-100 text-black font-semibold h-12"
+              >
+                Generate Video
+              </Button>
+            </div>
+          ) : (
+            <div
+              className="relative w-full h-screen bg-black flex items-center justify-center"
+              onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+            >
+              {/* Video Container */}
+              <div className="relative w-full h-full md:w-[500px] md:h-screen bg-black flex items-center justify-center">
+                {/* Current Video */}
+                {currentVideo && (
+                  <div className="relative w-full h-full">
+                    <video
+                      src={currentVideo.video_url}
+                      className="w-full h-full object-cover"
+                      autoPlay={isPlaying}
+                      loop
+                      muted
+                    />
 
-              {/* Side Buttons */}
-              <div className="hidden lg:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
-                <a
-                  href="#"
-                  className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition"
-                >
-                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-xs">Contact</span>
-                </a>
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
 
-                <a
-                  href="#"
-                  className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition"
-                >
-                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-xs">Terms</span>
-                </a>
+                    {/* Video Info Bottom */}
+                    <div className="absolute bottom-32 left-0 right-0 px-6 text-white z-10">
+                      <div className="flex gap-2 mb-4">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                          {currentVideo.duration}s
+                        </span>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                          {currentVideo.resolution}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-400">
+                        Created{" "}
+                        {new Date(currentVideo.created_at).toLocaleDateString()}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Expires{" "}
+                        {new Date(currentVideo.expires_at).toLocaleDateString()}
+                      </p>
+                    </div>
 
-                <a
-                  href="#"
-                  className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition"
-                >
-                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    {/* Play/Pause Button */}
+                    <button
+                      onClick={() => setIsPlaying(!isPlaying)}
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 backdrop-blur-sm p-4 rounded-full transition-all z-20"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
+                      {isPlaying ? (
+                        <Pause className="w-8 h-8 text-white" />
+                      ) : (
+                        <Play className="w-8 h-8 text-white" />
+                      )}
+                    </button>
+
+                    {/* Download Button */}
+                    <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
+                      <Button
+                        className="w-full bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2 h-12"
+                        onClick={() => {
+                          const a = document.createElement("a");
+                          a.href = currentVideo.video_url;
+                          a.download = `video-${currentVideo.id}.mp4`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                        }}
+                      >
+                        <Download className="w-4 h-4" />
+                        Download
+                      </Button>
+                    </div>
+
+                    {/* Pagination Indicator */}
+                    <div className="absolute top-8 left-0 right-0 px-6 text-white z-20">
+                      <p className="text-sm text-gray-300 text-center">
+                        {currentVideoIndex + 1} of {videos.length}
+                      </p>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="absolute top-16 left-0 right-0 px-6 z-20">
+                      <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-white transition-all"
+                          style={{
+                            width: `${((currentVideoIndex + 1) / videos.length) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Scroll Indicator */}
+                    {videos.length > 1 && (
+                      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white z-20 animate-bounce">
+                        <ChevronDown className="w-6 h-6" />
+                      </div>
+                    )}
                   </div>
-                  <span className="text-xs">Privacy</span>
-                </a>
+                )}
+
+                {/* Side Buttons */}
+                <div className="hidden lg:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
+                  <button
+                    onClick={() => navigate("/")}
+                    className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition"
+                  >
+                    <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 12l2.422-3.634A2 2 0 007.29 7h9.42a2 2 0 011.868 1.366L21 12m-18 0v5a2 2 0 002 2h14a2 2 0 002-2v-5m-15-3h.01M6 15h.01M15 9h.01"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-xs">Home</span>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      if (
+                        confirm(
+                          "Are you sure you want to delete this video?",
+                        )
+                      ) {
+                        try {
+                          const response = await fetch(
+                            `/api/videos/${currentVideo.id}`,
+                            {
+                              method: "DELETE",
+                            },
+                          );
+                          if (response.ok) {
+                            const updatedVideos = videos.filter(
+                              (v) => v.id !== currentVideo.id,
+                            );
+                            setVideos(updatedVideos);
+                            if (updatedVideos.length === 0) {
+                              setStep("email");
+                              setEmail("");
+                              setCode("");
+                            } else {
+                              setCurrentVideoIndex(0);
+                            }
+                          }
+                        } catch (err) {
+                          console.error("Delete failed", err);
+                        }
+                      }
+                    }}
+                    className="flex flex-col items-center gap-2 text-white hover:text-red-400 transition"
+                  >
+                    <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-red-500/10">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-xs">Delete</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </section>
       )}
     </div>
