@@ -110,3 +110,81 @@ export async function checkAndUpdateAllPendingVideos(): Promise<void> {
     console.error("Error checking pending videos:", error);
   }
 }
+
+interface GenerateVideoResult {
+  success: boolean;
+  requestId?: string;
+  videoUrl?: string;
+  error?: string;
+}
+
+export async function generateVideoAsync(
+  imageUrl: string,
+  duration: 5 | 10,
+  resolution: "720p" | "1080p",
+): Promise<GenerateVideoResult> {
+  try {
+    const apiKey = process.env.FASHN_AI_API_KEY;
+    if (!apiKey) {
+      return {
+        success: false,
+        error: "FASHN_AI_API_KEY not configured",
+      };
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
+    const response = await fetch("https://api.fashn.ai/v1/run", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model_name: "image-to-video",
+        inputs: {
+          image: imageUrl,
+          duration,
+          resolution,
+        },
+      }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: `Fashn API error: ${response.status}`,
+      };
+    }
+
+    const data = await response.json();
+    const requestId = data.id || data.request_id;
+
+    if (!requestId) {
+      return {
+        success: false,
+        error: "No request ID received from Fashn API",
+      };
+    }
+
+    return {
+      success: true,
+      requestId,
+      videoUrl: data.output?.video_url || data.video_url,
+    };
+  } catch (error) {
+    const errorMsg =
+      error instanceof Error
+        ? error.message
+        : "Unknown error during video generation";
+    console.error("Video generation error:", error);
+    return {
+      success: false,
+      error: errorMsg,
+    };
+  }
+}
