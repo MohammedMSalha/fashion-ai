@@ -97,15 +97,17 @@ const CardForm = ({
         });
 
         let videoUrl = "";
+        let requestId = "";
         if (generateResponse.ok) {
           const generateData = await generateResponse.json();
           videoUrl = generateData.videoUrl || "";
+          requestId = generateData.requestId || "";
         } else {
           console.warn("Video generation started but may be processing");
         }
 
         // Step 4: Save video to database
-        if (videoUrl) {
+        if (requestId || videoUrl) {
           await fetch("/api/save-video", {
             method: "POST",
             headers: {
@@ -113,7 +115,8 @@ const CardForm = ({
             },
             body: JSON.stringify({
               email,
-              videoUrl,
+              videoUrl: videoUrl || undefined,
+              requestId: requestId || undefined,
               duration: parseInt(duration),
               resolution: quality,
             }),
