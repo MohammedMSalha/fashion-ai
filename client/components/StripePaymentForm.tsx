@@ -128,7 +128,10 @@ const CardForm = ({
           console.error("Payment intent error response:", errorData);
         } catch {
           errorMessage = `Server error: ${paymentIntentResponse.status} ${paymentIntentResponse.statusText}`;
-          console.error("Payment intent server error:", paymentIntentResponse.status);
+          console.error(
+            "Payment intent server error:",
+            paymentIntentResponse.status,
+          );
         }
         throw new Error(errorMessage);
       }
