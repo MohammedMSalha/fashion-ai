@@ -88,10 +88,10 @@ export default function VideoSlider() {
   const currentVideo = SAMPLE_VIDEOS[currentIndex];
 
   return (
-    <div className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+    <div className="relative w-full h-screen bg-black overflow-hidden">
       {/* Video Container */}
       <div
-        className="relative w-full h-full md:w-[500px] md:h-screen bg-black"
+        className="relative w-full h-full bg-black"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onWheel={handleWheel}
