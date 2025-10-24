@@ -95,10 +95,14 @@ export const saveVideo: RequestHandler = async (req, res) => {
     // Determine status based on whether we have a video URL or just a request ID
     const status = videoUrl ? "completed" : "processing";
 
-    // Insert video record into database
+    // Insert video record into database with payment data
     const result = await query(
-      `INSERT INTO videos (email, video_url, video_id, request_id, duration, resolution, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO videos (
+        email, video_url, video_id, request_id, duration, resolution, status,
+        payment_intent_id, payment_amount, payment_currency, payment_status,
+        payment_method_type, payment_email
+      )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
        RETURNING id, expires_at, status`,
       [
         email,
@@ -108,6 +112,12 @@ export const saveVideo: RequestHandler = async (req, res) => {
         duration,
         resolution,
         status,
+        paymentIntentId || null,
+        paymentAmount || null,
+        paymentCurrency || null,
+        paymentStatus || null,
+        paymentMethodType || null,
+        paymentEmail || null,
       ],
     );
 
