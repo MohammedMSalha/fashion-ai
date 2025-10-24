@@ -168,13 +168,26 @@ const CardForm = ({
       }
 
       // Step 2: Confirm payment with Stripe
-      const { paymentIntent, error: stripeError } =
-        await stripe.confirmCardPayment(paymentIntentData.clientSecret, {
-          payment_method: {
-            card: cardElement,
-            billing_details: { email },
+      console.log("Confirming payment with Stripe...");
+      let paymentIntent;
+      let stripeError;
+
+      try {
+        const result = await stripe.confirmCardPayment(
+          paymentIntentData.clientSecret,
+          {
+            payment_method: {
+              card: cardElement,
+              billing_details: { email },
+            },
           },
-        });
+        );
+        paymentIntent = result.paymentIntent;
+        stripeError = result.error;
+      } catch (err) {
+        console.error("Stripe confirmation error:", err);
+        throw new Error("Payment confirmation failed");
+      }
 
       if (stripeError) {
         // Check for card validation errors
@@ -184,17 +197,21 @@ const CardForm = ({
         ) {
           const msg = `Card error: ${stripeError.message}`;
           setCardError(msg);
+          console.error("Card error:", msg);
           toast({
             title: "Card Error",
             description: msg,
             variant: "destructive",
           });
         } else {
+          console.error("Stripe error:", stripeError);
           throw new Error(stripeError.message || "Payment failed");
         }
         setProcessing(false);
         return;
       }
+
+      console.log("Payment intent status:", paymentIntent?.status);
 
       if (!paymentIntent) {
         throw new Error("Payment intent not returned");
