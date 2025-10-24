@@ -202,7 +202,7 @@ export default function VideoGeneratorForm() {
 
             <Button
               disabled={!formData.image}
-              className="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+              className="w-full mt-6 bg-white hover:bg-gray-100 text-black font-semibold"
               onClick={() => setStep("email")}
             >
               Continue
@@ -213,10 +213,10 @@ export default function VideoGeneratorForm() {
         {/* Email Step */}
         {step === "email" && (
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-bold text-white mb-2">
               Your Email Address
             </h2>
-            <p className="text-slate-600 mb-6">
+            <p className="text-gray-400 mb-6">
               We'll send your video link and store your videos
             </p>
 
@@ -228,9 +228,9 @@ export default function VideoGeneratorForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="h-12 text-base"
+                className="h-12 text-base bg-gray-800 border-gray-700 text-white"
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-gray-500">
                 ✓ Your email is used only to send download links and identify
                 your videos
               </p>
@@ -239,14 +239,14 @@ export default function VideoGeneratorForm() {
             <div className="flex gap-3 mt-6">
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800"
                 onClick={() => setStep("upload")}
               >
                 Back
               </Button>
               <Button
                 disabled={!formData.email}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                className="flex-1 bg-white hover:bg-gray-100 text-black font-semibold"
                 onClick={() => setStep("duration")}
               >
                 Continue
@@ -258,10 +258,10 @@ export default function VideoGeneratorForm() {
         {/* Duration Step */}
         {step === "duration" && (
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-bold text-white mb-2">
               Video Duration
             </h2>
-            <p className="text-slate-600 mb-6">
+            <p className="text-gray-400 mb-6">
               Choose how long your fashion video should be
             </p>
 
@@ -273,15 +273,15 @@ export default function VideoGeneratorForm() {
                   className={cn(
                     "w-full p-4 rounded-lg border-2 transition-all text-left font-medium",
                     formData.duration === dur
-                      ? "border-blue-500 bg-blue-50 text-slate-900"
-                      : "border-slate-200 hover:border-slate-300 text-slate-700"
+                      ? "border-white bg-gray-800 text-white"
+                      : "border-gray-700 hover:border-gray-600 text-gray-300"
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <span>{dur === "5s" ? "5 Seconds" : "10 Seconds"}</span>
-                    <div className="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center">
                       {formData.duration === dur && (
-                        <div className="w-3 h-3 bg-blue-500 rounded-full" />
+                        <div className="w-3 h-3 bg-white rounded-full" />
                       )}
                     </div>
                   </div>
@@ -292,14 +292,14 @@ export default function VideoGeneratorForm() {
             <div className="flex gap-3">
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800"
                 onClick={() => setStep("email")}
               >
                 Back
               </Button>
               <Button
                 disabled={!formData.duration}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                className="flex-1 bg-white hover:bg-gray-100 text-black font-semibold"
                 onClick={() => setStep("quality")}
               >
                 Continue
@@ -311,10 +311,10 @@ export default function VideoGeneratorForm() {
         {/* Quality Step */}
         {step === "quality" && (
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-bold text-white mb-2">
               Video Quality
             </h2>
-            <p className="text-slate-600 mb-6">
+            <p className="text-gray-400 mb-6">
               Higher quality means larger file size and slightly higher price
             </p>
 
@@ -326,15 +326,15 @@ export default function VideoGeneratorForm() {
                   className={cn(
                     "w-full p-4 rounded-lg border-2 transition-all text-left font-medium",
                     formData.quality === qual
-                      ? "border-blue-500 bg-blue-50 text-slate-900"
-                      : "border-slate-200 hover:border-slate-300 text-slate-700"
+                      ? "border-white bg-gray-800 text-white"
+                      : "border-gray-700 hover:border-gray-600 text-gray-300"
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <span>{qual === "720p" ? "720p (HD)" : "1080p (Full HD)"}</span>
-                    <div className="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center">
                       {formData.quality === qual && (
-                        <div className="w-3 h-3 bg-blue-500 rounded-full" />
+                        <div className="w-3 h-3 bg-white rounded-full" />
                       )}
                     </div>
                   </div>
@@ -345,14 +345,14 @@ export default function VideoGeneratorForm() {
             <div className="flex gap-3">
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800"
                 onClick={() => setStep("duration")}
               >
                 Back
               </Button>
               <Button
                 disabled={!formData.quality}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                className="flex-1 bg-white hover:bg-gray-100 text-black font-semibold"
                 onClick={() => setStep("review")}
               >
                 Continue
@@ -364,13 +364,13 @@ export default function VideoGeneratorForm() {
         {/* Review Step */}
         {step === "review" && (
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">
+            <h2 className="text-2xl font-bold text-white mb-6">
               Review Your Order
             </h2>
 
             <div className="space-y-4 mb-6">
               {/* Image Preview */}
-              <div className="rounded-lg overflow-hidden bg-slate-100">
+              <div className="rounded-lg overflow-hidden bg-gray-800">
                 {imagePreview && (
                   <img
                     src={imagePreview}
@@ -381,38 +381,38 @@ export default function VideoGeneratorForm() {
               </div>
 
               {/* Order Summary */}
-              <div className="bg-slate-50 rounded-lg p-4 space-y-3">
+              <div className="bg-gray-800 rounded-lg p-4 space-y-3 border border-gray-700">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">Email</span>
-                  <span className="font-medium text-slate-900">
+                  <span className="text-gray-400">Email</span>
+                  <span className="font-medium text-white">
                     {formData.email}
                   </span>
                 </div>
-                <div className="border-t border-slate-200 pt-3">
+                <div className="border-t border-gray-700 pt-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Duration</span>
-                    <span className="font-medium text-slate-900">
+                    <span className="text-gray-400">Duration</span>
+                    <span className="font-medium text-white">
                       {formData.duration === "5s" ? "5 seconds" : "10 seconds"}
                     </span>
                   </div>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">Quality</span>
-                  <span className="font-medium text-slate-900">
+                  <span className="text-gray-400">Quality</span>
+                  <span className="font-medium text-white">
                     {formData.quality === "720p" ? "720p (HD)" : "1080p (Full HD)"}
                   </span>
                 </div>
               </div>
 
               {/* Pricing */}
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-200">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-700 font-medium">Total Price</span>
-                  <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="text-gray-300 font-medium">Total Price</span>
+                  <span className="text-2xl font-bold text-white">
                     ${calculatePrice()?.toFixed(2)}
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 mt-2">
+                <p className="text-xs text-gray-500 mt-2">
                   One-time payment via Stripe Checkout
                 </p>
               </div>
@@ -421,17 +421,17 @@ export default function VideoGeneratorForm() {
             <div className="flex gap-3">
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800"
                 onClick={() => setStep("quality")}
               >
                 Back
               </Button>
-              <Button className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold">
+              <Button className="flex-1 bg-white hover:bg-gray-100 text-black font-semibold">
                 Proceed to Payment
               </Button>
             </div>
 
-            <p className="text-xs text-slate-500 text-center mt-4">
+            <p className="text-xs text-gray-500 text-center mt-4">
               By proceeding, you agree to our Terms of Service
             </p>
           </div>
