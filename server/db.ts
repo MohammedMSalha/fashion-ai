@@ -29,12 +29,73 @@ export async function initializeDatabase() {
         resolution VARCHAR(10) NOT NULL,
         status VARCHAR(20) DEFAULT 'processing',
         error_message TEXT,
+        payment_intent_id VARCHAR(255),
+        payment_amount INTEGER,
+        payment_currency VARCHAR(3),
+        payment_status VARCHAR(20),
+        payment_method_type VARCHAR(50),
+        payment_email VARCHAR(254),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '48 hours'),
         deleted_at TIMESTAMP,
         completed_at TIMESTAMP
       );
     `);
+
+    // Add payment columns if they don't exist (for existing tables)
+    try {
+      await pool.query(`
+        ALTER TABLE videos
+        ADD COLUMN IF NOT EXISTS payment_intent_id VARCHAR(255);
+      `);
+    } catch (e) {
+      console.warn("Column payment_intent_id already exists");
+    }
+
+    try {
+      await pool.query(`
+        ALTER TABLE videos
+        ADD COLUMN IF NOT EXISTS payment_amount INTEGER;
+      `);
+    } catch (e) {
+      console.warn("Column payment_amount already exists");
+    }
+
+    try {
+      await pool.query(`
+        ALTER TABLE videos
+        ADD COLUMN IF NOT EXISTS payment_currency VARCHAR(3);
+      `);
+    } catch (e) {
+      console.warn("Column payment_currency already exists");
+    }
+
+    try {
+      await pool.query(`
+        ALTER TABLE videos
+        ADD COLUMN IF NOT EXISTS payment_status VARCHAR(20);
+      `);
+    } catch (e) {
+      console.warn("Column payment_status already exists");
+    }
+
+    try {
+      await pool.query(`
+        ALTER TABLE videos
+        ADD COLUMN IF NOT EXISTS payment_method_type VARCHAR(50);
+      `);
+    } catch (e) {
+      console.warn("Column payment_method_type already exists");
+    }
+
+    try {
+      await pool.query(`
+        ALTER TABLE videos
+        ADD COLUMN IF NOT EXISTS payment_email VARCHAR(254);
+      `);
+    } catch (e) {
+      console.warn("Column payment_email already exists");
+    }
 
     // Create indexes individually with error handling
     try {
