@@ -13,9 +13,10 @@ import { startCleanupJob } from "./jobs/cleanup-videos";
 import { startVideoStatusCheckJob } from "./jobs/check-video-status";
 
 export async function createServer() {
-  // Initialize database and cleanup job
+  // Initialize database and background jobs
   await initializeDatabase();
   startCleanupJob();
+  startVideoStatusCheckJob();
 
   const app = express();
 
