@@ -94,7 +94,7 @@ const CardForm = ({
       let paymentIntentResponse;
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
         paymentIntentResponse = await fetch("/api/create-payment-intent", {
           method: "POST",
@@ -114,8 +114,9 @@ const CardForm = ({
         setProcessing(false);
         const errorMsg =
           err instanceof Error && err.name === "AbortError"
-            ? "Payment service request timed out"
+            ? "Payment service request timed out (>30s). Server may be overloaded. Please try again."
             : "Network error: Unable to connect to payment service";
+        console.error("Payment intent fetch error:", err);
         throw new Error(errorMsg);
       }
 
