@@ -25,7 +25,9 @@ function getStripeClient(): Stripe {
     if (!stripeSecretKey) {
       throw new Error("STRIPE_SECRET_KEY not configured");
     }
-    stripeClient = new Stripe(stripeSecretKey, { apiVersion: "2024-12-15.acacia" });
+    stripeClient = new Stripe(stripeSecretKey, {
+      apiVersion: "2024-12-15.acacia",
+    });
   }
   return stripeClient;
 }
@@ -143,7 +145,8 @@ export const confirmPayment: RequestHandler = async (req, res) => {
       const stripe = getStripeClient();
 
       // Retrieve the payment intent from Stripe
-      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      const paymentIntent =
+        await stripe.paymentIntents.retrieve(paymentIntentId);
 
       if (paymentIntent.status !== "succeeded") {
         return res.status(400).json({

@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Download, ChevronDown, Pause, Play, Loader } from "lucide-react";
+import {
+  ArrowLeft,
+  Download,
+  ChevronDown,
+  Pause,
+  Play,
+  Loader,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type Step = "email" | "verification" | "videos";
@@ -39,7 +46,9 @@ export default function MyVideos() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/videos/${encodeURIComponent(email)}`);
+        const response = await fetch(
+          `/api/videos/${encodeURIComponent(email)}`,
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch videos");
         }
@@ -285,9 +294,12 @@ export default function MyVideos() {
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">No Videos Yet</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                No Videos Yet
+              </h2>
               <p className="text-gray-400 mb-6">
-                You haven't generated any videos yet. Start by creating your first video!
+                You haven't generated any videos yet. Start by creating your
+                first video!
               </p>
               <Button
                 onClick={() => navigate("/generate")}
@@ -423,9 +435,7 @@ export default function MyVideos() {
                   <button
                     onClick={async () => {
                       if (
-                        confirm(
-                          "Are you sure you want to delete this video?",
-                        )
+                        confirm("Are you sure you want to delete this video?")
                       ) {
                         try {
                           const response = await fetch(
