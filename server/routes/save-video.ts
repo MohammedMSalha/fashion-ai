@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { query } from "../db";
+import { query } from "../db.js";
 
 interface SaveVideoRequest {
   email: string;
