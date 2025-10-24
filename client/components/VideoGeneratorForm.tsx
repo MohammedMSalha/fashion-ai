@@ -365,10 +365,10 @@ export default function VideoGeneratorForm() {
         {step === "review" && (
           <div>
             <h2 className="text-2xl font-bold text-white mb-6">
-              Review Your Order
+              Ready to Create?
             </h2>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-4 mb-8">
               {/* Image Preview */}
               <div className="rounded-lg overflow-hidden bg-gray-800">
                 {imagePreview && (
@@ -404,17 +404,25 @@ export default function VideoGeneratorForm() {
                 </div>
               </div>
 
-              {/* Pricing */}
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300 font-medium">Total Price</span>
-                  <span className="text-2xl font-bold text-white">
+              {/* Pricing - Prominent */}
+              <div className="bg-white rounded-lg p-6 border-2 border-white">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-black font-semibold">Total Price</span>
+                  <span className="text-4xl font-bold text-black">
                     ${calculatePrice()?.toFixed(2)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  One-time payment via Stripe Checkout
-                </p>
+                <div className="space-y-2">
+                  <p className="text-sm text-black font-medium">
+                    ✓ No subscription
+                  </p>
+                  <p className="text-sm text-black font-medium">
+                    ✓ No credits needed
+                  </p>
+                  <p className="text-sm text-black font-medium">
+                    ✓ One-time payment only
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -426,13 +434,13 @@ export default function VideoGeneratorForm() {
               >
                 Back
               </Button>
-              <Button className="flex-1 bg-white hover:bg-gray-100 text-black font-semibold">
-                Proceed to Payment
+              <Button className="flex-1 bg-white hover:bg-gray-100 text-black font-bold text-lg py-6">
+                Pay ${calculatePrice()?.toFixed(2)} & Generate
               </Button>
             </div>
 
             <p className="text-xs text-gray-500 text-center mt-4">
-              By proceeding, you agree to our Terms of Service
+              Secure payment via Stripe. You'll get your video link via email.
             </p>
           </div>
         )}
