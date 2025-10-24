@@ -18,7 +18,7 @@ interface StripePaymentFormProps {
   onCancel: () => void;
 }
 
-const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISH_KEY || "pk_test_51SLjzIFKPN8vxl5YLX6M3Wg3e2zLBEIb8QaWGCgO1xfzI1aCxpIVxwhjCExKVtduI0Zln9uoEg4Hqy8i1iyMmWL5002Kw1N8Lz";
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "pk_test_51SLjzIFKPN8vxl5YLX6M3Wg3e2zLBEIb8QaWGCgO1xfzI1aCxpIVxwhjCExKVtduI0Zln9uoEg4Hqy8i1iyMmWL5002Kw1N8Lz";
 
 const stripePromise = loadStripe(stripePublishableKey);
 
