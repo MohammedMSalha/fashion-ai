@@ -263,8 +263,8 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     return (
       <div className="w-full space-y-6">
         {/* Image Preview */}
-        <div className="rounded-xl overflow-hidden bg-gray-800">
-          <img src={imagePreview} alt="Final" className="w-full h-48 object-cover" />
+        <div className="rounded-xl overflow-hidden bg-gray-900 border border-gray-800 flex items-center justify-center" style={{ minHeight: "400px" }}>
+          <img src={imagePreview} alt="Final" className="max-w-full max-h-96 object-contain" />
         </div>
 
         {/* Summary */}
@@ -298,13 +298,14 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
         <div className="flex gap-3">
           <Button
             variant="outline"
-            className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800"
+            className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800 h-12"
             onClick={() => setStep("upload")}
           >
             Back
           </Button>
           <Button
-            className="flex-1 bg-white hover:bg-gray-100 text-black font-bold h-12 flex items-center justify-center gap-2"
+            variant="outline"
+            className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800 h-12 font-bold flex items-center justify-center gap-2"
             onClick={handleGenerateClick}
           >
             <Check className="w-4 h-4" />
