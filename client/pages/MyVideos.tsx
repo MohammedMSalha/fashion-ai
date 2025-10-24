@@ -24,6 +24,12 @@ interface DatabaseVideo {
   created_at: string;
   expires_at: string;
   request_id?: string;
+  payment_intent_id?: string;
+  payment_amount?: number;
+  payment_currency?: string;
+  payment_status?: string;
+  payment_method_type?: string;
+  payment_email?: string;
 }
 
 export default function MyVideos() {
