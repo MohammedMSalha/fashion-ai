@@ -329,6 +329,13 @@ export default function Index() {
                   Download Video
                 </Button>
               </div>
+
+              {/* Progress Bar Overlay */}
+              <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 z-20">
+                <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-full w-full bg-white animate-pulse" />
+                </div>
+              </div>
             </div>
           </div>
         </section>
