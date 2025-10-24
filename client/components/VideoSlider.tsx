@@ -134,68 +134,6 @@ export default function VideoSlider() {
         </div>
       </div>
 
-      {/* Side Info (Desktop) */}
-      <div className="hidden lg:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
-        {/* Contact Button */}
-        <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
-          <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-          </div>
-          <span className="text-xs">Contact</span>
-        </a>
-
-        {/* Terms Button */}
-        <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
-          <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-          </div>
-          <span className="text-xs">Terms</span>
-        </a>
-
-        {/* Privacy Button */}
-        <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
-          <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          </div>
-          <span className="text-xs">Privacy</span>
-        </a>
-      </div>
     </div>
   );
 }
