@@ -38,31 +38,41 @@ export async function initializeDatabase() {
 
     // Create indexes individually with error handling
     try {
-      await pool.query(`CREATE INDEX IF NOT EXISTS idx_email ON videos(email);`);
+      await pool.query(
+        `CREATE INDEX IF NOT EXISTS idx_email ON videos(email);`,
+      );
     } catch (e) {
       console.warn("Index idx_email already exists or has issues");
     }
 
     try {
-      await pool.query(`CREATE INDEX IF NOT EXISTS idx_status ON videos(status);`);
+      await pool.query(
+        `CREATE INDEX IF NOT EXISTS idx_status ON videos(status);`,
+      );
     } catch (e) {
       console.warn("Index idx_status already exists or has issues");
     }
 
     try {
-      await pool.query(`CREATE INDEX IF NOT EXISTS idx_expires_at ON videos(expires_at);`);
+      await pool.query(
+        `CREATE INDEX IF NOT EXISTS idx_expires_at ON videos(expires_at);`,
+      );
     } catch (e) {
       console.warn("Index idx_expires_at already exists or has issues");
     }
 
     try {
-      await pool.query(`CREATE INDEX IF NOT EXISTS idx_created_at ON videos(created_at);`);
+      await pool.query(
+        `CREATE INDEX IF NOT EXISTS idx_created_at ON videos(created_at);`,
+      );
     } catch (e) {
       console.warn("Index idx_created_at already exists or has issues");
     }
 
     try {
-      await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_request_id ON videos(request_id);`);
+      await pool.query(
+        `CREATE UNIQUE INDEX IF NOT EXISTS idx_request_id ON videos(request_id);`,
+      );
     } catch (e) {
       console.warn("Index idx_request_id already exists or has issues");
     }
