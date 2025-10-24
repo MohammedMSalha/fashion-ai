@@ -387,14 +387,6 @@ export default function MyVideos() {
         </section>
       )}
 
-      {/* Footer */}
-      <footer className="border-t border-gray-800 bg-black">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-8">
-          <p className="text-center text-sm text-gray-500">
-            © 2024 FashionAI. All rights reserved.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
