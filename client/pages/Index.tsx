@@ -265,8 +265,8 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Form */}
-              <VideoGeneratorForm onGenerate={handleGenerateClick} />
+              {/* Smart Form */}
+              <SmartVideoForm onGenerate={handleGenerateClick} />
             </div>
           </div>
         </section>
