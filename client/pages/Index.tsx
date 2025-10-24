@@ -313,11 +313,11 @@ export default function Index() {
 
               {/* 48-hour Expiry Alert */}
               <div className="absolute top-8 left-0 right-0 px-6 z-20">
-                <div className="bg-orange-500/20 border border-orange-500/50 rounded-lg p-3 flex gap-3">
-                  <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-orange-100">
+                <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-4 flex gap-3">
+                  <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-white">
                     <p className="font-semibold">Video expires in 48 hours</p>
-                    <p className="text-xs text-orange-200">Download now to save permanently</p>
+                    <p className="text-xs text-gray-300">Download now to save permanently</p>
                   </div>
                 </div>
               </div>
