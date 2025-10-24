@@ -211,6 +211,9 @@ const CardForm = ({
       let requestId = "";
 
       try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
         const generateResponse = await fetch("/api/generate-video", {
           method: "POST",
           headers: {
@@ -222,14 +225,21 @@ const CardForm = ({
             resolution: quality,
             email,
           }),
+          signal: controller.signal,
         });
+
+        clearTimeout(timeout);
 
         if (generateResponse.ok) {
           const generateData = await generateResponse.json();
           videoUrl = generateData.videoUrl || "";
           requestId = generateData.requestId || "";
+          console.log("Video generation started:", { requestId, videoUrl });
         } else {
-          console.warn("Video generation started but may be processing");
+          console.warn(
+            "Video generation response not ok:",
+            generateResponse.status,
+          );
         }
       } catch (err) {
         console.warn("Video generation error:", err);
