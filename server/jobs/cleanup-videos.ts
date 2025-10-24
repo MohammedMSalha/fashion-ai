@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { query } from "../db";
+import { query } from "../db.js";
 
 export function startCleanupJob() {
   // Run cleanup job every hour
