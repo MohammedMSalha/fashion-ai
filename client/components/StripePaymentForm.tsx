@@ -25,6 +25,9 @@ const stripePromise = loadStripe(
 const CardForm = ({
   amount,
   email,
+  image,
+  duration,
+  quality,
   onSuccess,
   onCancel,
 }: StripePaymentFormProps) => {
@@ -43,21 +46,61 @@ const CardForm = ({
     setError(null);
 
     try {
+      // Step 1: Create payment intent on backend
+      const paymentIntentResponse = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: Math.round(amount * 100), // Convert to cents
+          email,
+        }),
+      });
+
+      if (!paymentIntentResponse.ok) {
+        const errorData = await paymentIntentResponse.json();
+        throw new Error(errorData.error || "Failed to create payment intent");
+      }
+
+      const { clientSecret } = await paymentIntentResponse.json();
+
+      // Step 2: Confirm payment with Stripe
       const cardElement = elements.getElement(CardElement);
+      const { paymentIntent, error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: { email },
+        },
+      });
 
-      const { token } = await stripe.createToken(cardElement);
+      if (stripeError) {
+        throw new Error(stripeError.message);
+      }
 
-      if (token) {
-        // In production, send token to backend to process payment
-        // For now, simulate successful payment
-        console.log("Payment token created:", token.id);
+      if (paymentIntent?.status === "succeeded") {
+        // Step 3: Generate video after successful payment
+        const generateResponse = await fetch("/api/generate-video", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image,
+            duration: parseInt(duration),
+            resolution: quality,
+            email,
+          }),
+        });
 
-        // Simulate payment processing
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        if (!generateResponse.ok) {
+          const errorData = await generateResponse.json();
+          console.warn("Video generation started but may be processing", errorData);
+        }
 
         onSuccess();
       } else {
-        setError("Failed to create payment token");
+        setError("Payment was not completed successfully");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment failed");
