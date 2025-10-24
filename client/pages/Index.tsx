@@ -164,18 +164,18 @@ export default function Index() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between">
+          <div className="border-t border-gray-800 pt-12 flex flex-col md:flex-row items-center justify-between gap-6">
             <p className="text-sm text-gray-500">
               © 2024 FashionAI. All rights reserved.
             </p>
-            <div className="flex gap-4 mt-4 md:mt-0">
-              <a href="#" className="text-gray-500 hover:text-gray-300 transition">
+            <div className="flex gap-6 md:gap-8">
+              <a href="#" className="text-gray-500 hover:text-gray-300 transition text-sm">
                 Twitter
               </a>
-              <a href="#" className="text-gray-500 hover:text-gray-300 transition">
+              <a href="#" className="text-gray-500 hover:text-gray-300 transition text-sm">
                 Instagram
               </a>
-              <a href="#" className="text-gray-500 hover:text-gray-300 transition">
+              <a href="#" className="text-gray-500 hover:text-gray-300 transition text-sm">
                 Facebook
               </a>
             </div>
