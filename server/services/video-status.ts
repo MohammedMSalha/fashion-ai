@@ -99,9 +99,25 @@ export async function updateVideoStatusFromFashn(
 export async function checkAndUpdateAllPendingVideos(): Promise<void> {
   try {
     // Get all videos that are still processing
-    const result = await query(
-      `SELECT request_id FROM videos WHERE status = 'processing' AND request_id IS NOT NULL`,
-    );
+    // Handle case where request_id column might not exist yet on production
+    let result;
+    try {
+      result = await query(
+        `SELECT request_id FROM videos WHERE status = 'processing' AND request_id IS NOT NULL`,
+      );
+    } catch (columnError) {
+      // If request_id column doesn't exist, try without it
+      if (
+        columnError instanceof Error &&
+        columnError.message.includes('column "request_id" does not exist')
+      ) {
+        console.warn(
+          "request_id column not found, skipping status checks. Run database migration.",
+        );
+        return;
+      }
+      throw columnError;
+    }
 
     for (const row of result.rows) {
       await updateVideoStatusFromFashn(row.request_id);
