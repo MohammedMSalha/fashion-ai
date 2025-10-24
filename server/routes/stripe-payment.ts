@@ -35,8 +35,15 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
   try {
     const { amount, email, imageUrl } = req.body as PaymentIntentRequest;
 
+    console.log("createPaymentIntent called with:", { amount, email });
+    console.log(
+      "STRIPE_SECRET_KEY configured:",
+      !!process.env.STRIPE_SECRET_KEY,
+    );
+
     // Validate required fields
     if (!amount || !email) {
+      console.log("Missing required fields: amount or email");
       return res.status(400).json({
         success: false,
         error: "Missing required fields",
