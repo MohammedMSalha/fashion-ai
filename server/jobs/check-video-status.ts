@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { checkAndUpdateAllPendingVideos } from "../services/video-status";
+import { checkAndUpdateAllPendingVideos } from "../services/video-status.js";
 
 export function startVideoStatusCheckJob() {
   // Check every 2 minutes for pending videos (more frequent to catch completions faster)
