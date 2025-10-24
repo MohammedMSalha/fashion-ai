@@ -74,7 +74,10 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       const paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency: "usd",
-        metadata: { email },
+        metadata: {
+          email,
+          imageUrl: imageUrl || "",
+        },
       });
 
       return res.status(200).json({
