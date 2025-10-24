@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { generateVideoAsync } from "../services/video-status.js";
 
 interface GenerateVideoRequest {
   image: string;
