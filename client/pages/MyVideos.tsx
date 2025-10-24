@@ -76,6 +76,12 @@ export default function MyVideos() {
       setLoading(true);
       setError(null);
       try {
+        // First, check for any pending videos and update their status in the background
+        await fetch(`/api/check-pending/${encodeURIComponent(email)}`).catch(
+          () => null,
+        );
+
+        // Then fetch all videos (will include any that just completed)
         const response = await fetch(
           `/api/videos/${encodeURIComponent(email)}`,
         );
