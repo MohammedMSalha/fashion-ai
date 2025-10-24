@@ -98,8 +98,8 @@ export default function VideoGeneratorForm() {
                 className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center transition-all flex-shrink-0",
                   step === s.id || stepIndex > idx
-                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                    : "bg-slate-200 text-slate-600"
+                    ? "bg-white text-black"
+                    : "bg-gray-700 text-gray-300"
                 )}
               >
                 {stepIndex > idx ? (
@@ -113,15 +113,15 @@ export default function VideoGeneratorForm() {
                   className={cn(
                     "flex-1 h-1 mx-2 rounded transition-colors",
                     stepIndex > idx
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600"
-                      : "bg-slate-200"
+                      ? "bg-white"
+                      : "bg-gray-700"
                   )}
                 />
               )}
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-xs font-medium text-slate-600">
+        <div className="flex justify-between text-xs font-medium text-gray-400">
           {steps.map((s) => (
             <span key={s.id}>{s.label}</span>
           ))}
@@ -129,7 +129,7 @@ export default function VideoGeneratorForm() {
       </div>
 
       {/* Step Content */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 md:p-10">
+      <div className="bg-gray-900 rounded-2xl shadow-lg p-8 md:p-10 border border-gray-800">
         {/* Upload Step */}
         {step === "upload" && (
           <div>
