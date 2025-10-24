@@ -361,14 +361,14 @@ export default function Index() {
       {currentPage === "my-videos" && (
         <section className="fixed inset-0 bg-black flex flex-col">
           {/* Header */}
-          <div className="bg-black border-b border-gray-800 p-4">
+          <div className="bg-black border-b border-gray-800 p-3 flex-shrink-0">
             <div className="flex items-center justify-between">
-              <h1 className="text-lg font-bold text-white">My Videos</h1>
+              <h1 className="text-base font-bold text-white">My Videos</h1>
               <button
                 onClick={goHome}
                 className="text-gray-400 hover:text-white transition"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
             </div>
           </div>
