@@ -103,14 +103,35 @@ export const confirmPayment: RequestHandler = async (req, res) => {
   try {
     const { paymentIntentId, email } = req.body;
 
+    // Validate required fields
     if (!paymentIntentId || !email) {
       return res.status(400).json({
         success: false,
-        error: "Missing required fields: paymentIntentId, email",
+        error: "Missing required fields",
       });
     }
 
-    // In production, verify the payment with Stripe
+    // Validate paymentIntentId format (basic check)
+    if (typeof paymentIntentId !== "string" || paymentIntentId.length < 5) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid payment intent",
+      });
+    }
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid email",
+      });
+    }
+
+    // In production, verify the payment with Stripe:
+    // const stripe = require('stripe')(stripeSecretKey);
+    // const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    // const isSuccessful = paymentIntent.status === 'succeeded';
+
     // For now, simulate successful payment
     const isSuccessful = true;
 
@@ -129,7 +150,7 @@ export const confirmPayment: RequestHandler = async (req, res) => {
     console.error("Payment confirmation error:", error);
     return res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : "Internal server error",
+      error: "Service temporarily unavailable",
     });
   }
 };
