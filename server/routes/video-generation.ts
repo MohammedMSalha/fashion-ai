@@ -132,10 +132,11 @@ export const generateVideo: RequestHandler = async (req, res) => {
       });
     }
 
-    // Return success response with minimal info
+    // Return success response with request_id for status polling
+    const requestId = videoData.id || videoData.request_id;
     return res.status(200).json({
       success: true,
-      videoId: videoData.id || videoData.request_id,
+      requestId,
       videoUrl: videoData.output?.video_url || videoData.video_url,
     });
   } catch (error) {
