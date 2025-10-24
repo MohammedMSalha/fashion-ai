@@ -1,7 +1,8 @@
 import { Pool } from "pg";
 
 const pool = new Pool({
-  connectionString: process.env.fashion_DATABASE_URL || process.env.DATABASE_URL,
+  connectionString:
+    process.env.fashion_DATABASE_URL || process.env.DATABASE_URL,
   ssl:
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
