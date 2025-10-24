@@ -70,5 +70,10 @@ export async function createServer() {
   app.post("/api/create-payment-intent", paymentLimiter, createPaymentIntent);
   app.post("/api/confirm-payment", paymentLimiter, confirmPayment);
 
+  // Video storage endpoints
+  app.post("/api/save-video", videoLimiter, saveVideo);
+  app.get("/api/videos/:email", getVideosByEmail);
+  app.delete("/api/videos/:videoId", deleteVideo);
+
   return app;
 }
