@@ -17,7 +17,9 @@ export default function Generate() {
           >
             ← Back
           </Button>
-          <h1 className="text-xl md:text-2xl font-bold text-white">Generate Video</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-white">
+            Generate Video
+          </h1>
           <div className="w-12"></div>
         </div>
       </nav>
@@ -28,7 +30,10 @@ export default function Generate() {
           {/* Clear Messaging */}
           <div className="mb-10 p-6 bg-gray-900 border border-gray-800 rounded-lg">
             <p className="text-center text-gray-300 text-lg">
-              <span className="text-white font-semibold">No subscription. No credits.</span> Just pay once per video. That's it.
+              <span className="text-white font-semibold">
+                No subscription. No credits.
+              </span>{" "}
+              Just pay once per video. That's it.
             </p>
           </div>
 
@@ -39,7 +44,6 @@ export default function Generate() {
           </div>
         </div>
       </section>
-
     </div>
   );
 }

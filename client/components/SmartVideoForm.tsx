@@ -16,7 +16,10 @@ const PRICING = {
 
 export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   const [imagePreview, setImagePreview] = useState<string>("");
-  const [imageResolution, setImageResolution] = useState<{ width: number; height: number } | null>(null);
+  const [imageResolution, setImageResolution] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
   const [email, setEmail] = useState("");
   const [duration, setDuration] = useState<"5s" | "10s">("10s");
   const [quality, setQuality] = useState<"720p" | "1080p">("1080p");
@@ -100,7 +103,10 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
 
   const getResolutionText = () => {
     if (!imageResolution) return "";
-    const megapixels = ((imageResolution.width * imageResolution.height) / 1000000).toFixed(1);
+    const megapixels = (
+      (imageResolution.width * imageResolution.height) /
+      1000000
+    ).toFixed(1);
     return `${imageResolution.width}×${imageResolution.height} (${megapixels}MP)`;
   };
 
@@ -118,13 +124,15 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
             "border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer",
             dragActive
               ? "border-white bg-gray-800"
-              : "border-gray-700 hover:border-gray-600"
+              : "border-gray-700 hover:border-gray-600",
           )}
         >
           {!imagePreview ? (
             <div>
               <Upload className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-              <p className="text-white font-semibold mb-1">Drag your photo here</p>
+              <p className="text-white font-semibold mb-1">
+                Drag your photo here
+              </p>
               <p className="text-sm text-gray-400 mb-4">or click to browse</p>
               <input
                 type="file"
@@ -138,7 +146,10 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                 id="image-input"
               />
               <label htmlFor="image-input">
-                <Button variant="outline" className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 cursor-pointer">
+                <Button
+                  variant="outline"
+                  className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 cursor-pointer"
+                >
                   Browse Files
                 </Button>
               </label>
@@ -151,9 +162,13 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                 alt="Preview"
                 className="w-full max-h-48 object-contain mx-auto mb-4 rounded"
               />
-              <p className="text-green-400 text-sm font-semibold mb-2">✓ Image ready for generation</p>
+              <p className="text-green-400 text-sm font-semibold mb-2">
+                ✓ Image ready for generation
+              </p>
               {imageResolution && (
-                <p className="text-xs text-gray-400 mb-4">{getResolutionText()}</p>
+                <p className="text-xs text-gray-400 mb-4">
+                  {getResolutionText()}
+                </p>
               )}
               <Button
                 variant="ghost"
@@ -174,7 +189,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           <div className="grid grid-cols-2 gap-4">
             {/* Email */}
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email
+              </label>
               <Input
                 type="email"
                 placeholder="your@email.com"
@@ -186,7 +203,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
 
             {/* Duration */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Duration</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Duration
+              </label>
               <div className="space-y-2">
                 {(["5s", "10s"] as const).map((d) => (
                   <button
@@ -196,7 +215,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                       "w-full p-2 rounded-lg text-sm font-medium transition-all text-center",
                       duration === d
                         ? "bg-white text-black"
-                        : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                        : "bg-gray-800 text-gray-300 hover:bg-gray-700",
                     )}
                   >
                     {d === "5s" ? "5s" : "10s"}
@@ -207,7 +226,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
 
             {/* Quality */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Quality</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Quality
+              </label>
               <div className="space-y-2">
                 {(["720p", "1080p"] as const).map((q) => (
                   <button
@@ -217,7 +238,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                       "w-full p-2 rounded-lg text-sm font-medium transition-all text-center",
                       quality === q
                         ? "bg-white text-black"
-                        : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                        : "bg-gray-800 text-gray-300 hover:bg-gray-700",
                     )}
                   >
                     {q}
@@ -243,7 +264,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           <div className="space-y-3">
             <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-4 text-center border border-gray-700">
               <p className="text-gray-400 text-sm">Total price</p>
-              <p className="text-2xl font-bold text-white">${calculatePrice()?.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-white">
+                ${calculatePrice()?.toFixed(2)}
+              </p>
             </div>
 
             <Button
@@ -264,8 +287,15 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     return (
       <div className="w-full space-y-6">
         {/* Image Preview */}
-        <div className="rounded-xl overflow-hidden bg-gray-900 border border-gray-800 flex items-center justify-center" style={{ minHeight: "400px" }}>
-          <img src={imagePreview} alt="Final" className="max-w-full max-h-96 object-contain" />
+        <div
+          className="rounded-xl overflow-hidden bg-gray-900 border border-gray-800 flex items-center justify-center"
+          style={{ minHeight: "400px" }}
+        >
+          <img
+            src={imagePreview}
+            alt="Final"
+            className="max-w-full max-h-96 object-contain"
+          />
         </div>
 
         {/* Summary */}
@@ -276,22 +306,32 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           </div>
           <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
             <span className="text-sm text-gray-400">Duration</span>
-            <span className="text-sm font-medium text-white">{duration === "5s" ? "5 seconds" : "10 seconds"}</span>
+            <span className="text-sm font-medium text-white">
+              {duration === "5s" ? "5 seconds" : "10 seconds"}
+            </span>
           </div>
           <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
             <span className="text-sm text-gray-400">Quality</span>
-            <span className="text-sm font-medium text-white">{quality === "720p" ? "720p (HD)" : "1080p (Full HD)"}</span>
+            <span className="text-sm font-medium text-white">
+              {quality === "720p" ? "720p (HD)" : "1080p (Full HD)"}
+            </span>
           </div>
           <div className="flex justify-between items-center p-3 bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg border border-gray-700">
             <span className="text-sm text-gray-400">Total</span>
-            <span className="text-xl font-bold text-white">${calculatePrice()?.toFixed(2)}</span>
+            <span className="text-xl font-bold text-white">
+              ${calculatePrice()?.toFixed(2)}
+            </span>
           </div>
         </div>
 
         {/* 48-hour notice */}
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-4">
-          <p className="text-sm text-white font-semibold mb-1">⏱️ Video expires in 48 hours</p>
-          <p className="text-xs text-gray-300">Download now to save permanently</p>
+          <p className="text-sm text-white font-semibold mb-1">
+            ⏱️ Video expires in 48 hours
+          </p>
+          <p className="text-xs text-gray-300">
+            Download now to save permanently
+          </p>
         </div>
 
         {/* Buttons */}

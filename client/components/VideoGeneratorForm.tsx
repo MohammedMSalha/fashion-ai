@@ -22,7 +22,9 @@ interface VideoGeneratorFormProps {
   onGenerate?: () => void;
 }
 
-export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormProps) {
+export default function VideoGeneratorForm({
+  onGenerate,
+}: VideoGeneratorFormProps) {
   const [step, setStep] = useState<FormStep>("upload");
   const [formData, setFormData] = useState<FormData>({
     image: null,
@@ -91,9 +93,16 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
                 onClick={() => {
                   if (s.id === "upload" && formData.image) {
                     setStep(s.id);
-                  } else if (s.id === "email" && formData.image && formData.email) {
+                  } else if (
+                    s.id === "email" &&
+                    formData.image &&
+                    formData.email
+                  ) {
                     setStep(s.id);
-                  } else if (s.id === "duration" && formData.duration === null) {
+                  } else if (
+                    s.id === "duration" &&
+                    formData.duration === null
+                  ) {
                     return;
                   } else if (s.id === "quality" && formData.quality === null) {
                     return;
@@ -103,7 +112,7 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
                   "w-10 h-10 rounded-full flex items-center justify-center transition-all flex-shrink-0",
                   step === s.id || stepIndex > idx
                     ? "bg-white text-black"
-                    : "bg-gray-700 text-gray-300"
+                    : "bg-gray-700 text-gray-300",
                 )}
               >
                 {stepIndex > idx ? (
@@ -116,9 +125,7 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
                 <div
                   className={cn(
                     "flex-1 h-1 mx-2 rounded transition-colors",
-                    stepIndex > idx
-                      ? "bg-white"
-                      : "bg-gray-700"
+                    stepIndex > idx ? "bg-white" : "bg-gray-700",
                   )}
                 />
               )}
@@ -154,7 +161,7 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
                   "border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer",
                   dragActive
                     ? "border-white bg-gray-800"
-                    : "border-gray-700 hover:border-gray-600"
+                    : "border-gray-700 hover:border-gray-600",
                 )}
               >
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-500" />
@@ -278,7 +285,7 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
                     "w-full p-4 rounded-lg border-2 transition-all text-left font-medium",
                     formData.duration === dur
                       ? "border-white bg-gray-800 text-white"
-                      : "border-gray-700 hover:border-gray-600 text-gray-300"
+                      : "border-gray-700 hover:border-gray-600 text-gray-300",
                   )}
                 >
                   <div className="flex items-center justify-between">
@@ -331,11 +338,13 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
                     "w-full p-4 rounded-lg border-2 transition-all text-left font-medium",
                     formData.quality === qual
                       ? "border-white bg-gray-800 text-white"
-                      : "border-gray-700 hover:border-gray-600 text-gray-300"
+                      : "border-gray-700 hover:border-gray-600 text-gray-300",
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <span>{qual === "720p" ? "720p (HD)" : "1080p (Full HD)"}</span>
+                    <span>
+                      {qual === "720p" ? "720p (HD)" : "1080p (Full HD)"}
+                    </span>
                     <div className="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center">
                       {formData.quality === qual && (
                         <div className="w-3 h-3 bg-white rounded-full" />
@@ -403,7 +412,9 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Quality</span>
                   <span className="font-medium text-white">
-                    {formData.quality === "720p" ? "720p (HD)" : "1080p (Full HD)"}
+                    {formData.quality === "720p"
+                      ? "720p (HD)"
+                      : "1080p (Full HD)"}
                   </span>
                 </div>
               </div>

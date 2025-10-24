@@ -19,7 +19,8 @@ interface Video {
 const SAMPLE_VIDEOS: Video[] = [
   {
     id: "1",
-    thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=900&fit=crop",
+    thumbnail:
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=900&fit=crop",
     title: "Summer Collection",
     duration: "5s",
     quality: "1080p",
@@ -28,7 +29,8 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "2",
-    thumbnail: "https://images.unsplash.com/photo-1539571696357-5a69c006b15d?w=500&h=900&fit=crop",
+    thumbnail:
+      "https://images.unsplash.com/photo-1539571696357-5a69c006b15d?w=500&h=900&fit=crop",
     title: "Urban Style",
     duration: "10s",
     quality: "720p",
@@ -37,7 +39,8 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "3",
-    thumbnail: "https://images.unsplash.com/photo-1595777707802-41d339d60b84?w=500&h=900&fit=crop",
+    thumbnail:
+      "https://images.unsplash.com/photo-1595777707802-41d339d60b84?w=500&h=900&fit=crop",
     title: "Evening Wear",
     duration: "5s",
     quality: "1080p",
@@ -46,7 +49,8 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "4",
-    thumbnail: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=900&fit=crop",
+    thumbnail:
+      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=900&fit=crop",
     title: "Casual Vibes",
     duration: "10s",
     quality: "720p",
@@ -55,7 +59,8 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "5",
-    thumbnail: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&h=900&fit=crop",
+    thumbnail:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&h=900&fit=crop",
     title: "Fashion Forward",
     duration: "5s",
     quality: "1080p",
@@ -95,7 +100,7 @@ export default function MyVideos() {
 
   const handlePrevVideo = () => {
     setCurrentVideoIndex((prev) =>
-      prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1
+      prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1,
     );
   };
 
@@ -118,7 +123,9 @@ export default function MyVideos() {
         handlePrevVideo();
       }
     };
-    e.currentTarget.addEventListener("touchend", handleTouchEnd as any, { once: true });
+    e.currentTarget.addEventListener("touchend", handleTouchEnd as any, {
+      once: true,
+    });
   };
 
   return (
@@ -134,7 +141,9 @@ export default function MyVideos() {
             <ArrowLeft className="w-4 h-4" />
             Back
           </Button>
-          <h1 className="text-xl md:text-2xl font-bold text-white">My Videos</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-white">
+            My Videos
+          </h1>
           <div className="w-12"></div>
         </div>
       </nav>
@@ -159,7 +168,9 @@ export default function MyVideos() {
                   />
                 </svg>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-2">Your Videos</h2>
+              <h2 className="text-3xl font-bold text-white mb-2">
+                Your Videos
+              </h2>
               <p className="text-gray-400 text-lg">
                 Sign in to view your generated fashion videos
               </p>
@@ -215,7 +226,9 @@ export default function MyVideos() {
                   />
                 </svg>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-2">Verify Code</h2>
+              <h2 className="text-3xl font-bold text-white mb-2">
+                Verify Code
+              </h2>
               <p className="text-gray-400 text-lg">
                 Check your email for the verification code
               </p>
@@ -230,7 +243,9 @@ export default function MyVideos() {
                   type="text"
                   placeholder="123456"
                   value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onChange={(e) =>
+                    setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
                   maxLength="6"
                   className="h-12 text-base bg-gray-900 border-gray-800 text-white text-center text-2xl tracking-widest"
                 />
@@ -286,7 +301,9 @@ export default function MyVideos() {
 
                 {/* Video Info Bottom */}
                 <div className="absolute bottom-32 left-0 right-0 px-6 text-white z-10">
-                  <h3 className="text-2xl font-bold mb-3">{currentVideo.title}</h3>
+                  <h3 className="text-2xl font-bold mb-3">
+                    {currentVideo.title}
+                  </h3>
                   <div className="flex gap-2 mb-4">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
                       {currentVideo.duration}
@@ -296,7 +313,8 @@ export default function MyVideos() {
                     </span>
                   </div>
                   <p className="text-sm text-gray-400">
-                    Created {new Date(currentVideo.createdAt).toLocaleDateString()}
+                    Created{" "}
+                    {new Date(currentVideo.createdAt).toLocaleDateString()}
                   </p>
                 </div>
 
@@ -350,7 +368,10 @@ export default function MyVideos() {
 
               {/* Side Buttons */}
               <div className="hidden lg:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
-                <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+                <a
+                  href="#"
+                  className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition"
+                >
                   <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
                     <svg
                       className="w-6 h-6"
@@ -369,7 +390,10 @@ export default function MyVideos() {
                   <span className="text-xs">Contact</span>
                 </a>
 
-                <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+                <a
+                  href="#"
+                  className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition"
+                >
                   <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
                     <svg
                       className="w-6 h-6"
@@ -388,7 +412,10 @@ export default function MyVideos() {
                   <span className="text-xs">Terms</span>
                 </a>
 
-                <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+                <a
+                  href="#"
+                  className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition"
+                >
                   <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
                     <svg
                       className="w-6 h-6"
@@ -411,7 +438,6 @@ export default function MyVideos() {
           </div>
         </section>
       )}
-
     </div>
   );
 }

@@ -3,9 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
 import SmartVideoForm from "@/components/SmartVideoForm";
-import { Sparkles, X, Mail, FileText, Lock, Play, Info, Download, ArrowLeft, AlertCircle } from "lucide-react";
+import {
+  Sparkles,
+  X,
+  Mail,
+  FileText,
+  Lock,
+  Play,
+  Info,
+  Download,
+  ArrowLeft,
+  AlertCircle,
+} from "lucide-react";
 
-type Page = "home" | "generate" | "my-videos" | "contact" | "terms" | "privacy" | "about" | "in-progress" | "video-preview";
+type Page =
+  | "home"
+  | "generate"
+  | "my-videos"
+  | "contact"
+  | "terms"
+  | "privacy"
+  | "about"
+  | "in-progress"
+  | "video-preview";
 type MyVideosStep = "email" | "verification" | "videos";
 
 interface Video {
@@ -26,48 +46,58 @@ interface MousePosition {
 const SAMPLE_VIDEOS: Video[] = [
   {
     id: "1",
-    thumbnail: "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
     title: "Playful Monkey",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-15",
-    downloadUrl: "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
+    downloadUrl:
+      "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
   },
   {
     id: "2",
-    thumbnail: "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
     title: "Majestic Tiger",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-10",
-    downloadUrl: "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
+    downloadUrl:
+      "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
   },
   {
     id: "3",
-    thumbnail: "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
     title: "Striped Zebra",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-08",
-    downloadUrl: "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
+    downloadUrl:
+      "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
   },
   {
     id: "4",
-    thumbnail: "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
     title: "Wild Monkey Moves",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-05",
-    downloadUrl: "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
+    downloadUrl:
+      "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
   },
   {
     id: "5",
-    thumbnail: "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
     title: "Gentle Elephant",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-01",
-    downloadUrl: "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
+    downloadUrl:
+      "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
   },
 ];
 
@@ -116,7 +146,7 @@ export default function Index() {
 
   const handlePrevVideo = () => {
     setCurrentVideoIndex((prev) =>
-      prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1
+      prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1,
     );
   };
 
@@ -161,12 +191,14 @@ export default function Index() {
 
               <div className="mb-6 md:mb-8 inline-block bg-gray-900 border border-gray-800 rounded-full px-4 md:px-6 py-2 md:py-3">
                 <p className="text-gray-300 text-xs md:text-sm lg:text-base">
-                  <span className="text-white font-bold">$0.40-$0.90</span> per video • No subscription • No credits
+                  <span className="text-white font-bold">$0.40-$0.90</span> per
+                  video • No subscription • No credits
                 </p>
               </div>
 
               <p className="text-gray-300 mb-8 md:mb-10 max-w-3xl mx-auto text-base md:text-lg">
-                Upload a photo of yourself and let AI create stunning fashion videos
+                Upload a photo of yourself and let AI create stunning fashion
+                videos
               </p>
               <Button
                 onClick={() => setCurrentPage("generate")}
@@ -264,7 +296,9 @@ export default function Index() {
                 <ArrowLeft className="w-5 h-5" />
                 <span className="text-sm font-medium">Back</span>
               </button>
-              <h2 className="text-xl md:text-2xl font-bold text-white">Generate Video</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-white">
+                Generate Video
+              </h2>
               <div className="w-20"></div>
             </div>
           </div>
@@ -276,10 +310,15 @@ export default function Index() {
               <div className="mb-10 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-800 rounded-xl p-6">
                 <div className="text-center">
                   <p className="text-gray-200 text-lg">
-                    <span className="text-white font-bold text-xl">$0.40-$0.90</span>
+                    <span className="text-white font-bold text-xl">
+                      $0.40-$0.90
+                    </span>
                   </p>
                   <p className="text-gray-400 text-sm mt-2">
-                    <span className="text-white font-semibold">No subscription. No credits.</span> Just pay once per video.
+                    <span className="text-white font-semibold">
+                      No subscription. No credits.
+                    </span>{" "}
+                    Just pay once per video.
                   </p>
                 </div>
               </div>
@@ -296,12 +335,17 @@ export default function Index() {
         <section className="w-full h-full flex items-center justify-center">
           <div className="text-center">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full border-4 border-gray-800 border-t-white animate-spin">
-              </div>
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full border-4 border-gray-800 border-t-white animate-spin"></div>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">Generating Video</h2>
-            <p className="text-gray-400 mb-2">Creating your AI fashion video...</p>
-            <p className="text-sm text-gray-500">This usually takes 30-60 seconds</p>
+            <h2 className="text-3xl font-bold text-white mb-2">
+              Generating Video
+            </h2>
+            <p className="text-gray-400 mb-2">
+              Creating your AI fashion video...
+            </p>
+            <p className="text-sm text-gray-500">
+              This usually takes 30-60 seconds
+            </p>
           </div>
         </section>
       )}
@@ -340,7 +384,9 @@ export default function Index() {
                     <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
                     <div className="text-sm text-white flex-1">
                       <p className="font-semibold">Video expires in 48 hours</p>
-                      <p className="text-xs text-gray-300">Download now to save permanently</p>
+                      <p className="text-xs text-gray-300">
+                        Download now to save permanently
+                      </p>
                     </div>
                     <button
                       onClick={() => setShowExpiryAlert(false)}
@@ -354,7 +400,9 @@ export default function Index() {
 
               {/* Video Info */}
               <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
-                <p className="text-2xl font-bold mb-3">{generatedVideo.title}</p>
+                <p className="text-2xl font-bold mb-3">
+                  {generatedVideo.title}
+                </p>
                 <div className="flex gap-2">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
                     {generatedVideo.duration}
@@ -408,8 +456,12 @@ export default function Index() {
             <div className="h-full flex items-center justify-center p-4">
               <div className="w-full max-w-sm space-y-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white mb-2">Access Your Videos</h2>
-                  <p className="text-sm text-gray-400">Enter your email to view your generated videos</p>
+                  <h2 className="text-xl font-bold text-white mb-2">
+                    Access Your Videos
+                  </h2>
+                  <p className="text-sm text-gray-400">
+                    Enter your email to view your generated videos
+                  </p>
                 </div>
                 <Input
                   type="email"
@@ -433,14 +485,20 @@ export default function Index() {
             <div className="h-full flex items-center justify-center p-4">
               <div className="w-full max-w-sm space-y-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white mb-2">Verify Your Email</h2>
-                  <p className="text-sm text-gray-400">Enter the code sent to your email</p>
+                  <h2 className="text-xl font-bold text-white mb-2">
+                    Verify Your Email
+                  </h2>
+                  <p className="text-sm text-gray-400">
+                    Enter the code sent to your email
+                  </p>
                 </div>
                 <Input
                   type="text"
                   placeholder="000000"
                   value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onChange={(e) =>
+                    setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
                   maxLength="6"
                   className="h-11 bg-gray-800 border-gray-700 text-white text-center text-lg tracking-widest"
                 />
@@ -500,14 +558,18 @@ export default function Index() {
                       }}
                     />
                   </div>
-                  <p className="text-white text-xs mt-1 text-center">{currentVideoIndex + 1}/{SAMPLE_VIDEOS.length}</p>
+                  <p className="text-white text-xs mt-1 text-center">
+                    {currentVideoIndex + 1}/{SAMPLE_VIDEOS.length}
+                  </p>
                 </div>
 
                 {/* Controls */}
                 <div className="absolute bottom-6 left-0 right-0 px-6 z-20 space-y-3">
                   <Button
                     className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-11 flex items-center justify-center gap-2"
-                    onClick={() => window.open(currentVideo.downloadUrl, '_blank')}
+                    onClick={() =>
+                      window.open(currentVideo.downloadUrl, "_blank")
+                    }
                   >
                     <Download className="w-4 h-4" />
                     Download Video
@@ -564,12 +626,27 @@ export default function Index() {
             <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="max-w-2xl mx-auto px-4 py-12 pt-16">
-            <h2 className="text-3xl font-bold text-white mb-6">Terms of Service</h2>
+            <h2 className="text-3xl font-bold text-white mb-6">
+              Terms of Service
+            </h2>
             <div className="text-gray-300 space-y-4">
-              <p><strong>By using this service, you agree to our terms and conditions.</strong></p>
-              <p><strong>Payment Terms:</strong> All payments are one-time, non-refundable charges.</p>
-              <p><strong>Content Rights:</strong> You own the videos generated using your photos.</p>
-              <p><strong>User Responsibility:</strong> You confirm you have the right to use provided images.</p>
+              <p>
+                <strong>
+                  By using this service, you agree to our terms and conditions.
+                </strong>
+              </p>
+              <p>
+                <strong>Payment Terms:</strong> All payments are one-time,
+                non-refundable charges.
+              </p>
+              <p>
+                <strong>Content Rights:</strong> You own the videos generated
+                using your photos.
+              </p>
+              <p>
+                <strong>User Responsibility:</strong> You confirm you have the
+                right to use provided images.
+              </p>
               <p>© 2024 FashionAI. All rights reserved.</p>
             </div>
           </div>
@@ -586,12 +663,26 @@ export default function Index() {
             <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="max-w-2xl mx-auto px-4 py-12 pt-16">
-            <h2 className="text-3xl font-bold text-white mb-6">Privacy Policy</h2>
+            <h2 className="text-3xl font-bold text-white mb-6">
+              Privacy Policy
+            </h2>
             <div className="text-gray-300 space-y-4">
-              <p><strong>Data Collection:</strong> We collect emails to deliver videos and manage your account.</p>
-              <p><strong>Image Security:</strong> Your photos are used only for video generation and deleted after processing.</p>
-              <p><strong>No Tracking:</strong> We do not track your behavior or share data with third parties.</p>
-              <p><strong>Payment Privacy:</strong> Payment processing is handled securely by Stripe.</p>
+              <p>
+                <strong>Data Collection:</strong> We collect emails to deliver
+                videos and manage your account.
+              </p>
+              <p>
+                <strong>Image Security:</strong> Your photos are used only for
+                video generation and deleted after processing.
+              </p>
+              <p>
+                <strong>No Tracking:</strong> We do not track your behavior or
+                share data with third parties.
+              </p>
+              <p>
+                <strong>Payment Privacy:</strong> Payment processing is handled
+                securely by Stripe.
+              </p>
             </div>
           </div>
         </section>
@@ -609,10 +700,24 @@ export default function Index() {
           <div className="max-w-2xl mx-auto px-4 py-12 pt-16">
             <h2 className="text-3xl font-bold text-white mb-6">About Us</h2>
             <div className="text-gray-300 space-y-4">
-              <p><strong className="text-white">FashionAI</strong> is a cutting-edge platform that leverages artificial intelligence to transform fashion photography.</p>
-              <p>We believe that everyone deserves access to professional-quality fashion content. Our mission is to make AI-generated fashion videos affordable, accessible, and easy to create.</p>
-              <p><strong className="text-white">Our Technology:</strong> We use advanced AI models to analyze clothing and create realistic fashion videos.</p>
-              <p><strong className="text-white">Why Choose Us?</strong></p>
+              <p>
+                <strong className="text-white">FashionAI</strong> is a
+                cutting-edge platform that leverages artificial intelligence to
+                transform fashion photography.
+              </p>
+              <p>
+                We believe that everyone deserves access to professional-quality
+                fashion content. Our mission is to make AI-generated fashion
+                videos affordable, accessible, and easy to create.
+              </p>
+              <p>
+                <strong className="text-white">Our Technology:</strong> We use
+                advanced AI models to analyze clothing and create realistic
+                fashion videos.
+              </p>
+              <p>
+                <strong className="text-white">Why Choose Us?</strong>
+              </p>
               <ul className="list-disc list-inside space-y-2 ml-2">
                 <li>No subscriptions or hidden fees</li>
                 <li>Fast processing and instant delivery</li>

@@ -10,27 +10,32 @@ interface Video {
 const SAMPLE_VIDEOS: Video[] = [
   {
     id: "1",
-    thumbnail: "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
     title: "Playful Monkey",
   },
   {
     id: "2",
-    thumbnail: "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
     title: "Majestic Tiger",
   },
   {
     id: "3",
-    thumbnail: "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
     title: "Striped Zebra",
   },
   {
     id: "4",
-    thumbnail: "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
     title: "Wild Monkey Moves",
   },
   {
     id: "5",
-    thumbnail: "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
+    thumbnail:
+      "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
     title: "Gentle Elephant",
   },
 ];
@@ -71,7 +76,7 @@ export default function VideoSlider() {
       } else {
         // Swiped down
         setCurrentIndex((prev) =>
-          prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1
+          prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1,
         );
       }
     }
@@ -83,7 +88,7 @@ export default function VideoSlider() {
       setCurrentIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
     } else {
       setCurrentIndex((prev) =>
-        prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1
+        prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1,
       );
     }
   };
@@ -113,7 +118,6 @@ export default function VideoSlider() {
           {/* Overlay Gradient */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40" />
 
-
           {/* Play/Pause Button */}
           <button
             onClick={() => setIsPlaying(!isPlaying)}
@@ -139,7 +143,6 @@ export default function VideoSlider() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

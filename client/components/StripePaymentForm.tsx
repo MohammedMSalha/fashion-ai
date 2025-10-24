@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { CardElement, Elements, ElementsConsumer } from "@stripe/react-stripe-js";
+import {
+  CardElement,
+  Elements,
+  ElementsConsumer,
+} from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
@@ -11,13 +15,24 @@ interface StripePaymentFormProps {
   onCancel: () => void;
 }
 
-const stripePromise = loadStripe("pk_test_51SLjzIFKPN8vxl5YLX6M3Wg3e2zLBEIb8QaWGCgO1xfzI1aCxpIVxwhjCExKVtduI0Zln9uoEg4Hqy8i1iyMmWL5002Kw1N8Lz");
+const stripePromise = loadStripe(
+  "pk_test_51SLjzIFKPN8vxl5YLX6M3Wg3e2zLBEIb8QaWGCgO1xfzI1aCxpIVxwhjCExKVtduI0Zln9uoEg4Hqy8i1iyMmWL5002Kw1N8Lz",
+);
 
-const CardForm = ({ amount, email, onSuccess, onCancel }: StripePaymentFormProps) => {
+const CardForm = ({
+  amount,
+  email,
+  onSuccess,
+  onCancel,
+}: StripePaymentFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent, elements: any, stripe: any) => {
+  const handleSubmit = async (
+    event: React.FormEvent,
+    elements: any,
+    stripe: any,
+  ) => {
     event.preventDefault();
     if (!stripe || !elements) return;
 
@@ -33,10 +48,10 @@ const CardForm = ({ amount, email, onSuccess, onCancel }: StripePaymentFormProps
         // In production, send token to backend to process payment
         // For now, simulate successful payment
         console.log("Payment token created:", token.id);
-        
+
         // Simulate payment processing
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
         onSuccess();
       } else {
         setError("Failed to create payment token");
@@ -51,7 +66,10 @@ const CardForm = ({ amount, email, onSuccess, onCancel }: StripePaymentFormProps
   return (
     <ElementsConsumer>
       {({ elements, stripe }) => (
-        <form onSubmit={(e) => handleSubmit(e, elements, stripe)} className="space-y-6">
+        <form
+          onSubmit={(e) => handleSubmit(e, elements, stripe)}
+          className="space-y-6"
+        >
           {/* Card Input */}
           <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
             <CardElement
@@ -84,7 +102,9 @@ const CardForm = ({ amount, email, onSuccess, onCancel }: StripePaymentFormProps
           {/* Amount Info */}
           <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-4 text-center border border-gray-700">
             <p className="text-gray-400 text-sm mb-1">Total amount</p>
-            <p className="text-3xl font-bold text-white">${amount.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-white">
+              ${amount.toFixed(2)}
+            </p>
           </div>
 
           {/* Buttons */}
