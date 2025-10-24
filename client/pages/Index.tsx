@@ -468,9 +468,12 @@ export default function Index() {
           {myVideosStep === "videos" && (
             <div className="h-full flex items-center justify-center overflow-hidden">
               <div className="relative w-full h-full md:w-[500px] bg-black flex flex-col">
-                <img
+                <video
                   src={currentVideo.thumbnail}
-                  alt={currentVideo.title}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
                   className="flex-1 w-full h-full object-cover cursor-pointer hover:opacity-95 transition"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
