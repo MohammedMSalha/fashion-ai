@@ -89,30 +89,7 @@ const CardForm = ({
     setCardError(null);
 
     try {
-      // Step 0: Save pending payment record to database BEFORE payment attempt
-      try {
-        await fetch("/api/save-video", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            duration: parseInt(duration),
-            resolution: quality,
-            paymentAmount: amount,
-            paymentCurrency: "usd",
-            paymentStatus: "payment_pending",
-            paymentMethodType: "card",
-            paymentEmail: email,
-          }),
-        });
-      } catch (err) {
-        console.warn("Failed to save initial payment record", err);
-        // Continue anyway, webhook will still process
-      }
-
-      // Step 1: Create payment intent on backend
+      // Step 1: Create payment intent on backend FIRST (to get payment_intent_id)
       let paymentIntentResponse;
       try {
         paymentIntentResponse = await fetch("/api/create-payment-intent", {
