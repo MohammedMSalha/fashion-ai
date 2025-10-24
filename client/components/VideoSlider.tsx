@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Play, Pause } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 
 interface Video {
   id: string;
