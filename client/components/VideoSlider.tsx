@@ -125,7 +125,7 @@ export default function VideoSlider() {
           </button>
 
           {/* Progress Indicator */}
-          <div className="absolute bottom-16 left-0 right-0 px-6 flex gap-1 z-10">
+          <div className="absolute top-6 left-0 right-0 px-6 flex gap-1 z-10">
             {SAMPLE_VIDEOS.map((_, idx) => (
               <div
                 key={idx}
@@ -135,13 +135,6 @@ export default function VideoSlider() {
               />
             ))}
           </div>
-
-          {/* Scroll Indicator */}
-          {showScroll && (
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white z-20 animate-bounce">
-              <ChevronDown className="w-6 h-6" />
-            </div>
-          )}
         </div>
       </div>
 
