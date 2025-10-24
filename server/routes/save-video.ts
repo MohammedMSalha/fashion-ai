@@ -25,8 +25,20 @@ interface SaveVideoResponse {
 
 export const saveVideo: RequestHandler = async (req, res) => {
   try {
-    const { email, videoUrl, videoId, requestId, duration, resolution } =
-      req.body as SaveVideoRequest;
+    const {
+      email,
+      videoUrl,
+      videoId,
+      requestId,
+      duration,
+      resolution,
+      paymentIntentId,
+      paymentAmount,
+      paymentCurrency,
+      paymentStatus,
+      paymentMethodType,
+      paymentEmail,
+    } = req.body as SaveVideoRequest;
 
     // Validate inputs
     if (!email || !duration || !resolution) {
