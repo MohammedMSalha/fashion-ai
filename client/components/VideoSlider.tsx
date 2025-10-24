@@ -101,9 +101,12 @@ export default function VideoSlider() {
       >
         {/* Current Video */}
         <div className="relative w-full h-full">
-          <img
+          <video
             src={currentVideo.thumbnail}
-            alt={currentVideo.title}
+            autoPlay
+            muted
+            loop
+            playsInline
             className="w-full h-full object-cover"
           />
 
