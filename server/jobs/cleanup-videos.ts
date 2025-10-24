@@ -12,10 +12,12 @@ export function startCleanupJob() {
         `UPDATE videos 
          SET deleted_at = CURRENT_TIMESTAMP
          WHERE expires_at <= CURRENT_TIMESTAMP 
-         AND deleted_at IS NULL`
+         AND deleted_at IS NULL`,
       );
 
-      console.log(`Cleanup job completed. Deleted ${result.rowCount} expired videos.`);
+      console.log(
+        `Cleanup job completed. Deleted ${result.rowCount} expired videos.`,
+      );
     } catch (error) {
       console.error("Video cleanup job error:", error);
     }
@@ -34,10 +36,12 @@ export async function cleanupExpiredVideos() {
        SET deleted_at = CURRENT_TIMESTAMP
        WHERE expires_at <= CURRENT_TIMESTAMP 
        AND deleted_at IS NULL
-       RETURNING id, email`
+       RETURNING id, email`,
     );
 
-    console.log(`Manual cleanup completed. Deleted ${result.rowCount} expired videos.`);
+    console.log(
+      `Manual cleanup completed. Deleted ${result.rowCount} expired videos.`,
+    );
 
     return {
       success: true,

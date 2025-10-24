@@ -18,7 +18,8 @@ interface SaveVideoResponse {
 
 export const saveVideo: RequestHandler = async (req, res) => {
   try {
-    const { email, videoUrl, videoId, duration, resolution } = req.body as SaveVideoRequest;
+    const { email, videoUrl, videoId, duration, resolution } =
+      req.body as SaveVideoRequest;
 
     // Validate inputs
     if (!email || !videoUrl || !duration || !resolution) {
@@ -67,7 +68,7 @@ export const saveVideo: RequestHandler = async (req, res) => {
       `INSERT INTO videos (email, video_url, video_id, duration, resolution, status)
        VALUES ($1, $2, $3, $4, $5, 'completed')
        RETURNING id, expires_at`,
-      [email, videoUrl, videoId || null, duration, resolution]
+      [email, videoUrl, videoId || null, duration, resolution],
     );
 
     const videoRecord = result.rows[0];
@@ -113,7 +114,7 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
        WHERE email = $1 AND deleted_at IS NULL
        ORDER BY created_at DESC
        LIMIT 50`,
-      [email]
+      [email],
     );
 
     return res.status(200).json({
@@ -144,7 +145,7 @@ export const deleteVideo: RequestHandler = async (req, res) => {
       `UPDATE videos SET deleted_at = CURRENT_TIMESTAMP
        WHERE id = $1 AND deleted_at IS NULL
        RETURNING id`,
-      [videoId]
+      [videoId],
     );
 
     if (result.rows.length === 0) {

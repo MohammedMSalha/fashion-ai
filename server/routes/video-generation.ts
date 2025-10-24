@@ -32,7 +32,8 @@ const validateEmail = (email: string): boolean => {
 
 export const generateVideo: RequestHandler = async (req, res) => {
   try {
-    const { image, duration, resolution, email } = req.body as GenerateVideoRequest;
+    const { image, duration, resolution, email } =
+      req.body as GenerateVideoRequest;
 
     // Validate required fields
     if (!image || !duration || !resolution || !email) {
@@ -118,7 +119,12 @@ export const generateVideo: RequestHandler = async (req, res) => {
     const videoData = await fashnResponse.json();
 
     // Validate response
-    if (!videoData.id && !videoData.request_id && !videoData.output?.video_url && !videoData.video_url) {
+    if (
+      !videoData.id &&
+      !videoData.request_id &&
+      !videoData.output?.video_url &&
+      !videoData.video_url
+    ) {
       console.error("Invalid Fashn.ai response:", videoData);
       return res.status(500).json({
         success: false,

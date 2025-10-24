@@ -67,12 +67,13 @@ const CardForm = ({
 
       // Step 2: Confirm payment with Stripe
       const cardElement = elements.getElement(CardElement);
-      const { paymentIntent, error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement,
-          billing_details: { email },
-        },
-      });
+      const { paymentIntent, error: stripeError } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: { email },
+          },
+        });
 
       if (stripeError) {
         throw new Error(stripeError.message);
@@ -114,7 +115,9 @@ const CardForm = ({
               duration: parseInt(duration),
               resolution: quality,
             }),
-          }).catch(err => console.warn("Failed to save video to database", err));
+          }).catch((err) =>
+            console.warn("Failed to save video to database", err),
+          );
         }
 
         onSuccess();

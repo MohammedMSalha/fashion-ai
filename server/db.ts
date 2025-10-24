@@ -2,13 +2,18 @@ import { Pool } from "pg";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
 
 export async function initializeDatabase() {
   try {
     if (!process.env.DATABASE_URL) {
-      console.warn("DATABASE_URL not set. Database features will be unavailable. Set DATABASE_URL from Neon to enable.");
+      console.warn(
+        "DATABASE_URL not set. Database features will be unavailable. Set DATABASE_URL from Neon to enable.",
+      );
       return;
     }
 
