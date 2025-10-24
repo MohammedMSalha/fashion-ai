@@ -86,9 +86,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
               const imageUrl = paymentIntent.metadata?.imageUrl;
               if (imageUrl) {
                 try {
-                  // Call video generation API
+                  // Call video generation API (use localhost for server-side call)
                   const generateResponse = await fetch(
-                    `${process.env.APP_URL || "http://localhost:5173"}/api/generate-video`,
+                    "http://localhost:3000/api/generate-video",
                     {
                       method: "POST",
                       headers: {
