@@ -1,73 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Download, ChevronDown, Pause, Play } from "lucide-react";
+import { ArrowLeft, Download, ChevronDown, Pause, Play, Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type Step = "email" | "verification" | "videos";
 
-interface Video {
-  id: string;
-  thumbnail: string;
-  title: string;
-  duration: string;
-  quality: string;
-  createdAt: string;
-  downloadUrl: string;
+interface DatabaseVideo {
+  id: number;
+  email: string;
+  video_url: string;
+  duration: number;
+  resolution: string;
+  status: string;
+  created_at: string;
+  expires_at: string;
 }
-
-const SAMPLE_VIDEOS: Video[] = [
-  {
-    id: "1",
-    thumbnail:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=900&fit=crop",
-    title: "Summer Collection",
-    duration: "5s",
-    quality: "1080p",
-    createdAt: "2024-01-15",
-    downloadUrl: "#",
-  },
-  {
-    id: "2",
-    thumbnail:
-      "https://images.unsplash.com/photo-1539571696357-5a69c006b15d?w=500&h=900&fit=crop",
-    title: "Urban Style",
-    duration: "10s",
-    quality: "720p",
-    createdAt: "2024-01-10",
-    downloadUrl: "#",
-  },
-  {
-    id: "3",
-    thumbnail:
-      "https://images.unsplash.com/photo-1595777707802-41d339d60b84?w=500&h=900&fit=crop",
-    title: "Evening Wear",
-    duration: "5s",
-    quality: "1080p",
-    createdAt: "2024-01-08",
-    downloadUrl: "#",
-  },
-  {
-    id: "4",
-    thumbnail:
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=900&fit=crop",
-    title: "Casual Vibes",
-    duration: "10s",
-    quality: "720p",
-    createdAt: "2024-01-05",
-    downloadUrl: "#",
-  },
-  {
-    id: "5",
-    thumbnail:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&h=900&fit=crop",
-    title: "Fashion Forward",
-    duration: "5s",
-    quality: "1080p",
-    createdAt: "2024-01-01",
-    downloadUrl: "#",
-  },
-];
 
 export default function MyVideos() {
   const navigate = useNavigate();
@@ -76,6 +24,9 @@ export default function MyVideos() {
   const [code, setCode] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [videos, setVideos] = useState<DatabaseVideo[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleEmailSubmit = () => {
     if (email) {
@@ -83,16 +34,32 @@ export default function MyVideos() {
     }
   };
 
-  const handleCodeSubmit = () => {
+  const handleCodeSubmit = async () => {
     if (code) {
-      setStep("videos");
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/videos/${encodeURIComponent(email)}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch videos");
+        }
+        const data = await response.json();
+        setVideos(data.videos || []);
+        if (!data.videos || data.videos.length === 0) {
+          setError("No videos found for this email");
+        } else {
+          setStep("videos");
+          setCurrentVideoIndex(0);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load videos");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const currentVideo = SAMPLE_VIDEOS[currentVideoIndex];
-  const videosPerPage = 1;
-  const totalPages = Math.ceil(SAMPLE_VIDEOS.length / videosPerPage);
-  const currentPage = Math.floor(currentVideoIndex / videosPerPage) + 1;
+  const currentVideo = videos.length > 0 ? videos[currentVideoIndex] : null;
 
   const handleNextVideo = () => {
     setCurrentVideoIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
