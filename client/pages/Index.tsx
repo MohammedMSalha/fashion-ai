@@ -1,25 +1,103 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
-import { Sparkles } from "lucide-react";
+import VideoGeneratorForm from "@/components/VideoGeneratorForm";
+import { Sparkles, X, Mail, FileText, Lock, Play } from "lucide-react";
+
+type Modal = null | "generate" | "my-videos" | "contact" | "terms" | "privacy";
+type MyVideosStep = "email" | "verification" | "videos";
+
+interface Video {
+  id: string;
+  thumbnail: string;
+  title: string;
+  duration: string;
+  quality: string;
+  createdAt: string;
+  downloadUrl: string;
+}
+
+const SAMPLE_VIDEOS: Video[] = [
+  {
+    id: "1",
+    thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=900&fit=crop",
+    title: "Summer Collection",
+    duration: "5s",
+    quality: "1080p",
+    createdAt: "2024-01-15",
+    downloadUrl: "#",
+  },
+  {
+    id: "2",
+    thumbnail: "https://images.unsplash.com/photo-1539571696357-5a69c006b15d?w=500&h=900&fit=crop",
+    title: "Urban Style",
+    duration: "10s",
+    quality: "720p",
+    createdAt: "2024-01-10",
+    downloadUrl: "#",
+  },
+  {
+    id: "3",
+    thumbnail: "https://images.unsplash.com/photo-1595777707802-41d339d60b84?w=500&h=900&fit=crop",
+    title: "Evening Wear",
+    duration: "5s",
+    quality: "1080p",
+    createdAt: "2024-01-08",
+    downloadUrl: "#",
+  },
+];
 
 export default function Index() {
-  const navigate = useNavigate();
+  const [activeModal, setActiveModal] = useState<Modal>(null);
+  const [myVideosStep, setMyVideosStep] = useState<MyVideosStep>("email");
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [showFabMenu, setShowFabMenu] = useState(false);
+
+  const handleEmailSubmit = () => {
+    if (email) setMyVideosStep("verification");
+  };
+
+  const handleCodeSubmit = () => {
+    if (code) setMyVideosStep("videos");
+  };
+
+  const handleNextVideo = () => {
+    setCurrentVideoIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
+  };
+
+  const handlePrevVideo = () => {
+    setCurrentVideoIndex((prev) =>
+      prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1
+    );
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+    if (activeModal === "my-videos") {
+      setMyVideosStep("email");
+      setEmail("");
+      setCode("");
+    }
+  };
+
+  const currentVideo = SAMPLE_VIDEOS[currentVideoIndex];
 
   return (
-    <div className="bg-black text-white">
-      {/* Video Slider Section */}
-      <section className="relative">
+    <div className="fixed inset-0 bg-black text-white overflow-hidden">
+      {/* Main Video Slider */}
+      <section className="relative w-full h-full">
         <VideoSlider />
 
-        {/* Scroll Down Indicator and CTA */}
+        {/* CTA Section */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent pt-16 md:pt-24 pb-8 md:pb-12">
           <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 text-center">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
               Create Your Own AI Fashion Video
             </h2>
 
-            {/* Clear Pricing Banner */}
             <div className="mb-6 md:mb-8 inline-block bg-gray-900 border border-gray-800 rounded-full px-4 md:px-6 py-2 md:py-3">
               <p className="text-gray-300 text-xs md:text-sm lg:text-base">
                 <span className="text-white font-bold">$0.40-$0.90</span> per video • No subscription • No credits
@@ -30,7 +108,7 @@ export default function Index() {
               Upload a photo of yourself and let AI create stunning fashion videos
             </p>
             <Button
-              onClick={() => navigate("/generate")}
+              onClick={() => setActiveModal("generate")}
               className="bg-white text-black hover:bg-gray-100 font-bold text-base md:text-lg px-8 md:px-12 py-5 md:py-6 rounded-lg"
             >
               Start Generating
@@ -39,25 +117,324 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-black border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-black" />
-            </div>
-            <span className="text-xl md:text-2xl font-bold text-white">FashionAI</span>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/my-videos")}
-            className="gap-2 bg-transparent border-white text-white hover:bg-white hover:text-black text-sm md:text-base"
+      {/* Floating Action Button Menu */}
+      <div className="fixed bottom-8 right-8 z-40">
+        <div
+          className={`flex flex-col gap-3 mb-4 transition-all duration-300 ${
+            showFabMenu ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
+        >
+          <button
+            onClick={() => {
+              setActiveModal("contact");
+              setShowFabMenu(false);
+            }}
+            className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
           >
-            My Videos
-          </Button>
-        </div>
-      </nav>
+            <Mail className="w-5 h-5" />
+            <span className="text-sm font-medium">Contact</span>
+          </button>
 
+          <button
+            onClick={() => {
+              setActiveModal("terms");
+              setShowFabMenu(false);
+            }}
+            className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+          >
+            <FileText className="w-5 h-5" />
+            <span className="text-sm font-medium">Terms</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveModal("privacy");
+              setShowFabMenu(false);
+            }}
+            className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+          >
+            <Lock className="w-5 h-5" />
+            <span className="text-sm font-medium">Privacy</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveModal("my-videos");
+              setShowFabMenu(false);
+            }}
+            className="flex items-center gap-3 bg-white hover:bg-gray-100 text-black px-4 py-3 rounded-full transition-all font-semibold"
+          >
+            <Play className="w-5 h-5" />
+            <span className="text-sm">My Videos</span>
+          </button>
+        </div>
+
+        {/* Main FAB Toggle */}
+        <button
+          onClick={() => setShowFabMenu(!showFabMenu)}
+          className="w-14 h-14 rounded-full bg-white hover:bg-gray-100 text-black flex items-center justify-center shadow-lg transition-all hover:scale-110"
+        >
+          <Sparkles className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Modal Backdrop */}
+      {activeModal && (
+        <div
+          className="fixed inset-0 bg-black/70 z-40 transition-opacity"
+          onClick={closeModal}
+        />
+      )}
+
+      {/* Generate Modal */}
+      {activeModal === "generate" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            {/* Close Button */}
+            <div className="sticky top-0 bg-black border-b border-gray-800 p-4 flex items-center justify-between z-10">
+              <h2 className="text-xl font-bold text-white">Generate Video</h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <div className="mb-6 bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <p className="text-center text-gray-300">
+                  <span className="text-white font-semibold">No subscription. No credits.</span> Just pay once per video. That's it.
+                </p>
+              </div>
+              <VideoGeneratorForm />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* My Videos Modal */}
+      {activeModal === "my-videos" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-md">
+            {/* Close Button */}
+            <div className="border-b border-gray-800 p-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white">My Videos</h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Email Step */}
+            {myVideosStep === "email" && (
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Email Address
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-10 text-sm bg-gray-900 border-gray-800 text-white"
+                  />
+                </div>
+                <Button
+                  disabled={!email}
+                  onClick={handleEmailSubmit}
+                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-10 text-sm"
+                >
+                  Proceed
+                </Button>
+              </div>
+            )}
+
+            {/* Code Step */}
+            {myVideosStep === "verification" && (
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Verification Code
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="123456"
+                    value={code}
+                    onChange={(e) =>
+                      setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                    }
+                    maxLength="6"
+                    className="h-10 text-sm bg-gray-900 border-gray-800 text-white text-center text-lg tracking-widest"
+                  />
+                </div>
+                <Button
+                  disabled={code.length !== 6}
+                  onClick={handleCodeSubmit}
+                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-10 text-sm"
+                >
+                  Verify
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setMyVideosStep("email");
+                    setCode("");
+                  }}
+                  className="w-full text-gray-400 hover:text-white h-10 text-sm"
+                >
+                  Back
+                </Button>
+              </div>
+            )}
+
+            {/* Videos Step */}
+            {myVideosStep === "videos" && (
+              <div className="p-6 space-y-4">
+                <div className="bg-gray-800 rounded-lg p-3 mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="text-sm font-medium text-white">{currentVideo.title}</p>
+                    <p className="text-xs text-gray-400">
+                      {currentVideoIndex + 1}/{SAMPLE_VIDEOS.length}
+                    </p>
+                  </div>
+                  <img
+                    src={currentVideo.thumbnail}
+                    alt={currentVideo.title}
+                    className="w-full h-40 object-cover rounded"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">
+                      {currentVideo.duration}
+                    </span>
+                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">
+                      {currentVideo.quality}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevVideo}
+                    className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-900 h-10 text-sm"
+                  >
+                    ← Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleNextVideo}
+                    className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-900 h-10 text-sm"
+                  >
+                    Next →
+                  </Button>
+                </div>
+
+                <Button
+                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-10 text-sm"
+                  onClick={() => window.open(currentVideo.downloadUrl)}
+                >
+                  Download
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Contact Modal */}
+      {activeModal === "contact" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-md">
+            <div className="border-b border-gray-800 p-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white">Contact Us</h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4 text-center">
+              <p className="text-gray-300">Get in touch with us</p>
+              <a
+                href="mailto:support@fashionai.com"
+                className="inline-block bg-white text-black font-semibold px-6 py-2 rounded-lg hover:bg-gray-100 transition"
+              >
+                Email Us
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Terms Modal */}
+      {activeModal === "terms" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-md">
+            <div className="sticky top-0 bg-black border-b border-gray-800 p-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white">Terms of Service</h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6 text-sm text-gray-300 space-y-3 max-h-[60vh] overflow-y-auto">
+              <p>By using this service, you agree to our terms and conditions.</p>
+              <p>
+                <strong>Payment Terms:</strong> All payments are one-time, non-refundable charges.
+              </p>
+              <p>
+                <strong>Content Rights:</strong> You own the videos generated using your photos.
+              </p>
+              <p>
+                <strong>User Responsibility:</strong> You confirm you have the right to use provided images.
+              </p>
+              <p>© 2024 FashionAI. All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Privacy Modal */}
+      {activeModal === "privacy" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-md">
+            <div className="sticky top-0 bg-black border-b border-gray-800 p-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white">Privacy Policy</h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6 text-sm text-gray-300 space-y-3 max-h-[60vh] overflow-y-auto">
+              <p>
+                <strong>Data Collection:</strong> We collect emails to deliver videos and manage your account.
+              </p>
+              <p>
+                <strong>Image Security:</strong> Your photos are used only for video generation and deleted after processing.
+              </p>
+              <p>
+                <strong>No Tracking:</strong> We do not track your behavior or share data with third parties.
+              </p>
+              <p>
+                <strong>Payment Privacy:</strong> Payment processing is handled securely by Stripe.
+              </p>
+              <p>
+                <strong>Contact:</strong> For privacy concerns, email us at support@fashionai.com
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
