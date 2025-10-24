@@ -295,10 +295,7 @@ const CardForm = ({
           clearTimeout(timeout);
 
           if (!saveResponse.ok) {
-            console.warn(
-              "Save video response not ok:",
-              saveResponse.status,
-            );
+            console.warn("Save video response not ok:", saveResponse.status);
           } else {
             console.log("Video saved successfully");
           }
