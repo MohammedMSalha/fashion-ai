@@ -92,6 +92,7 @@ export async function createServer() {
   app.post("/api/save-video", videoLimiter, saveVideo);
   app.get("/api/videos/:email", getVideosByEmail);
   app.get("/api/video-status/:videoId", getVideoStatus);
+  app.get("/api/check-pending/:email", checkPendingVideos);
   app.delete("/api/videos/:videoId", deleteVideo);
 
   return app;
