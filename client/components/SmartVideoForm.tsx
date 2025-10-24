@@ -288,10 +288,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
         </div>
 
         {/* 48-hour notice */}
-        <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-3">
-          <p className="text-xs text-orange-200">
-            ⏱️ <span className="font-semibold">Video expires in 48 hours</span> - Download to keep permanently
-          </p>
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-4">
+          <p className="text-sm text-white font-semibold mb-1">⏱️ Video expires in 48 hours</p>
+          <p className="text-xs text-gray-300">Download now to save permanently</p>
         </div>
 
         {/* Buttons */}
