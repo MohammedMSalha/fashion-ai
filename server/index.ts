@@ -5,7 +5,10 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { handleDemo } from "./routes/demo.js";
 import { generateVideo } from "./routes/video-generation.js";
-import { createPaymentIntent, confirmPayment } from "./routes/stripe-payment.js";
+import {
+  createPaymentIntent,
+  confirmPayment,
+} from "./routes/stripe-payment.js";
 import { handleStripeWebhook } from "./routes/stripe-webhook.js";
 import {
   saveVideo,
