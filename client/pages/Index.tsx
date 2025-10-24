@@ -359,11 +359,11 @@ export default function Index() {
 
       {/* MY VIDEOS PAGE */}
       {currentPage === "my-videos" && (
-        <section className="relative w-full h-full">
+        <section className="relative w-full h-full bg-black overflow-hidden">
           {/* Header */}
-          <div className="absolute top-0 left-0 right-0 bg-black border-b border-gray-800 p-4 z-20">
+          <div className="bg-black border-b border-gray-800 p-4">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-bold text-white">My Videos</h1>
+              <h1 className="text-lg font-bold text-white">My Videos</h1>
               <button
                 onClick={goHome}
                 className="text-gray-400 hover:text-white transition"
@@ -373,104 +373,124 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Content */}
-          <div className="pt-16 w-full h-full overflow-y-auto">
-            {myVideosStep === "email" && (
-              <div className="flex items-center justify-center min-h-screen">
-                <div className="w-full max-w-md px-4 space-y-4">
-                  <h2 className="text-2xl font-bold text-white text-center">Find Your Videos</h2>
-                  <Input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 bg-gray-900 border-gray-800 text-white"
-                  />
+          {/* Email + Videos Container */}
+          {myVideosStep === "email" && (
+            <div className="h-full flex items-center justify-center p-4">
+              <div className="w-full max-w-sm space-y-4">
+                <div>
+                  <h2 className="text-xl font-bold text-white mb-2">Access Your Videos</h2>
+                  <p className="text-sm text-gray-400">Enter your email to view your generated videos</p>
+                </div>
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-11 bg-gray-800 border-gray-700 text-white"
+                />
+                <Button
+                  disabled={!email}
+                  onClick={handleEmailSubmit}
+                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-11"
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {myVideosStep === "verification" && (
+            <div className="h-full flex items-center justify-center p-4">
+              <div className="w-full max-w-sm space-y-4">
+                <div>
+                  <h2 className="text-xl font-bold text-white mb-2">Verify Your Email</h2>
+                  <p className="text-sm text-gray-400">Enter the code sent to your email</p>
+                </div>
+                <Input
+                  type="text"
+                  placeholder="000000"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  maxLength="6"
+                  className="h-11 bg-gray-800 border-gray-700 text-white text-center text-lg tracking-widest"
+                />
+                <Button
+                  disabled={code.length !== 6}
+                  onClick={handleCodeSubmit}
+                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-11"
+                >
+                  Verify
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setMyVideosStep("email");
+                    setCode("");
+                  }}
+                  className="w-full text-gray-400 hover:text-white"
+                >
+                  Back
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {myVideosStep === "videos" && (
+            <div className="h-full flex items-center justify-center overflow-hidden">
+              <div className="relative w-full h-full md:w-[500px] bg-black">
+                <img
+                  src={currentVideo.thumbnail}
+                  alt={currentVideo.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
+
+                {/* Video Info */}
+                <div className="absolute bottom-16 left-0 right-0 px-6 text-white z-10">
+                  <p className="text-xl font-bold mb-2">{currentVideo.title}</p>
+                  <div className="flex gap-2">
+                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-800 text-gray-300 border border-gray-700">
+                      {currentVideo.duration}
+                    </span>
+                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-800 text-gray-300 border border-gray-700">
+                      {currentVideo.quality}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 z-20">
+                  <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white transition-all"
+                      style={{
+                        width: `${((currentVideoIndex + 1) / SAMPLE_VIDEOS.length) * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-white text-xs mt-1 text-center">{currentVideoIndex + 1}/{SAMPLE_VIDEOS.length}</p>
+                </div>
+
+                {/* Controls */}
+                <div className="absolute bottom-6 left-0 right-0 px-6 z-20 flex gap-2">
                   <Button
-                    disabled={!email}
-                    onClick={handleEmailSubmit}
-                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12"
+                    variant="outline"
+                    onClick={handlePrevVideo}
+                    className="flex-1 bg-gray-900/80 border-gray-700 text-white text-sm h-10"
                   >
-                    Proceed
+                    ← Prev
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleNextVideo}
+                    className="flex-1 bg-gray-900/80 border-gray-700 text-white text-sm h-10"
+                  >
+                    Next →
                   </Button>
                 </div>
               </div>
-            )}
-
-            {myVideosStep === "verification" && (
-              <div className="flex items-center justify-center min-h-screen">
-                <div className="w-full max-w-md px-4 space-y-4">
-                  <h2 className="text-2xl font-bold text-white text-center">Verify Code</h2>
-                  <Input
-                    type="text"
-                    placeholder="123456"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                    maxLength="6"
-                    className="h-12 bg-gray-900 border-gray-800 text-white text-center text-2xl tracking-widest"
-                  />
-                  <Button
-                    disabled={code.length !== 6}
-                    onClick={handleCodeSubmit}
-                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12"
-                  >
-                    Verify
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setMyVideosStep("email")}
-                    className="w-full text-gray-400 hover:text-white h-12"
-                  >
-                    Back
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {myVideosStep === "videos" && (
-              <div className="relative w-full h-screen flex items-center justify-center">
-                <div className="relative w-full h-full md:w-[500px] md:h-full bg-black">
-                  <img
-                    src={currentVideo.thumbnail}
-                    alt={currentVideo.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
-                  
-                  <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
-                    <p className="text-2xl font-bold mb-3">{currentVideo.title}</p>
-                    <div className="flex gap-2">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-gray-800 text-gray-300 border border-gray-700">
-                        {currentVideo.duration}
-                      </span>
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-gray-800 text-gray-300 border border-gray-700">
-                        {currentVideo.quality}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="absolute bottom-6 left-0 right-0 px-6 z-20 flex gap-2">
-                    <Button variant="outline" onClick={handlePrevVideo} className="flex-1 bg-transparent border-gray-700 text-white">← Prev</Button>
-                    <Button variant="outline" onClick={handleNextVideo} className="flex-1 bg-transparent border-gray-700 text-white">Next →</Button>
-                  </div>
-
-                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 z-20">
-                    <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-white transition-all"
-                        style={{
-                          width: `${((currentVideoIndex + 1) / SAMPLE_VIDEOS.length) * 100}%`,
-                        }}
-                      />
-                    </div>
-                    <p className="text-white text-xs mt-2 text-center">
-                      {currentVideoIndex + 1} of {SAMPLE_VIDEOS.length}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </section>
       )}
 
