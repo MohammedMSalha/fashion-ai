@@ -313,15 +313,23 @@ export default function Index() {
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
 
               {/* 48-hour Expiry Alert */}
-              <div className="absolute top-8 left-0 right-0 px-6 z-20">
-                <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-4 flex gap-3">
-                  <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-white">
-                    <p className="font-semibold">Video expires in 48 hours</p>
-                    <p className="text-xs text-gray-300">Download now to save permanently</p>
+              {showExpiryAlert && (
+                <div className="absolute top-8 left-0 right-0 px-6 z-20">
+                  <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-4 flex gap-3 items-start">
+                    <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-white flex-1">
+                      <p className="font-semibold">Video expires in 48 hours</p>
+                      <p className="text-xs text-gray-300">Download now to save permanently</p>
+                    </div>
+                    <button
+                      onClick={() => setShowExpiryAlert(false)}
+                      className="text-gray-400 hover:text-white transition flex-shrink-0"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Video Info */}
               <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
