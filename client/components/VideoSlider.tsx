@@ -140,22 +140,8 @@ export default function VideoSlider() {
 
       {/* Side Info (Desktop) */}
       <div className="hidden lg:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
-        {/* Like Button */}
-        <button className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
-          <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
-            <svg
-              className="w-6 h-6"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
-          </div>
-          <span className="text-xs">12K</span>
-        </button>
-
-        {/* Comment Button */}
-        <button className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+        {/* Contact Button */}
+        <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
           <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
             <svg
               className="w-6 h-6"
@@ -167,15 +153,15 @@ export default function VideoSlider() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
           </div>
-          <span className="text-xs">2.3K</span>
-        </button>
+          <span className="text-xs">Contact</span>
+        </a>
 
-        {/* Share Button */}
-        <button className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+        {/* Terms Button */}
+        <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
           <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
             <svg
               className="w-6 h-6"
@@ -187,12 +173,32 @@ export default function VideoSlider() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
           </div>
-          <span className="text-xs">Share</span>
-        </button>
+          <span className="text-xs">Terms</span>
+        </a>
+
+        {/* Privacy Button */}
+        <a href="#" className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+          <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+          </div>
+          <span className="text-xs">Privacy</span>
+        </a>
       </div>
     </div>
   );
