@@ -365,6 +365,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
         <StripePaymentForm
           amount={calculatePrice()}
           email={email}
+          image={imagePreview}
+          duration={duration}
+          quality={quality}
           onSuccess={() => {
             localStorage.setItem("fashionai_email", email);
             onGenerate?.();
