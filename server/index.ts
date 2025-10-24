@@ -10,6 +10,7 @@ import { handleStripeWebhook } from "./routes/stripe-webhook";
 import { saveVideo, getVideosByEmail, deleteVideo, getVideoStatus } from "./routes/save-video";
 import { initializeDatabase } from "./db";
 import { startCleanupJob } from "./jobs/cleanup-videos";
+import { startVideoStatusCheckJob } from "./jobs/check-video-status";
 
 export async function createServer() {
   // Initialize database and cleanup job
