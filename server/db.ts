@@ -7,6 +7,11 @@ const pool = new Pool({
 
 export async function initializeDatabase() {
   try {
+    if (!process.env.DATABASE_URL) {
+      console.warn("DATABASE_URL not set. Database features will be unavailable. Set DATABASE_URL from Neon to enable.");
+      return;
+    }
+
     // Create videos table if it doesn't exist
     await pool.query(`
       CREATE TABLE IF NOT EXISTS videos (
@@ -20,17 +25,17 @@ export async function initializeDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '48 hours'),
         deleted_at TIMESTAMP,
-        INDEX idx_email (email),
-        INDEX idx_expires_at (expires_at),
-        INDEX idx_created_at (created_at),
         UNIQUE(video_id)
       );
+      CREATE INDEX IF NOT EXISTS idx_email ON videos(email);
+      CREATE INDEX IF NOT EXISTS idx_expires_at ON videos(expires_at);
+      CREATE INDEX IF NOT EXISTS idx_created_at ON videos(created_at);
     `);
 
     console.log("Database initialized successfully");
   } catch (error) {
     console.error("Database initialization error:", error);
-    throw error;
+    // Don't throw, allow app to run without DB in dev
   }
 }
 
