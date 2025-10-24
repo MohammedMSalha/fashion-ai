@@ -54,6 +54,17 @@ export default function VideoSlider() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Handle play/pause
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+
   // Auto-advance to next video every 6 seconds
   useEffect(() => {
     const autoAdvanceTimer = setInterval(() => {
