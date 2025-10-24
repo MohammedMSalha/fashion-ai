@@ -100,5 +100,35 @@ export async function createServer() {
   app.get("/api/check-pending/:email", checkPendingVideos);
   app.delete("/api/videos/:videoId", deleteVideo);
 
+  // 404 handler
+  app.use((_req, res) => {
+    res.status(404).json({
+      success: false,
+      error: "Endpoint not found",
+    });
+  });
+
+  // Global error handler (must be last)
+  app.use(
+    (
+      err: any,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction,
+    ) => {
+      console.error("Unhandled error:", err);
+
+      // Ensure we always return JSON
+      const statusCode = err.statusCode || err.status || 500;
+      const message =
+        err.message || "An unexpected error occurred. Please try again.";
+
+      res.status(statusCode).json({
+        success: false,
+        error: message,
+      });
+    },
+  );
+
   return app;
 }
