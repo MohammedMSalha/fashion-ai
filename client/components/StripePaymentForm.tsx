@@ -125,8 +125,10 @@ const CardForm = ({
         try {
           const errorData = await paymentIntentResponse.json();
           errorMessage = errorData.error || errorMessage;
+          console.error("Payment intent error response:", errorData);
         } catch {
-          errorMessage = `Server error: ${paymentIntentResponse.status}`;
+          errorMessage = `Server error: ${paymentIntentResponse.status} ${paymentIntentResponse.statusText}`;
+          console.error("Payment intent server error:", paymentIntentResponse.status);
         }
         throw new Error(errorMessage);
       }
@@ -134,7 +136,9 @@ const CardForm = ({
       let paymentIntentData;
       try {
         paymentIntentData = await paymentIntentResponse.json();
-      } catch {
+        console.log("Payment intent created successfully");
+      } catch (err) {
+        console.error("Failed to parse payment intent response:", err);
         throw new Error("Invalid response from payment service");
       }
 
