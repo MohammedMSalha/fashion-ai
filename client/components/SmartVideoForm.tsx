@@ -11,7 +11,7 @@ interface SmartVideoFormProps {
 }
 
 const PRICING = {
-  "5s": { "720p": 0.5, "1080p": 0.6 },
+  "5s": { "720p": 0.5, "1080p": 0.65 },
   "10s": { "720p": 0.75, "1080p": 0.9 },
 };
 
