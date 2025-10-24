@@ -60,11 +60,118 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         console.log("Payment succeeded:", paymentIntent.id);
 
-        // Update payment status in database if needed
         const email = paymentIntent.metadata?.email;
         if (email) {
           console.log(`Payment succeeded for email: ${email}`);
-          // You can add custom logic here to update payment status in DB
+
+          try {
+            // Find the pending video record for this payment
+            const videoResult = await query(
+              `SELECT id, resolution, duration, payment_intent_id FROM videos
+               WHERE email = $1 AND payment_status = 'payment_pending'
+               ORDER BY created_at DESC LIMIT 1`,
+              [email],
+            );
+
+            if (videoResult.rows.length > 0) {
+              const pendingVideo = videoResult.rows[0];
+              const resolution = pendingVideo.resolution as "720p" | "1080p";
+              const duration = pendingVideo.duration as 5 | 10;
+
+              console.log(
+                `Generating video for pending payment: ${pendingVideo.id}`,
+              );
+
+              // Get the image from metadata if available
+              const imageUrl = paymentIntent.metadata?.imageUrl;
+              if (imageUrl) {
+                try {
+                  // Call video generation API
+                  const generateResponse = await fetch(
+                    `${process.env.APP_URL || "http://localhost:5173"}/api/generate-video`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        image: imageUrl,
+                        duration,
+                        resolution,
+                        email,
+                      }),
+                    },
+                  );
+
+                  if (generateResponse.ok) {
+                    const generateData = await generateResponse.json();
+                    const videoUrl = generateData.videoUrl || "";
+                    const requestId = generateData.requestId || "";
+
+                    // Update the database with generated video info
+                    await query(
+                      `UPDATE videos
+                       SET payment_intent_id = $1,
+                           payment_status = 'succeeded',
+                           video_url = $2,
+                           request_id = $3,
+                           status = $4
+                       WHERE id = $5`,
+                      [
+                        paymentIntent.id,
+                        videoUrl || null,
+                        requestId || null,
+                        videoUrl ? "processing" : "processing",
+                        pendingVideo.id,
+                      ],
+                    );
+
+                    console.log(
+                      `Video generation started for payment: ${paymentIntent.id}`,
+                    );
+                  } else {
+                    console.warn("Video generation failed from webhook");
+                    // Update payment status but mark video as failed
+                    await query(
+                      `UPDATE videos
+                       SET payment_intent_id = $1,
+                           payment_status = 'succeeded',
+                           status = 'failed'
+                       WHERE id = $2`,
+                      [paymentIntent.id, pendingVideo.id],
+                    );
+                  }
+                } catch (generateErr) {
+                  console.error("Error generating video in webhook:", generateErr);
+                  // Update status to mark failure
+                  await query(
+                    `UPDATE videos
+                     SET payment_intent_id = $1,
+                         payment_status = 'succeeded',
+                         status = 'failed',
+                         error_message = $2
+                     WHERE id = $3`,
+                    [
+                      paymentIntent.id,
+                      `Generation error: ${generateErr instanceof Error ? generateErr.message : "Unknown error"}`,
+                      pendingVideo.id,
+                    ],
+                  );
+                }
+              } else {
+                // No image URL in metadata, just update payment status
+                await query(
+                  `UPDATE videos
+                   SET payment_intent_id = $1,
+                       payment_status = 'succeeded'
+                   WHERE id = $2`,
+                  [paymentIntent.id, pendingVideo.id],
+                );
+              }
+            }
+          } catch (dbErr) {
+            console.error("Error updating database in webhook:", dbErr);
+          }
         }
         break;
       }
