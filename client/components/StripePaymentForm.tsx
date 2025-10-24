@@ -196,7 +196,7 @@ const CardForm = ({
         console.warn("Video generation error:", err);
       }
 
-      // Step 4: Save video to database
+      // Step 4: Save video to database with payment data
       if (requestId || videoUrl) {
         try {
           await fetch("/api/save-video", {
@@ -210,6 +210,13 @@ const CardForm = ({
               requestId: requestId || undefined,
               duration: parseInt(duration),
               resolution: quality,
+              paymentIntentId: paymentIntent.id,
+              paymentAmount: amount,
+              paymentCurrency: "usd",
+              paymentStatus: paymentIntent.status,
+              paymentMethodType:
+                paymentIntent.payment_method_types?.[0] || "card",
+              paymentEmail: email,
             }),
           });
         } catch (err) {
