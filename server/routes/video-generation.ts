@@ -76,70 +76,21 @@ export const generateVideo: RequestHandler = async (req, res) => {
       });
     }
 
-    // Get API key from environment variables
-    const apiKey = process.env.FASHN_AI_API_KEY;
-    if (!apiKey) {
-      console.error("FASHN_AI_API_KEY not configured");
+    // Call video generation service
+    const result = await generateVideoAsync(image, duration, resolution);
+
+    if (result.success) {
+      return res.status(200).json({
+        success: true,
+        requestId: result.requestId,
+        videoUrl: result.videoUrl,
+      });
+    } else {
       return res.status(500).json({
         success: false,
-        error: "Service temporarily unavailable",
+        error: result.error || "Video generation failed",
       });
     }
-
-    // Call Fashn.ai API with timeout
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-    const fashnResponse = await fetch("https://api.fashn.ai/v1/run", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model_name: "image-to-video",
-        inputs: {
-          image,
-          duration,
-          resolution,
-        },
-      }),
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeout);
-
-    if (!fashnResponse.ok) {
-      console.error("Fashn.ai API error:", fashnResponse.status);
-      return res.status(500).json({
-        success: false,
-        error: "Video generation service error",
-      });
-    }
-
-    const videoData = await fashnResponse.json();
-
-    // Validate response
-    if (
-      !videoData.id &&
-      !videoData.request_id &&
-      !videoData.output?.video_url &&
-      !videoData.video_url
-    ) {
-      console.error("Invalid Fashn.ai response:", videoData);
-      return res.status(500).json({
-        success: false,
-        error: "Invalid service response",
-      });
-    }
-
-    // Return success response with request_id for status polling
-    const requestId = videoData.id || videoData.request_id;
-    return res.status(200).json({
-      success: true,
-      requestId,
-      videoUrl: videoData.output?.video_url || videoData.video_url,
-    });
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
       console.error("Video generation timeout");
