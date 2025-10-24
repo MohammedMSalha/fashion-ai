@@ -45,6 +45,7 @@ export default function VideoSlider() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [showScroll, setShowScroll] = useState(true);
   const touchStartY = useRef(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
