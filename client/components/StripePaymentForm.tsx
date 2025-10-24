@@ -93,9 +93,28 @@ const CardForm = ({
           }),
         });
 
-        if (!generateResponse.ok) {
-          const errorData = await generateResponse.json();
-          console.warn("Video generation started but may be processing", errorData);
+        let videoUrl = "";
+        if (generateResponse.ok) {
+          const generateData = await generateResponse.json();
+          videoUrl = generateData.videoUrl || "";
+        } else {
+          console.warn("Video generation started but may be processing");
+        }
+
+        // Step 4: Save video to database
+        if (videoUrl) {
+          await fetch("/api/save-video", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              videoUrl,
+              duration: parseInt(duration),
+              resolution: quality,
+            }),
+          }).catch(err => console.warn("Failed to save video to database", err));
         }
 
         onSuccess();
