@@ -129,6 +129,32 @@ const CardForm = ({
         throw new Error("No payment secret received");
       }
 
+      const paymentIntentId = paymentIntentData.clientSecret?.split("_secret_")[0];
+
+      // Step 1.5: Save pending payment record to database with payment_intent_id
+      try {
+        await fetch("/api/save-video", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            duration: parseInt(duration),
+            resolution: quality,
+            paymentIntentId,
+            paymentAmount: amount,
+            paymentCurrency: "usd",
+            paymentStatus: "payment_pending",
+            paymentMethodType: "card",
+            paymentEmail: email,
+          }),
+        });
+      } catch (err) {
+        console.warn("Failed to save initial payment record", err);
+        // Continue anyway, webhook will still process
+      }
+
       // Step 2: Confirm payment with Stripe
       const { paymentIntent, error: stripeError } =
         await stripe.confirmCardPayment(paymentIntentData.clientSecret, {
