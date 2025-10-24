@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   CardElement,
@@ -6,7 +6,8 @@ import {
   ElementsConsumer,
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, ArrowLeft } from "lucide-react";
+import { AlertCircle, ArrowLeft, X } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface StripePaymentFormProps {
   amount: number;
@@ -35,6 +36,33 @@ const CardForm = ({
 }: StripePaymentFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [cardError, setCardError] = useState<string | null>(null);
+  const { toast } = useToast();
+  const [errorTimeout, setErrorTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  // Auto-dismiss error after 6 seconds
+  useEffect(() => {
+    if (error || cardError) {
+      if (errorTimeout) {
+        clearTimeout(errorTimeout);
+      }
+      const timeout = setTimeout(() => {
+        setError(null);
+        setCardError(null);
+      }, 6000);
+      setErrorTimeout(timeout);
+      return () => clearTimeout(timeout);
+    }
+  }, [error, cardError]);
+
+  const validateCardElement = (cardElement: any): boolean => {
+    if (!cardElement) {
+      return false;
+    }
+    // Check if card element has been filled
+    // The CardElement doesn't expose direct validation, but we can check by attempting to use it
+    return true;
+  };
 
   const handleSubmit = async (
     event: React.FormEvent,
@@ -44,33 +72,65 @@ const CardForm = ({
     event.preventDefault();
     if (!stripe || !elements) return;
 
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      const msg = "Card form not properly initialized";
+      setError(msg);
+      toast({
+        title: "Error",
+        description: msg,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setProcessing(true);
     setError(null);
+    setCardError(null);
 
     try {
       // Step 1: Create payment intent on backend
-      const paymentIntentResponse = await fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: Math.round(amount * 100), // Convert to cents
-          email,
-        }),
-      });
-
-      if (!paymentIntentResponse.ok) {
-        const errorData = await paymentIntentResponse.json();
-        throw new Error(errorData.error || "Failed to create payment intent");
+      let paymentIntentResponse;
+      try {
+        paymentIntentResponse = await fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: Math.round(amount * 100), // Convert to cents
+            email,
+          }),
+        });
+      } catch (err) {
+        throw new Error("Network error: Unable to connect to payment service");
       }
 
-      const { clientSecret } = await paymentIntentResponse.json();
+      if (!paymentIntentResponse.ok) {
+        let errorMessage = "Failed to create payment intent";
+        try {
+          const errorData = await paymentIntentResponse.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          errorMessage = `Server error: ${paymentIntentResponse.status}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      let paymentIntentData;
+      try {
+        paymentIntentData = await paymentIntentResponse.json();
+      } catch {
+        throw new Error("Invalid response from payment service");
+      }
+
+      if (!paymentIntentData.clientSecret) {
+        throw new Error("No payment secret received");
+      }
 
       // Step 2: Confirm payment with Stripe
-      const cardElement = elements.getElement(CardElement);
       const { paymentIntent, error: stripeError } =
-        await stripe.confirmCardPayment(clientSecret, {
+        await stripe.confirmCardPayment(paymentIntentData.clientSecret, {
           payment_method: {
             card: cardElement,
             billing_details: { email },
@@ -78,11 +138,40 @@ const CardForm = ({
         });
 
       if (stripeError) {
-        throw new Error(stripeError.message);
+        // Check for card validation errors
+        if (
+          stripeError.code === "card_error" ||
+          stripeError.type === "card_error"
+        ) {
+          const msg = `Card error: ${stripeError.message}`;
+          setCardError(msg);
+          toast({
+            title: "Card Error",
+            description: msg,
+            variant: "destructive",
+          });
+        } else {
+          throw new Error(stripeError.message || "Payment failed");
+        }
+        setProcessing(false);
+        return;
       }
 
-      if (paymentIntent?.status === "succeeded") {
-        // Step 3: Generate video after successful payment
+      if (!paymentIntent) {
+        throw new Error("Payment intent not returned");
+      }
+
+      if (paymentIntent.status !== "succeeded") {
+        throw new Error(
+          `Payment status: ${paymentIntent.status}. Please try again.`,
+        );
+      }
+
+      // Step 3: Generate video after successful payment
+      let videoUrl = "";
+      let requestId = "";
+
+      try {
         const generateResponse = await fetch("/api/generate-video", {
           method: "POST",
           headers: {
@@ -96,8 +185,6 @@ const CardForm = ({
           }),
         });
 
-        let videoUrl = "";
-        let requestId = "";
         if (generateResponse.ok) {
           const generateData = await generateResponse.json();
           videoUrl = generateData.videoUrl || "";
@@ -105,9 +192,13 @@ const CardForm = ({
         } else {
           console.warn("Video generation started but may be processing");
         }
+      } catch (err) {
+        console.warn("Video generation error:", err);
+      }
 
-        // Step 4: Save video to database
-        if (requestId || videoUrl) {
+      // Step 4: Save video to database
+      if (requestId || videoUrl) {
+        try {
           await fetch("/api/save-video", {
             method: "POST",
             headers: {
@@ -120,17 +211,22 @@ const CardForm = ({
               duration: parseInt(duration),
               resolution: quality,
             }),
-          }).catch((err) =>
-            console.warn("Failed to save video to database", err),
-          );
+          });
+        } catch (err) {
+          console.warn("Failed to save video to database", err);
         }
-
-        onSuccess();
-      } else {
-        setError("Payment was not completed successfully");
       }
+
+      onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Payment failed");
+      const errorMessage =
+        err instanceof Error ? err.message : "Payment failed";
+      setError(errorMessage);
+      toast({
+        title: "Payment Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setProcessing(false);
     }
