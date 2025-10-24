@@ -438,7 +438,10 @@ export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormPro
               >
                 Back
               </Button>
-              <Button className="flex-1 bg-white hover:bg-gray-100 text-black font-bold text-lg py-6">
+              <Button
+                className="flex-1 bg-white hover:bg-gray-100 text-black font-bold text-lg py-6"
+                onClick={onGenerate}
+              >
                 Pay ${calculatePrice()?.toFixed(2)} & Generate
               </Button>
             </div>
