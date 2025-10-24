@@ -3,8 +3,9 @@ import { query } from "../db";
 
 interface SaveVideoRequest {
   email: string;
-  videoUrl: string;
+  videoUrl?: string;
   videoId?: string;
+  requestId?: string;
   duration: 5 | 10;
   resolution: "720p" | "1080p";
 }
