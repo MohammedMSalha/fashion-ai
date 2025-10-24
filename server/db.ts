@@ -22,19 +22,23 @@ export async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS videos (
         id SERIAL PRIMARY KEY,
         email VARCHAR(254) NOT NULL,
-        video_url TEXT NOT NULL,
+        video_url TEXT,
         video_id VARCHAR(255),
+        request_id VARCHAR(255) UNIQUE,
         duration INTEGER NOT NULL,
         resolution VARCHAR(10) NOT NULL,
         status VARCHAR(20) DEFAULT 'processing',
+        error_message TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '48 hours'),
         deleted_at TIMESTAMP,
-        UNIQUE(video_id)
+        completed_at TIMESTAMP
       );
       CREATE INDEX IF NOT EXISTS idx_email ON videos(email);
+      CREATE INDEX IF NOT EXISTS idx_status ON videos(status);
       CREATE INDEX IF NOT EXISTS idx_expires_at ON videos(expires_at);
       CREATE INDEX IF NOT EXISTS idx_created_at ON videos(created_at);
+      CREATE INDEX IF NOT EXISTS idx_request_id ON videos(request_id);
     `);
 
     console.log("Database initialized successfully");
