@@ -132,7 +132,7 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
 
     // Get non-deleted videos for the email
     const result = await query(
-      `SELECT id, email, video_url, duration, resolution, status, created_at, expires_at
+      `SELECT id, email, video_url, duration, resolution, status, error_message, created_at, expires_at, request_id
        FROM videos
        WHERE email = $1 AND deleted_at IS NULL
        ORDER BY created_at DESC
@@ -149,6 +149,44 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: "Failed to retrieve videos",
+    });
+  }
+};
+
+export const getVideoStatus: RequestHandler = async (req, res) => {
+  try {
+    const { videoId } = req.params;
+
+    if (!videoId) {
+      return res.status(400).json({
+        success: false,
+        error: "Video ID required",
+      });
+    }
+
+    const result = await query(
+      `SELECT id, status, error_message, video_url, created_at, expires_at
+       FROM videos
+       WHERE id = $1 AND deleted_at IS NULL`,
+      [videoId],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Video not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      video: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Get video status error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to retrieve video status",
     });
   }
 };
