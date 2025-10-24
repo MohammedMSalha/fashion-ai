@@ -191,7 +191,7 @@ export default function Index() {
 
               <div className="mb-6 md:mb-8 inline-block bg-gray-900 border border-gray-800 rounded-full px-4 md:px-6 py-2 md:py-3">
                 <p className="text-gray-300 text-xs md:text-sm lg:text-base">
-                  <span className="text-white font-bold">$0.40-$0.90</span> per
+                  <span className="text-white font-bold">$0.50-$0.90</span> per
                   video • No subscription • No credits
                 </p>
               </div>
