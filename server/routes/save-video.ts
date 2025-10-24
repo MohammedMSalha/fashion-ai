@@ -8,6 +8,12 @@ interface SaveVideoRequest {
   requestId?: string;
   duration: 5 | 10;
   resolution: "720p" | "1080p";
+  paymentIntentId?: string;
+  paymentAmount?: number;
+  paymentCurrency?: string;
+  paymentStatus?: string;
+  paymentMethodType?: string;
+  paymentEmail?: string;
 }
 
 interface SaveVideoResponse {
