@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import Stripe from "stripe";
 import { query } from "../db.js";
 import { checkAndUpdateAllPendingVideos } from "../services/video-status.js";
+import { generateVideo } from "./video-generation.js";
 
 interface StripeEvent {
   id: string;
