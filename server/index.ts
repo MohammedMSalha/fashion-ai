@@ -113,7 +113,7 @@ export async function createServer() {
     (
       err: any,
       _req: express.Request,
-      res: express.Response<any>,
+      res: any,
       _next: express.NextFunction,
     ) => {
       console.error("Unhandled error:", err);
@@ -123,7 +123,7 @@ export async function createServer() {
       const message =
         err.message || "An unexpected error occurred. Please try again.";
 
-      return res.status(statusCode).json({
+      res.status(statusCode).json({
         success: false,
         error: message,
       });
