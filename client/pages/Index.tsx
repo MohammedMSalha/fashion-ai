@@ -26,7 +26,7 @@ interface MousePosition {
 const SAMPLE_VIDEOS: Video[] = [
   {
     id: "1",
-    thumbnail: "https://images.unsplash.com/photo-1551884170-936639fc08bf?w=500&h=900&fit=crop",
+    thumbnail: "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
     title: "Playful Monkey",
     duration: "10s",
     quality: "1080p",
@@ -35,7 +35,7 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "2",
-    thumbnail: "https://images.unsplash.com/photo-1613821876997-fcb24f5c8a06?w=500&h=900&fit=crop",
+    thumbnail: "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
     title: "Majestic Tiger",
     duration: "10s",
     quality: "1080p",
@@ -44,7 +44,7 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "3",
-    thumbnail: "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?w=500&h=900&fit=crop",
+    thumbnail: "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
     title: "Striped Zebra",
     duration: "10s",
     quality: "1080p",
@@ -53,7 +53,7 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "4",
-    thumbnail: "https://images.unsplash.com/photo-1495360046262-7be7f4fed8da?w=500&h=900&fit=crop",
+    thumbnail: "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
     title: "Wild Monkey Moves",
     duration: "10s",
     quality: "1080p",
@@ -62,7 +62,7 @@ const SAMPLE_VIDEOS: Video[] = [
   },
   {
     id: "5",
-    thumbnail: "https://images.unsplash.com/photo-1564349457-98d3b281e06e?w=500&h=900&fit=crop",
+    thumbnail: "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
     title: "Gentle Elephant",
     duration: "10s",
     quality: "1080p",
