@@ -321,9 +321,12 @@ export default function Index() {
           <div className="relative w-full h-full md:w-[500px] md:h-full bg-black flex items-center justify-center">
             {/* Generated Video */}
             <div className="relative w-full h-full">
-              <img
+              <video
                 src={generatedVideo.thumbnail}
-                alt="Generated video"
+                autoPlay
+                muted
+                loop
+                playsInline
                 className="w-full h-full object-cover"
               />
 
