@@ -263,9 +263,13 @@ const CardForm = ({
       }
 
       // Step 4: Save video to database with payment data
+      console.log("Saving video to database...", { requestId, videoUrl });
       if (requestId || videoUrl) {
         try {
-          await fetch("/api/save-video", {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+          const saveResponse = await fetch("/api/save-video", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -284,12 +288,27 @@ const CardForm = ({
                 paymentIntent.payment_method_types?.[0] || "card",
               paymentEmail: email,
             }),
+            signal: controller.signal,
           });
+
+          clearTimeout(timeout);
+
+          if (!saveResponse.ok) {
+            console.warn(
+              "Save video response not ok:",
+              saveResponse.status,
+            );
+          } else {
+            console.log("Video saved successfully");
+          }
         } catch (err) {
           console.warn("Failed to save video to database", err);
         }
+      } else {
+        console.log("No video info to save yet, webhook will handle it");
       }
 
+      console.log("Payment flow completed successfully");
       onSuccess();
     } catch (err) {
       const errorMessage =
