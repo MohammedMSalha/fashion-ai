@@ -349,66 +349,115 @@ export default function MyVideos() {
                 {/* Current Video */}
                 {currentVideo && (
                   <div className="relative w-full h-full">
-                    <video
-                      src={currentVideo.video_url}
-                      className="w-full h-full object-cover"
-                      autoPlay={isPlaying}
-                      loop
-                      muted
-                    />
-
-                    {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
-
-                    {/* Video Info Bottom */}
-                    <div className="absolute bottom-32 left-0 right-0 px-6 text-white z-10">
-                      <div className="flex gap-2 mb-4">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                          {currentVideo.duration}s
-                        </span>
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                          {currentVideo.resolution}
-                        </span>
+                    {currentVideo.status === "processing" ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+                        <div className="animate-spin mb-6">
+                          <Loader className="w-12 h-12 text-white" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-white mb-2">
+                          Generating Video
+                        </h3>
+                        <p className="text-gray-400 text-sm">
+                          Your video is being created. This may take a few moments...
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-400">
-                        Created{" "}
-                        {new Date(currentVideo.created_at).toLocaleDateString()}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        Expires{" "}
-                        {new Date(currentVideo.expires_at).toLocaleDateString()}
-                      </p>
-                    </div>
+                    ) : currentVideo.status === "failed" ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-red-950 to-black p-6">
+                        <svg
+                          className="w-16 h-16 text-red-500 mb-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <h3 className="text-xl font-semibold text-white mb-2">
+                          Generation Failed
+                        </h3>
+                        <p className="text-red-300 text-sm mb-6 text-center">
+                          {currentVideo.error_message ||
+                            "Sorry, the video generation failed. Please try again."}
+                        </p>
+                        <Button
+                          onClick={() => navigate("/generate")}
+                          className="bg-white hover:bg-gray-100 text-black font-semibold h-10 px-6"
+                        >
+                          Try Again
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <video
+                          src={currentVideo.video_url || ""}
+                          className="w-full h-full object-cover"
+                          autoPlay={isPlaying}
+                          loop
+                          muted
+                        />
 
-                    {/* Play/Pause Button */}
-                    <button
-                      onClick={() => setIsPlaying(!isPlaying)}
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 backdrop-blur-sm p-4 rounded-full transition-all z-20"
-                    >
-                      {isPlaying ? (
-                        <Pause className="w-8 h-8 text-white" />
-                      ) : (
-                        <Play className="w-8 h-8 text-white" />
-                      )}
-                    </button>
+                        {/* Overlay Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
 
-                    {/* Download Button */}
-                    <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
-                      <Button
-                        className="w-full bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2 h-12"
-                        onClick={() => {
-                          const a = document.createElement("a");
-                          a.href = currentVideo.video_url;
-                          a.download = `video-${currentVideo.id}.mp4`;
-                          document.body.appendChild(a);
-                          a.click();
-                          document.body.removeChild(a);
-                        }}
-                      >
-                        <Download className="w-4 h-4" />
-                        Download
-                      </Button>
-                    </div>
+                        {/* Video Info Bottom */}
+                        <div className="absolute bottom-32 left-0 right-0 px-6 text-white z-10">
+                          <div className="flex gap-2 mb-4">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                              {currentVideo.duration}s
+                            </span>
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                              {currentVideo.resolution}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-400">
+                            Created{" "}
+                            {new Date(
+                              currentVideo.created_at,
+                            ).toLocaleDateString()}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-2">
+                            Expires{" "}
+                            {new Date(
+                              currentVideo.expires_at,
+                            ).toLocaleDateString()}
+                          </p>
+                        </div>
+
+                        {/* Play/Pause Button */}
+                        <button
+                          onClick={() => setIsPlaying(!isPlaying)}
+                          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 backdrop-blur-sm p-4 rounded-full transition-all z-20"
+                        >
+                          {isPlaying ? (
+                            <Pause className="w-8 h-8 text-white" />
+                          ) : (
+                            <Play className="w-8 h-8 text-white" />
+                          )}
+                        </button>
+
+                        {/* Download Button */}
+                        <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
+                          <Button
+                            className="w-full bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2 h-12"
+                            onClick={() => {
+                              const a = document.createElement("a");
+                              a.href = currentVideo.video_url || "";
+                              a.download = `video-${currentVideo.id}.mp4`;
+                              document.body.appendChild(a);
+                              a.click();
+                              document.body.removeChild(a);
+                            }}
+                          >
+                            <Download className="w-4 h-4" />
+                            Download
+                          </Button>
+                        </div>
+                      </>
+                    )}
 
                     {/* Pagination Indicator */}
                     <div className="absolute top-8 left-0 right-0 px-6 text-white z-20">
