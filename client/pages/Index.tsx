@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import VideoGeneratorForm from "@/components/VideoGeneratorForm";
 import VideoSlider from "@/components/VideoSlider";
 import { Sparkles } from "lucide-react";
-import { useState } from "react";
 
 export default function Index() {
   const navigate = useNavigate();
-  const [showForm, setShowForm] = useState(false);
 
   return (
     <div className="bg-black text-white">
