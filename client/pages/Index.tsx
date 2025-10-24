@@ -438,8 +438,18 @@ export default function Index() {
                     <Button variant="outline" onClick={handleNextVideo} className="flex-1 bg-transparent border-gray-700 text-white">Next →</Button>
                   </div>
 
-                  <div className="absolute top-8 left-0 right-0 px-6 text-white text-center text-sm">
-                    {currentVideoIndex + 1} of {SAMPLE_VIDEOS.length}
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 z-20">
+                    <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-white transition-all"
+                        style={{
+                          width: `${((currentVideoIndex + 1) / SAMPLE_VIDEOS.length) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <p className="text-white text-xs mt-2 text-center">
+                      {currentVideoIndex + 1} of {SAMPLE_VIDEOS.length}
+                    </p>
                   </div>
                 </div>
               </div>
