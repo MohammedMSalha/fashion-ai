@@ -18,9 +18,17 @@ export default function Index() {
         {/* Scroll Down Indicator and CTA */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent pt-20 pb-8">
           <div className="max-w-7xl mx-auto px-4 md:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-2">
               Create Your Own AI Fashion Video
             </h2>
+
+            {/* Clear Pricing Banner */}
+            <div className="mb-6 inline-block bg-gray-900 border border-gray-800 rounded-full px-4 py-2">
+              <p className="text-gray-300 text-sm">
+                <span className="text-white font-bold">$0.40-$0.90</span> per video • No subscription • No credits
+              </p>
+            </div>
+
             <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
               Upload a photo of yourself and let AI create stunning fashion videos
             </p>
