@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import Stripe from "stripe";
 import { query } from "../db";
+import { checkAndUpdateAllPendingVideos } from "../services/video-status";
 
 interface StripeEvent {
   id: string;
