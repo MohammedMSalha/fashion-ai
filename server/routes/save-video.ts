@@ -19,14 +19,22 @@ interface SaveVideoResponse {
 
 export const saveVideo: RequestHandler = async (req, res) => {
   try {
-    const { email, videoUrl, videoId, duration, resolution } =
+    const { email, videoUrl, videoId, requestId, duration, resolution } =
       req.body as SaveVideoRequest;
 
     // Validate inputs
-    if (!email || !videoUrl || !duration || !resolution) {
+    if (!email || !duration || !resolution) {
       return res.status(400).json({
         success: false,
         error: "Missing required fields",
+      });
+    }
+
+    // Must have either videoUrl or requestId
+    if (!videoUrl && !requestId) {
+      return res.status(400).json({
+        success: false,
+        error: "Either videoUrl or requestId is required",
       });
     }
 
@@ -39,14 +47,16 @@ export const saveVideo: RequestHandler = async (req, res) => {
       });
     }
 
-    // Validate video URL
-    try {
-      new URL(videoUrl);
-    } catch {
-      return res.status(400).json({
-        success: false,
-        error: "Invalid video URL",
-      });
+    // Validate video URL if provided
+    if (videoUrl) {
+      try {
+        new URL(videoUrl);
+      } catch {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid video URL",
+        });
+      }
     }
 
     // Validate duration and resolution
@@ -64,12 +74,23 @@ export const saveVideo: RequestHandler = async (req, res) => {
       });
     }
 
+    // Determine status based on whether we have a video URL or just a request ID
+    const status = videoUrl ? "completed" : "processing";
+
     // Insert video record into database
     const result = await query(
-      `INSERT INTO videos (email, video_url, video_id, duration, resolution, status)
-       VALUES ($1, $2, $3, $4, $5, 'completed')
-       RETURNING id, expires_at`,
-      [email, videoUrl, videoId || null, duration, resolution],
+      `INSERT INTO videos (email, video_url, video_id, request_id, duration, resolution, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, expires_at, status`,
+      [
+        email,
+        videoUrl || null,
+        videoId || null,
+        requestId || null,
+        duration,
+        resolution,
+        status,
+      ],
     );
 
     const videoRecord = result.rows[0];
@@ -77,6 +98,7 @@ export const saveVideo: RequestHandler = async (req, res) => {
     return res.status(200).json({
       success: true,
       videoId: videoRecord.id,
+      status: videoRecord.status,
       expiresAt: videoRecord.expires_at,
     });
   } catch (error) {
