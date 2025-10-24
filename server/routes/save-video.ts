@@ -160,7 +160,8 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
 
     // Get non-deleted videos for the email
     const result = await query(
-      `SELECT id, email, video_url, duration, resolution, status, error_message, created_at, expires_at, request_id
+      `SELECT id, email, video_url, duration, resolution, status, error_message, created_at, expires_at, request_id,
+              payment_intent_id, payment_amount, payment_currency, payment_status, payment_method_type, payment_email
        FROM videos
        WHERE email = $1 AND deleted_at IS NULL
        ORDER BY created_at DESC
