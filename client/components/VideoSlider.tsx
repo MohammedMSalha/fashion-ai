@@ -107,10 +107,6 @@ export default function VideoSlider() {
           {/* Overlay Gradient */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40" />
 
-          {/* Video Title */}
-          <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
-            <p className="text-2xl font-bold">{currentVideo.title}</p>
-          </div>
 
           {/* Play/Pause Button */}
           <button
