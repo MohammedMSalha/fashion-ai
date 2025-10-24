@@ -370,7 +370,11 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           duration={duration}
           quality={quality}
           onSuccess={() => {
+            console.log("Payment successful! Navigating...");
             localStorage.setItem("fashionai_email", email);
+            // Reset form state
+            setStep("upload");
+            // Navigate to video generation
             onGenerate?.();
           }}
           onCancel={() => setStep("review")}
