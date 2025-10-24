@@ -18,7 +18,11 @@ const PRICING = {
   "10s": { "720p": 0.7, "1080p": 0.9 },
 };
 
-export default function VideoGeneratorForm() {
+interface VideoGeneratorFormProps {
+  onGenerate?: () => void;
+}
+
+export default function VideoGeneratorForm({ onGenerate }: VideoGeneratorFormProps) {
   const [step, setStep] = useState<FormStep>("upload");
   const [formData, setFormData] = useState<FormData>({
     image: null,
