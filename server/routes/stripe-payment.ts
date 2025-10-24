@@ -4,6 +4,7 @@ import Stripe from "stripe";
 interface PaymentIntentRequest {
   amount: number;
   email: string;
+  imageUrl?: string;
 }
 
 interface PaymentIntentResponse {
