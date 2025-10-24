@@ -86,28 +86,14 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
               const imageUrl = paymentIntent.metadata?.imageUrl;
               if (imageUrl) {
                 try {
-                  // Call video generation API (use localhost for server-side call)
-                  const generateResponse = await fetch(
-                    "http://localhost:3000/api/generate-video",
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        image: imageUrl,
-                        duration,
-                        resolution,
-                        email,
-                      }),
-                    },
+                  // Generate video using the service function
+                  const generateResult = await generateVideoAsync(
+                    imageUrl,
+                    duration,
+                    resolution,
                   );
 
-                  if (generateResponse.ok) {
-                    const generateData = await generateResponse.json();
-                    const videoUrl = generateData.videoUrl || "";
-                    const requestId = generateData.requestId || "";
-
+                  if (generateResult.success && generateResult.requestId) {
                     // Update the database with generated video info
                     await query(
                       `UPDATE videos
@@ -119,9 +105,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                        WHERE id = $5`,
                       [
                         paymentIntent.id,
-                        videoUrl || null,
-                        requestId || null,
-                        videoUrl ? "processing" : "processing",
+                        generateResult.videoUrl || null,
+                        generateResult.requestId || null,
+                        "processing",
                         pendingVideo.id,
                       ],
                     );
@@ -130,15 +116,23 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                       `Video generation started for payment: ${paymentIntent.id}`,
                     );
                   } else {
-                    console.warn("Video generation failed from webhook");
+                    console.warn(
+                      "Video generation failed from webhook:",
+                      generateResult.error,
+                    );
                     // Update payment status but mark video as failed
                     await query(
                       `UPDATE videos
                        SET payment_intent_id = $1,
                            payment_status = 'succeeded',
-                           status = 'failed'
-                       WHERE id = $2`,
-                      [paymentIntent.id, pendingVideo.id],
+                           status = 'failed',
+                           error_message = $2
+                       WHERE id = $3`,
+                      [
+                        paymentIntent.id,
+                        generateResult.error || "Generation failed",
+                        pendingVideo.id,
+                      ],
                     );
                   }
                 } catch (generateErr) {
