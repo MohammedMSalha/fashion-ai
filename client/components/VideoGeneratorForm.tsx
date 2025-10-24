@@ -133,10 +133,10 @@ export default function VideoGeneratorForm() {
         {/* Upload Step */}
         {step === "upload" && (
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-bold text-white mb-2">
               Upload Your Photo
             </h2>
-            <p className="text-slate-600 mb-6">
+            <p className="text-gray-400 mb-6">
               Choose a high-quality photo of a person wearing clothes
             </p>
 
@@ -149,15 +149,15 @@ export default function VideoGeneratorForm() {
                 className={cn(
                   "border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer",
                   dragActive
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-slate-300 hover:border-slate-400"
+                    ? "border-white bg-gray-800"
+                    : "border-gray-700 hover:border-gray-600"
                 )}
               >
-                <Upload className="w-12 h-12 mx-auto mb-4 text-slate-400" />
-                <p className="text-slate-900 font-semibold mb-1">
+                <Upload className="w-12 h-12 mx-auto mb-4 text-gray-500" />
+                <p className="text-white font-semibold mb-1">
                   Drag and drop your image
                 </p>
-                <p className="text-sm text-slate-600 mb-4">
+                <p className="text-sm text-gray-400 mb-4">
                   or click to browse (JPG, PNG max 10MB)
                 </p>
                 <input
