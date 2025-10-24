@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
 import VideoGeneratorForm from "@/components/VideoGeneratorForm";
-import { Sparkles, X, Mail, FileText, Lock, Play } from "lucide-react";
+import { Sparkles, X, Mail, FileText, Lock, Play, Info } from "lucide-react";
 
-type Modal = null | "generate" | "my-videos" | "contact" | "terms" | "privacy";
+type Modal = null | "generate" | "my-videos" | "contact" | "terms" | "privacy" | "about";
 type MyVideosStep = "email" | "verification" | "videos";
 
 interface Video {
