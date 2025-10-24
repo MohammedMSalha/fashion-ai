@@ -62,13 +62,17 @@ export default function MyVideos() {
   const currentVideo = videos.length > 0 ? videos[currentVideoIndex] : null;
 
   const handleNextVideo = () => {
-    setCurrentVideoIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
+    if (videos.length > 0) {
+      setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+    }
   };
 
   const handlePrevVideo = () => {
-    setCurrentVideoIndex((prev) =>
-      prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1,
-    );
+    if (videos.length > 0) {
+      setCurrentVideoIndex((prev) =>
+        prev === 0 ? videos.length - 1 : prev - 1,
+      );
+    }
   };
 
   const handleWheel = (e: React.WheelEvent) => {
