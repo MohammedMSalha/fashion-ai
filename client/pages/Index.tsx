@@ -90,8 +90,8 @@ export default function Index() {
 
       {/* Footer */}
       <footer className="border-t border-gray-800 bg-black">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-16 md:py-20">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
