@@ -218,16 +218,30 @@ export default function MyVideos() {
                     setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
                   }
                   maxLength="6"
+                  disabled={loading}
                   className="h-12 text-base bg-gray-900 border-gray-800 text-white text-center text-2xl tracking-widest"
                 />
               </div>
 
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-sm text-red-200">
+                  {error}
+                </div>
+              )}
+
               <Button
-                disabled={code.length !== 6}
+                disabled={code.length !== 6 || loading}
                 onClick={handleCodeSubmit}
-                className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 text-base"
+                className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 text-base disabled:opacity-50"
               >
-                Verify
+                {loading ? (
+                  <>
+                    <Loader className="w-4 h-4 mr-2 animate-spin" />
+                    Loading Videos...
+                  </>
+                ) : (
+                  "Verify"
+                )}
               </Button>
 
               <Button
@@ -235,7 +249,9 @@ export default function MyVideos() {
                 onClick={() => {
                   setStep("email");
                   setCode("");
+                  setError(null);
                 }}
+                disabled={loading}
                 className="w-full text-gray-400 hover:text-white hover:bg-gray-900"
               >
                 Back
