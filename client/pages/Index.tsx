@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
-import VideoGeneratorForm from "@/components/VideoGeneratorForm";
+import SmartVideoForm from "@/components/SmartVideoForm";
 import { Sparkles, X, Mail, FileText, Lock, Play, Info, Download, ArrowLeft, AlertCircle } from "lucide-react";
 
 type Page = "home" | "generate" | "my-videos" | "contact" | "terms" | "privacy" | "about" | "in-progress" | "video-preview";
