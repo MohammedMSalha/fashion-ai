@@ -40,6 +40,10 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       "STRIPE_SECRET_KEY configured:",
       !!process.env.STRIPE_SECRET_KEY,
     );
+    console.log("Environment keys:", {
+      stripe: !!process.env.STRIPE_SECRET_KEY,
+      database: !!process.env.DATABASE_URL || !!process.env.fashion_DATABASE_URL,
+    });
 
     // Validate required fields
     if (!amount || !email) {
