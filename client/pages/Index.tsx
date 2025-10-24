@@ -215,8 +215,8 @@ export default function Index() {
         </div>
       )}
 
-      {/* My Videos Modal */}
-      {activeModal === "my-videos" && (
+      {/* My Videos Modal - TikTok Style */}
+      {activeModal === "my-videos" && myVideosStep !== "videos" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="bg-black border border-gray-800 rounded-2xl w-full max-w-md">
             {/* Close Button */}
@@ -292,57 +292,81 @@ export default function Index() {
                 </Button>
               </div>
             )}
+          </div>
+        </div>
+      )}
 
-            {/* Videos Step */}
-            {myVideosStep === "videos" && (
-              <div className="p-6 space-y-4">
-                <div className="bg-gray-800 rounded-lg p-3 mb-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-sm font-medium text-white">{currentVideo.title}</p>
-                    <p className="text-xs text-gray-400">
-                      {currentVideoIndex + 1}/{SAMPLE_VIDEOS.length}
-                    </p>
-                  </div>
-                  <img
-                    src={currentVideo.thumbnail}
-                    alt={currentVideo.title}
-                    className="w-full h-40 object-cover rounded"
-                  />
-                  <div className="flex gap-2 mt-2">
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">
-                      {currentVideo.duration}
-                    </span>
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">
-                      {currentVideo.quality}
-                    </span>
-                  </div>
-                </div>
+      {/* My Videos - Full Screen TikTok Style */}
+      {activeModal === "my-videos" && myVideosStep === "videos" && (
+        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden">
+          {/* Close Button */}
+          <button
+            onClick={closeModal}
+            className="absolute top-4 right-4 z-20 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition"
+          >
+            <X className="w-6 h-6" />
+          </button>
 
+          {/* Video Container */}
+          <div className="relative w-full h-full md:w-[500px] md:h-full bg-black flex items-center justify-center">
+            {/* Current Video */}
+            <div className="relative w-full h-full">
+              <img
+                src={currentVideo.thumbnail}
+                alt={currentVideo.title}
+                className="w-full h-full object-cover"
+              />
+
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
+
+              {/* Video Info */}
+              <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
+                <p className="text-2xl font-bold mb-3">{currentVideo.title}</p>
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={handlePrevVideo}
-                    className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-900 h-10 text-sm"
-                  >
-                    ← Previous
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handleNextVideo}
-                    className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-900 h-10 text-sm"
-                  >
-                    Next →
-                  </Button>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                    {currentVideo.duration}
+                  </span>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                    {currentVideo.quality}
+                  </span>
                 </div>
+              </div>
 
+              {/* Download Button */}
+              <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
                 <Button
-                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-10 text-sm"
+                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12"
                   onClick={() => window.open(currentVideo.downloadUrl)}
                 >
-                  Download
+                  Download Video
                 </Button>
               </div>
-            )}
+
+              {/* Pagination */}
+              <div className="absolute top-8 left-0 right-0 px-6 z-20">
+                <p className="text-white text-center text-sm">
+                  {currentVideoIndex + 1} of {SAMPLE_VIDEOS.length}
+                </p>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="absolute top-16 left-0 right-0 px-6 z-20">
+                <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-white transition-all"
+                    style={{
+                      width: `${(currentVideoIndex / SAMPLE_VIDEOS.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation Hints */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-gray-400 text-xs z-20">
+            Scroll up/down to browse
           </div>
         </div>
       )}
