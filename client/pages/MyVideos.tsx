@@ -1,240 +1,400 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Download, Loader2 } from "lucide-react";
+import { ArrowLeft, Download, ChevronDown, Pause, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+type Step = "email" | "verification" | "videos";
 
 interface Video {
   id: string;
+  thumbnail: string;
+  title: string;
   duration: string;
   quality: string;
   createdAt: string;
-  thumbnail: string;
   downloadUrl: string;
 }
 
+const SAMPLE_VIDEOS: Video[] = [
+  {
+    id: "1",
+    thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=900&fit=crop",
+    title: "Summer Collection",
+    duration: "5s",
+    quality: "1080p",
+    createdAt: "2024-01-15",
+    downloadUrl: "#",
+  },
+  {
+    id: "2",
+    thumbnail: "https://images.unsplash.com/photo-1539571696357-5a69c006b15d?w=500&h=900&fit=crop",
+    title: "Urban Style",
+    duration: "10s",
+    quality: "720p",
+    createdAt: "2024-01-10",
+    downloadUrl: "#",
+  },
+  {
+    id: "3",
+    thumbnail: "https://images.unsplash.com/photo-1595777707802-41d339d60b84?w=500&h=900&fit=crop",
+    title: "Evening Wear",
+    duration: "5s",
+    quality: "1080p",
+    createdAt: "2024-01-08",
+    downloadUrl: "#",
+  },
+  {
+    id: "4",
+    thumbnail: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=900&fit=crop",
+    title: "Casual Vibes",
+    duration: "10s",
+    quality: "720p",
+    createdAt: "2024-01-05",
+    downloadUrl: "#",
+  },
+  {
+    id: "5",
+    thumbnail: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&h=900&fit=crop",
+    title: "Fashion Forward",
+    duration: "5s",
+    quality: "1080p",
+    createdAt: "2024-01-01",
+    downloadUrl: "#",
+  },
+];
+
 export default function MyVideos() {
   const navigate = useNavigate();
+  const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
+  const [code, setCode] = useState("");
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
 
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleEmailSubmit = () => {
+    if (email) {
+      setStep("verification");
+    }
+  };
+
+  const handleCodeSubmit = () => {
+    if (code) {
+      setStep("videos");
+    }
+  };
+
+  const currentVideo = SAMPLE_VIDEOS[currentVideoIndex];
+  const videosPerPage = 1;
+  const totalPages = Math.ceil(SAMPLE_VIDEOS.length / videosPerPage);
+  const currentPage = Math.floor(currentVideoIndex / videosPerPage) + 1;
+
+  const handleNextVideo = () => {
+    setCurrentVideoIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
+  };
+
+  const handlePrevVideo = () => {
+    setCurrentVideoIndex((prev) =>
+      prev === 0 ? SAMPLE_VIDEOS.length - 1 : prev - 1
+    );
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (e.deltaY > 0) {
+      handleNextVideo();
+    } else {
+      handlePrevVideo();
+    }
+  };
 
-    setLoading(true);
-    setSearched(true);
-
-    // Simulate API call - replace with actual backend call
-    setTimeout(() => {
-      // Mock data - remove when connected to real backend
-      setVideos([
-        {
-          id: "1",
-          duration: "5s",
-          quality: "1080p",
-          createdAt: "2024-01-15",
-          thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
-          downloadUrl: "#",
-        },
-        {
-          id: "2",
-          duration: "10s",
-          quality: "720p",
-          createdAt: "2024-01-10",
-          thumbnail: "https://images.unsplash.com/photo-1539571696357-5a69c006b15d?w=400&h=300&fit=crop",
-          downloadUrl: "#",
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const startY = e.touches[0].clientY;
+    const handleTouchEnd = (endEvent: React.TouchEvent) => {
+      const endY = endEvent.changedTouches[0].clientY;
+      if (startY - endY > 50) {
+        handleNextVideo();
+      } else if (endY - startY > 50) {
+        handlePrevVideo();
+      }
+    };
+    e.currentTarget.addEventListener("touchend", handleTouchEnd as any, { once: true });
   };
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <div className="bg-black border-b border-gray-800 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/")}
-              className="gap-2 text-white hover:bg-gray-900"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </Button>
-            <h1 className="text-xl font-bold text-white">My Videos</h1>
-          </div>
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-black border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-4 flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="text-white hover:bg-gray-900 flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Button>
+          <h1 className="text-xl md:text-2xl font-bold text-white">My Videos</h1>
+          <div className="w-12"></div>
         </div>
-      </div>
+      </nav>
 
-      {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-4 md:px-8 py-12">
-        {!searched ? (
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-900 mb-6 border border-gray-800">
-              <svg
-                className="w-8 h-8 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Find Your Videos
-            </h2>
-            <p className="text-gray-400 mb-8 max-w-md mx-auto">
-              Enter the email address you used to generate your videos and we'll
-              display all your creations
-            </p>
-
-            <form onSubmit={handleSearch} className="space-y-4">
-              <Input
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 text-base max-w-xs mx-auto block bg-gray-900 border-gray-800 text-white"
-              />
-              <Button
-                type="submit"
-                disabled={!email || loading}
-                className="bg-white hover:bg-gray-100 text-black font-semibold"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Searching...
-                  </>
-                ) : (
-                  "Search Videos"
-                )}
-              </Button>
-            </form>
-          </div>
-        ) : (
-          <>
-            <div className="mb-8">
-              <div className="flex items-center gap-4 mb-6">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setSearched(false);
-                    setEmail("");
-                    setVideos([]);
-                  }}
-                  className="gap-2 text-white hover:bg-gray-900"
+      {/* Email Step */}
+      {step === "email" && (
+        <section className="min-h-screen bg-black flex items-center justify-center py-12">
+          <div className="w-full max-w-md px-4">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-900 mb-6 border border-gray-800">
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  Change Email
-                </Button>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-2">Your Videos</h2>
+              <p className="text-gray-400 text-lg">
+                Sign in to view your generated fashion videos
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Email Address
+                </label>
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 text-base bg-gray-900 border-gray-800 text-white"
+                />
               </div>
 
-              {videos.length > 0 ? (
-                <>
-                  <p className="text-sm text-gray-400 mb-6">
-                    Found <strong>{videos.length}</strong> video
-                    {videos.length !== 1 ? "s" : ""} for{" "}
-                    <strong>{email}</strong>
-                  </p>
+              <Button
+                disabled={!email}
+                onClick={handleEmailSubmit}
+                className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 text-base"
+              >
+                Proceed
+              </Button>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {videos.map((video) => (
-                      <div
-                        key={video.id}
-                        className="rounded-xl overflow-hidden bg-gray-900 border border-gray-800 hover:border-gray-700 transition-all"
-                      >
-                        {/* Thumbnail */}
-                        <div className="relative aspect-video bg-gray-800 overflow-hidden group">
-                          <img
-                            src={video.thumbnail}
-                            alt="Video thumbnail"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                            <svg
-                              className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
-                        </div>
+              <p className="text-xs text-gray-500 text-center mt-6">
+                We'll send you a verification code
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
-                        {/* Video Info */}
-                        <div className="p-4">
-                          <div className="flex gap-2 mb-3">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                              {video.duration}
-                            </span>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                              {video.quality}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-400 mb-4">
-                            Generated on{" "}
-                            {new Date(video.createdAt).toLocaleDateString()}
-                          </p>
-                          <Button
-                            className="w-full gap-2 bg-white hover:bg-gray-100 text-black font-semibold"
-                            onClick={() => {
-                              // Handle download
-                              window.open(video.downloadUrl);
-                            }}
-                          >
-                            <Download className="w-4 h-4" />
-                            Download Video
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+      {/* Code Verification Step */}
+      {step === "verification" && (
+        <section className="min-h-screen bg-black flex items-center justify-center py-12">
+          <div className="w-full max-w-md px-4">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-900 mb-6 border border-gray-800">
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-2">Verify Code</h2>
+              <p className="text-gray-400 text-lg">
+                Check your email for the verification code
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Verification Code
+                </label>
+                <Input
+                  type="text"
+                  placeholder="123456"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  maxLength="6"
+                  className="h-12 text-base bg-gray-900 border-gray-800 text-white text-center text-2xl tracking-widest"
+                />
+              </div>
+
+              <Button
+                disabled={code.length !== 6}
+                onClick={handleCodeSubmit}
+                className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 text-base"
+              >
+                Verify
+              </Button>
+
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setStep("email");
+                  setCode("");
+                }}
+                className="w-full text-gray-400 hover:text-white hover:bg-gray-900"
+              >
+                Back
+              </Button>
+
+              <p className="text-xs text-gray-500 text-center">
+                Didn't receive code? Check spam folder or try again.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Videos Step - TikTok Style */}
+      {step === "videos" && (
+        <section className="min-h-screen bg-black flex items-center justify-center py-12 overflow-hidden">
+          <div
+            className="relative w-full h-screen bg-black flex items-center justify-center"
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+          >
+            {/* Video Container */}
+            <div className="relative w-full h-full md:w-[500px] md:h-screen bg-black flex items-center justify-center">
+              {/* Current Video */}
+              <div className="relative w-full h-full">
+                <img
+                  src={currentVideo.thumbnail}
+                  alt={currentVideo.title}
+                  className="w-full h-full object-cover"
+                />
+
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
+
+                {/* Video Info Bottom */}
+                <div className="absolute bottom-32 left-0 right-0 px-6 text-white z-10">
+                  <h3 className="text-2xl font-bold mb-3">{currentVideo.title}</h3>
+                  <div className="flex gap-2 mb-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                      {currentVideo.duration}
+                    </span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                      {currentVideo.quality}
+                    </span>
                   </div>
-                </>
-              ) : (
-                <div className="text-center py-12">
-                  <svg
-                    className="w-16 h-16 text-gray-800 mx-auto mb-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <p className="text-gray-300 text-lg font-medium mb-2">
-                    No videos found
+                  <p className="text-sm text-gray-400">
+                    Created {new Date(currentVideo.createdAt).toLocaleDateString()}
                   </p>
-                  <p className="text-gray-500 mb-6">
-                    Start by creating your first AI fashion video
-                  </p>
+                </div>
+
+                {/* Play/Pause Button */}
+                <button
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 backdrop-blur-sm p-4 rounded-full transition-all z-20"
+                >
+                  {isPlaying ? (
+                    <Pause className="w-8 h-8 text-white" />
+                  ) : (
+                    <Play className="w-8 h-8 text-white" />
+                  )}
+                </button>
+
+                {/* Download Button */}
+                <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
                   <Button
-                    onClick={() => navigate("/")}
-                    className="gap-2 bg-white hover:bg-gray-100 text-black font-semibold"
+                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2 h-12"
+                    onClick={() => window.open(currentVideo.downloadUrl)}
                   >
-                    Create Video
+                    <Download className="w-4 h-4" />
+                    Download
                   </Button>
                 </div>
-              )}
+
+                {/* Pagination Indicator */}
+                <div className="absolute top-8 left-0 right-0 px-6 text-white z-20">
+                  <p className="text-sm text-gray-300 text-center">
+                    {currentVideoIndex + 1} of {SAMPLE_VIDEOS.length}
+                  </p>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="absolute top-16 left-0 right-0 px-6 z-20">
+                  <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white transition-all"
+                      style={{
+                        width: `${(currentVideoIndex / SAMPLE_VIDEOS.length) * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Scroll Indicator */}
+                <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white z-20 animate-bounce">
+                  <ChevronDown className="w-6 h-6" />
+                </div>
+              </div>
+
+              {/* Side Buttons */}
+              <div className="hidden lg:flex absolute right-6 top-1/2 transform -translate-y-1/2 flex-col gap-8 z-20">
+                <button className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
+                    <svg
+                      className="w-6 h-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </div>
+                  <span className="text-xs">Like</span>
+                </button>
+
+                <button className="flex flex-col items-center gap-2 text-white hover:text-gray-400 transition">
+                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center hover:bg-white/10">
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-xs">Share</span>
+                </button>
+              </div>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </section>
+      )}
+
+      {/* Footer */}
+      <footer className="border-t border-gray-800 bg-black">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-8">
+          <p className="text-center text-sm text-gray-500">
+            © 2024 FashionAI. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
