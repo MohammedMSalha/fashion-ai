@@ -53,6 +53,14 @@ export default function VideoSlider() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-advance to next video every 6 seconds
+  useEffect(() => {
+    const autoAdvanceTimer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
+    }, 6000);
+    return () => clearInterval(autoAdvanceTimer);
+  }, []);
+
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
   };
