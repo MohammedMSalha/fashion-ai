@@ -61,6 +61,7 @@ export default function Index() {
   const [code, setCode] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [generatedVideo] = useState<Video>(SAMPLE_VIDEOS[0]);
+  const [showFabMenu, setShowFabMenu] = useState(false);
 
   // Mouse tracking effect
   useEffect(() => {
