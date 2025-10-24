@@ -36,6 +36,34 @@ export default function MyVideos() {
   const [videos, setVideos] = useState<DatabaseVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pollInterval, setPollInterval] = useState<NodeJS.Timeout | null>(null);
+
+  // Poll for video status updates
+  useEffect(() => {
+    if (step === "videos" && videos.length > 0) {
+      const hasProcessing = videos.some((v) => v.status === "processing");
+
+      if (hasProcessing) {
+        // Poll every 5 seconds for processing videos
+        const interval = setInterval(async () => {
+          try {
+            const response = await fetch(
+              `/api/videos/${encodeURIComponent(email)}`,
+            );
+            if (response.ok) {
+              const data = await response.json();
+              setVideos(data.videos || []);
+            }
+          } catch (err) {
+            console.error("Error polling video status", err);
+          }
+        }, 5000);
+
+        setPollInterval(interval);
+        return () => clearInterval(interval);
+      }
+    }
+  }, [step, videos, email]);
 
   const handleEmailSubmit = () => {
     if (email) {
