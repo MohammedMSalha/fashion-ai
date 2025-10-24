@@ -84,7 +84,10 @@ export async function updateVideoStatusFromFashn(
         [status.error || "Generation failed", videoId],
       );
       console.log(`Video ${videoId} failed: ${status.error}`);
-    } else if (status.status === "processing" || status.status === "submitted") {
+    } else if (
+      status.status === "processing" ||
+      status.status === "submitted"
+    ) {
       // Still processing, no update needed
       console.log(`Video ${videoId} still processing`);
     }

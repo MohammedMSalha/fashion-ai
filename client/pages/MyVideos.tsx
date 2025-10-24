@@ -364,7 +364,8 @@ export default function MyVideos() {
                           Generating Video
                         </h3>
                         <p className="text-gray-400 text-sm">
-                          Your video is being created. This may take a few moments...
+                          Your video is being created. This may take a few
+                          moments...
                         </p>
                       </div>
                     ) : currentVideo.status === "failed" ? (

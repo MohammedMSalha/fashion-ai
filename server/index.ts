@@ -7,7 +7,12 @@ import { handleDemo } from "./routes/demo";
 import { generateVideo } from "./routes/video-generation";
 import { createPaymentIntent, confirmPayment } from "./routes/stripe-payment";
 import { handleStripeWebhook } from "./routes/stripe-webhook";
-import { saveVideo, getVideosByEmail, deleteVideo, getVideoStatus } from "./routes/save-video";
+import {
+  saveVideo,
+  getVideosByEmail,
+  deleteVideo,
+  getVideoStatus,
+} from "./routes/save-video";
 import { checkPendingVideos } from "./routes/check-pending-videos";
 import { initializeDatabase } from "./db";
 import { startCleanupJob } from "./jobs/cleanup-videos";
