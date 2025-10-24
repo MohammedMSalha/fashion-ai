@@ -160,6 +160,17 @@ export default function Index() {
 
           <button
             onClick={() => {
+              setActiveModal("about");
+              setShowFabMenu(false);
+            }}
+            className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-full transition-all"
+          >
+            <Info className="w-5 h-5" />
+            <span className="text-sm font-medium">About Us</span>
+          </button>
+
+          <button
+            onClick={() => {
               setActiveModal("my-videos");
               setShowFabMenu(false);
             }}
