@@ -39,33 +39,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Form Section */}
-      {showForm && (
-        <section className="min-h-screen bg-black py-12 md:py-16 lg:py-24">
-          <div className="max-w-4xl mx-auto px-4 md:px-8 lg:px-12">
-            <button
-              onClick={() => setShowForm(false)}
-              className="mb-8 text-gray-400 hover:text-white transition flex items-center gap-2 text-lg"
-            >
-              ← Back to Videos
-            </button>
-
-            {/* Clear Messaging */}
-            <div className="mb-10 p-6 bg-gray-900 border border-gray-800 rounded-lg">
-              <p className="text-center text-gray-300 text-lg">
-                <span className="text-white font-semibold">No subscription. No credits.</span> Just pay once per video. That's it.
-              </p>
-            </div>
-
-            <div className="flex justify-center">
-              <div className="w-full lg:w-2/3">
-                <VideoGeneratorForm />
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-black border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-4 flex items-center justify-between">
