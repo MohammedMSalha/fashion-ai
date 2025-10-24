@@ -44,6 +44,14 @@ export default function Index() {
             >
               ← Back to Videos
             </button>
+
+            {/* Clear Messaging */}
+            <div className="mb-10 p-4 bg-gray-900 border border-gray-800 rounded-lg">
+              <p className="text-center text-gray-300">
+                <span className="text-white font-semibold">No subscription. No credits.</span> Just pay once per video. That's it.
+              </p>
+            </div>
+
             <VideoGeneratorForm />
           </div>
         </section>
