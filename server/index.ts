@@ -10,7 +10,11 @@ import { saveVideo, getVideosByEmail, deleteVideo } from "./routes/save-video";
 import { initializeDatabase } from "./db";
 import { startCleanupJob } from "./jobs/cleanup-videos";
 
-export function createServer() {
+export async function createServer() {
+  // Initialize database and cleanup job
+  await initializeDatabase();
+  startCleanupJob();
+
   const app = express();
 
   // Security middleware
