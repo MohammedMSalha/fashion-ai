@@ -234,24 +234,40 @@ export default function Index() {
 
       {/* GENERATE PAGE */}
       {currentPage === "generate" && (
-        <section className="relative w-full h-full flex items-center justify-center overflow-y-auto">
-          <button
-            onClick={goHome}
-            className="absolute top-4 left-4 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition z-20"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-
-          <div className="w-full max-w-2xl px-4 py-8">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">Generate Video</h2>
-
-            <div className="mb-6 bg-gray-900 border border-gray-800 rounded-lg p-4">
-              <p className="text-center text-gray-300">
-                <span className="text-white font-semibold">No subscription. No credits.</span> Just pay once per video.
-              </p>
+        <section className="relative w-full h-full bg-black overflow-y-auto">
+          {/* Header with Back Button */}
+          <div className="sticky top-0 bg-black border-b border-gray-800 p-4 z-20">
+            <div className="flex items-center justify-between max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+              <button
+                onClick={goHome}
+                className="text-white hover:text-gray-300 transition flex items-center gap-2"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span className="text-sm font-medium">Back</span>
+              </button>
+              <h2 className="text-xl md:text-2xl font-bold text-white">Generate Video</h2>
+              <div className="w-20"></div>
             </div>
+          </div>
 
-            <VideoGeneratorForm onGenerate={handleGenerateClick} />
+          {/* Main Content */}
+          <div className="w-full py-12 md:py-16">
+            <div className="max-w-3xl mx-auto px-4 md:px-8 lg:px-12">
+              {/* Info Box */}
+              <div className="mb-10 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-800 rounded-xl p-6">
+                <div className="text-center">
+                  <p className="text-gray-200 text-lg">
+                    <span className="text-white font-bold text-xl">$0.40-$0.90</span>
+                  </p>
+                  <p className="text-gray-400 text-sm mt-2">
+                    <span className="text-white font-semibold">No subscription. No credits.</span> Just pay once per video.
+                  </p>
+                </div>
+              </div>
+
+              {/* Form */}
+              <VideoGeneratorForm onGenerate={handleGenerateClick} />
+            </div>
           </div>
         </section>
       )}
