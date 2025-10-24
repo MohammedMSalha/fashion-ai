@@ -11,9 +11,9 @@ const pool = new Pool({
 
 export async function initializeDatabase() {
   try {
-    if (!process.env.DATABASE_URL) {
+    if (!process.env.fashion_DATABASE_URL && !process.env.DATABASE_URL) {
       console.warn(
-        "DATABASE_URL not set. Database features will be unavailable. Set DATABASE_URL from Neon to enable.",
+        "fashion_DATABASE_URL or DATABASE_URL not set. Database features will be unavailable. Set DATABASE_URL from Neon to enable.",
       );
       return;
     }
