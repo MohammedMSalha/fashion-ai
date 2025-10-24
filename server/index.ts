@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import { handleDemo } from "./routes/demo";
 import { generateVideo } from "./routes/video-generation";
 import { createPaymentIntent, confirmPayment } from "./routes/stripe-payment";
+import { handleStripeWebhook } from "./routes/stripe-webhook";
 import { saveVideo, getVideosByEmail, deleteVideo } from "./routes/save-video";
 import { initializeDatabase } from "./db";
 import { startCleanupJob } from "./jobs/cleanup-videos";
@@ -26,6 +27,18 @@ export async function createServer() {
       origin: process.env.CORS_ORIGIN || "*",
       credentials: true,
     }),
+  );
+
+  // Stripe webhook handler (MUST be before JSON body parser)
+  app.post(
+    "/api/webhook",
+    express.raw({ type: "application/json" }),
+    (req: any, res: any, next: any) => {
+      // Store raw body for Stripe signature verification
+      req.rawBody = req.body;
+      next();
+    },
+    handleStripeWebhook,
   );
 
   // Request size limits
