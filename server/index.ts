@@ -6,6 +6,9 @@ import rateLimit from "express-rate-limit";
 import { handleDemo } from "./routes/demo";
 import { generateVideo } from "./routes/video-generation";
 import { createPaymentIntent, confirmPayment } from "./routes/stripe-payment";
+import { saveVideo, getVideosByEmail, deleteVideo } from "./routes/save-video";
+import { initializeDatabase } from "./db";
+import { startCleanupJob } from "./jobs/cleanup-videos";
 
 export function createServer() {
   const app = express();
