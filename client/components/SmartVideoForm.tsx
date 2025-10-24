@@ -11,8 +11,8 @@ interface SmartVideoFormProps {
 }
 
 const PRICING = {
-  "5s": { "720p": 0.5, "1080p": 0.75 },
-  "10s": { "720p": 0.99, "1080p": 1.49 },
+  "5s": { "720p": 0.5, "1080p": 0.6 },
+  "10s": { "720p": 0.75, "1080p": 0.9 },
 };
 
 export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
