@@ -95,31 +95,100 @@ export const saveVideo: RequestHandler = async (req, res) => {
     // Determine status based on whether we have a video URL or just a request ID
     const status = videoUrl ? "completed" : "processing";
 
-    // Insert video record into database with payment data
-    const result = await query(
-      `INSERT INTO videos (
-        email, video_url, video_id, request_id, duration, resolution, status,
-        payment_intent_id, payment_amount, payment_currency, payment_status,
-        payment_method_type, payment_email
-      )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-       RETURNING id, expires_at, status`,
-      [
-        email,
-        videoUrl || null,
-        videoId || null,
-        requestId || null,
-        duration,
-        resolution,
-        status,
-        paymentIntentId || null,
-        paymentAmount || null,
-        paymentCurrency || null,
-        paymentStatus || null,
-        paymentMethodType || null,
-        paymentEmail || null,
-      ],
-    );
+    // Check if a record with this payment_intent_id already exists
+    let result;
+    if (paymentIntentId) {
+      const existingRecord = await query(
+        `SELECT id FROM videos WHERE payment_intent_id = $1`,
+        [paymentIntentId],
+      );
+
+      if (existingRecord.rows.length > 0) {
+        // Update existing record
+        result = await query(
+          `UPDATE videos SET
+            video_url = $1,
+            video_id = $2,
+            request_id = $3,
+            duration = $4,
+            resolution = $5,
+            status = $6,
+            payment_amount = $7,
+            payment_currency = $8,
+            payment_status = $9,
+            payment_method_type = $10,
+            payment_email = $11
+           WHERE payment_intent_id = $12
+           RETURNING id, expires_at, status`,
+          [
+            videoUrl || null,
+            videoId || null,
+            requestId || null,
+            duration,
+            resolution,
+            status,
+            paymentAmount || null,
+            paymentCurrency || null,
+            paymentStatus || null,
+            paymentMethodType || null,
+            paymentEmail || null,
+            paymentIntentId,
+          ],
+        );
+      } else {
+        // Insert new record
+        result = await query(
+          `INSERT INTO videos (
+            email, video_url, video_id, request_id, duration, resolution, status,
+            payment_intent_id, payment_amount, payment_currency, payment_status,
+            payment_method_type, payment_email
+          )
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+           RETURNING id, expires_at, status`,
+          [
+            email,
+            videoUrl || null,
+            videoId || null,
+            requestId || null,
+            duration,
+            resolution,
+            status,
+            paymentIntentId || null,
+            paymentAmount || null,
+            paymentCurrency || null,
+            paymentStatus || null,
+            paymentMethodType || null,
+            paymentEmail || null,
+          ],
+        );
+      }
+    } else {
+      // No payment_intent_id, insert new record
+      result = await query(
+        `INSERT INTO videos (
+          email, video_url, video_id, request_id, duration, resolution, status,
+          payment_intent_id, payment_amount, payment_currency, payment_status,
+          payment_method_type, payment_email
+        )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+         RETURNING id, expires_at, status`,
+        [
+          email,
+          videoUrl || null,
+          videoId || null,
+          requestId || null,
+          duration,
+          resolution,
+          status,
+          paymentIntentId || null,
+          paymentAmount || null,
+          paymentCurrency || null,
+          paymentStatus || null,
+          paymentMethodType || null,
+          paymentEmail || null,
+        ],
+      );
+    }
 
     const videoRecord = result.rows[0];
 
