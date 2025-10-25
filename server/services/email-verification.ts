@@ -110,7 +110,10 @@ export async function sendVerificationCode(email: string): Promise<{
   }
 }
 
-export function verifyCode(email: string, code: string): {
+export function verifyCode(
+  email: string,
+  code: string,
+): {
   success: boolean;
   error?: string;
 } {

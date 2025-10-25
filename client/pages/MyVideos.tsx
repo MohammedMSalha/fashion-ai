@@ -172,11 +172,14 @@ export default function MyVideos() {
     setError(null);
     try {
       // Verify the code
-      const verifyResponse = await fetch(createApiUrl("/api/auth/verify-code"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
-      });
+      const verifyResponse = await fetch(
+        createApiUrl("/api/auth/verify-code"),
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, code }),
+        },
+      );
 
       const verifyData = await verifyResponse.json();
 
