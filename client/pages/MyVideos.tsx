@@ -120,6 +120,7 @@ export default function MyVideos() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
+          signal: AbortSignal.timeout(10000), // 10 second timeout
         });
 
         const data = await response.json();
