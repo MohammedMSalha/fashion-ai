@@ -18,7 +18,10 @@ function getPool(): Pool {
   console.log("[API] Creating database pool...");
   pool = new Pool({
     connectionString,
-    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+    ssl:
+      process.env.NODE_ENV === "production"
+        ? { rejectUnauthorized: false }
+        : false,
     max: 5,
     idleTimeoutMillis: 10000,
     connectionTimeoutMillis: 5000,
@@ -74,7 +77,8 @@ export default async function handler(req: any, res: any) {
           res.end(
             JSON.stringify({
               success: false,
-              error: "Missing required fields: email, imageBase64, duration, resolution",
+              error:
+                "Missing required fields: email, imageBase64, duration, resolution",
             }),
           );
           return;
