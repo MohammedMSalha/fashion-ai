@@ -17,7 +17,9 @@ async function initializeHandler() {
     console.log(`[API] Creating Express app... (${Date.now() - startTime}ms)`);
     const app = await createServer();
 
-    console.log(`[API] Wrapping with serverless-http... (${Date.now() - startTime}ms)`);
+    console.log(
+      `[API] Wrapping with serverless-http... (${Date.now() - startTime}ms)`,
+    );
     serverlessHandler = serverless(app);
 
     console.log(`[API] ✓ Handler ready (${Date.now() - startTime}ms total)`);

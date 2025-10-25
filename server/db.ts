@@ -62,7 +62,10 @@ async function performInitialization() {
         console.error("[DB] Background table init error:", err);
       });
     } catch (connError) {
-      console.warn("[DB] Connection failed (will retry on first query):", (connError as Error).message);
+      console.warn(
+        "[DB] Connection failed (will retry on first query):",
+        (connError as Error).message,
+      );
       // Don't fail - let queries retry
     }
 
