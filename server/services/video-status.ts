@@ -93,9 +93,10 @@ export async function updateVideoStatusFromFashn(
       `[UpdateStatus] Found video ${videoId} with current status: ${currentStatus}`,
     );
 
-    // Update based on status
+    // Update based on status (matching PHP logic from Laravel)
+    // Status is "completed" or "succeeded" when done
     if (
-      status.status === "completed" &&
+      (status.status === "completed" || status.status === "succeeded") &&
       status.output &&
       status.output.length > 0
     ) {
@@ -121,9 +122,21 @@ export async function updateVideoStatusFromFashn(
         `[UpdateStatus] Update result:`,
         JSON.stringify(updateResult.rows[0]),
       );
-    } else if (status.status === "failed") {
+    } else if (
+      // Still processing - check all possible processing statuses
+      status.status === "processing" ||
+      status.status === "submitted" ||
+      status.status === "starting" ||
+      status.status === "in_queue"
+    ) {
+      // Still processing, no update needed
+      console.log(
+        `[UpdateStatus] Video ${videoId} still ${status.status} - next check in 10 seconds`,
+      );
+    } else {
+      // All other statuses are treated as failures
       const errorMessage =
-        status.error?.message || "Generation failed without error details";
+        status.error?.message || `Generation failed with status: ${status.status}`;
       console.log(`[UpdateStatus] Video ${videoId} failed: ${errorMessage}`);
 
       const updateResult = await query(
@@ -139,18 +152,6 @@ export async function updateVideoStatusFromFashn(
       console.log(
         `[UpdateStatus] Update result:`,
         JSON.stringify(updateResult.rows[0]),
-      );
-    } else if (
-      status.status === "processing" ||
-      status.status === "submitted"
-    ) {
-      // Still processing, no update needed
-      console.log(
-        `[UpdateStatus] Video ${videoId} still ${status.status} - next check in 10 seconds`,
-      );
-    } else {
-      console.log(
-        `[UpdateStatus] Unknown status from Fashion.ai: ${status.status}`,
       );
     }
   } catch (error) {
