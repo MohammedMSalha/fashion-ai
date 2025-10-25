@@ -22,8 +22,15 @@ interface StripePaymentFormProps {
 }
 
 const stripePublishableKey =
+  (import.meta.env as any).VITE_STRIPE_PUBLISHABLE_KEY ||
   (import.meta.env as any).STRIPE_PUBLISHABLE_KEY ||
   "pk_test_51SLjzIFKPN8vxl5YLX6M3Wg3e2zLBEIb8QaWGCgO1xfzI1aCxpIVxwhjCExKVtduI0Zln9uoEg4Hqy8i1iyMmWL5002Kw1N8Lz";
+
+if (!stripePublishableKey) {
+  console.error(
+    "Stripe publishable key not found! Check VITE_STRIPE_PUBLISHABLE_KEY env var",
+  );
+}
 
 const stripePromise = loadStripe(stripePublishableKey);
 
