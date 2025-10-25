@@ -83,24 +83,106 @@ export default async function handler(req: any, res: any) {
 
     // Stripe webhook endpoint
     if (pathname === "/api/stripe-webhook" && method === "POST") {
-      console.log("[API] Stripe webhook received");
+      try {
+        console.log("[Webhook] POST /api/stripe-webhook received");
 
-      // Preserve raw body for signature verification
-      let body = req.body;
-      if (typeof body === "string") {
-        (req as any).rawBody = body;
-      } else if (Buffer.isBuffer(body)) {
-        (req as any).rawBody = body.toString("utf-8");
-      } else if (typeof body === "object") {
-        (req as any).rawBody = JSON.stringify(body);
+        // Preserve raw body for Stripe signature verification
+        let rawBody: string;
+        if (typeof req.body === "string") {
+          rawBody = req.body;
+        } else if (Buffer.isBuffer(req.body)) {
+          rawBody = req.body.toString("utf-8");
+        } else if (typeof req.body === "object") {
+          rawBody = JSON.stringify(req.body);
+        } else {
+          rawBody = "";
+        }
+
+        (req as any).rawBody = rawBody;
+        console.log("[Webhook] Raw body length:", rawBody.length);
+
+        // Parse the body
+        let event: any;
+        try {
+          event = JSON.parse(rawBody);
+        } catch (e) {
+          console.error("[Webhook] Failed to parse body");
+          res.statusCode = 400;
+          res.setHeader("Content-Type", "application/json");
+          res.end(JSON.stringify({ error: "Invalid JSON" }));
+          return;
+        }
+
+        console.log("[Webhook] Event type:", event.type);
+
+        // Handle payment_intent.succeeded event
+        if (event.type === "payment_intent.succeeded") {
+          const paymentIntent = event.data.object;
+          console.log("[Webhook] Processing payment_intent.succeeded");
+          console.log("[Webhook] Payment ID:", paymentIntent.id);
+          console.log("[Webhook] Amount:", paymentIntent.amount);
+          console.log("[Webhook] Metadata:", paymentIntent.metadata);
+
+          const videoId = paymentIntent.metadata?.videoId;
+          const email = paymentIntent.metadata?.email;
+
+          if (!videoId) {
+            console.error("[Webhook] Missing videoId in metadata");
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ received: true }));
+            return;
+          }
+
+          // Update videos table with payment info
+          try {
+            const updateResult = await query(
+              `UPDATE videos
+               SET payment_intent_id = $1,
+                   payment_status = $2,
+                   payment_amount = $3,
+                   payment_currency = $4,
+                   payment_email = $5,
+                   status = $6
+               WHERE id = $7
+               RETURNING id, email, image_base64, duration, resolution`,
+              [
+                paymentIntent.id,
+                "succeeded",
+                paymentIntent.amount,
+                paymentIntent.currency || "usd",
+                email || "",
+                "processing",
+                videoId,
+              ],
+            );
+
+            if (!updateResult.rows[0]) {
+              console.error("[Webhook] Video record not found:", videoId);
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ received: true }));
+              return;
+            }
+
+            console.log("[Webhook] ✓ Updated video record:", videoId);
+          } catch (dbError) {
+            console.error("[Webhook] Database update error:", dbError);
+          }
+        }
+
+        // Acknowledge receipt to Stripe
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ received: true }));
+        return;
+      } catch (error) {
+        console.error("[Webhook] Error processing webhook:", error);
+        res.statusCode = 500;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ error: "Webhook processing failed" }));
+        return;
       }
-
-      // For now, acknowledge receipt
-      // TODO: Verify Stripe signature and process event
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify({ received: true }));
-      return;
     }
 
     // Default 404
