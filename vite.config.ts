@@ -21,7 +21,6 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: "dist/spa",
-    minify: "terser",
   },
   plugins: [react(), expressPlugin()],
   resolve: {
