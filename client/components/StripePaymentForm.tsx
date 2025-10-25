@@ -35,13 +35,13 @@ function CardForm({
   quality,
   onSuccess,
   onCancel,
-}: StripePaymentFormProps) {
+  clientSecret,
+}: StripePaymentFormProps & { clientSecret: string | null }) {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const { toast } = useToast();
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
   // Auto-dismiss error after 6 seconds
   useEffect(() => {
@@ -52,55 +52,6 @@ function CardForm({
       return () => clearTimeout(timeout);
     }
   }, [error]);
-
-  // Create payment intent on mount (only once)
-  useEffect(() => {
-    if (clientSecret) return;
-
-    const createPaymentIntent = async () => {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-        const response = await fetch(
-          createApiUrl("/api/create-payment-intent"),
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              amount: Math.round(amount * 100),
-              email,
-              imageUrl: image,
-            }),
-            signal: controller.signal,
-          },
-        );
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          let errorMsg = "Failed to create payment intent";
-          try {
-            const errorData = await response.json();
-            errorMsg = errorData.error || errorMsg;
-          } catch {
-            errorMsg = `Server error (${response.status})`;
-          }
-          throw new Error(errorMsg);
-        }
-
-        const data = await response.json();
-        setClientSecret(data.clientSecret);
-      } catch (err) {
-        const errorMsg =
-          err instanceof Error ? err.message : "Failed to initialize payment";
-        setError(errorMsg);
-        console.error("Payment intent error:", err);
-      }
-    };
-
-    createPaymentIntent();
-  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -236,43 +187,53 @@ function CardForm({
         } catch (err) {
           console.warn("Failed to save video to database", err);
         }
-      } else {
-        console.log("No video info to save yet, webhook will handle it");
       }
 
-      console.log("Payment flow completed successfully");
+      // Save email for later
+      localStorage.setItem("fashionai_email", email);
+
+      // Success!
+      setProcessing(false);
       onSuccess();
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Payment failed";
-      setError(errorMessage);
-      toast({
-        title: "Payment Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
+      const errorMsg = err instanceof Error ? err.message : "Payment failed";
+      setError(errorMsg);
       setProcessing(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Payment Element */}
-      {clientSecret ? (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-          <PaymentElement options={{ layout: "tabs" }} />
-        </div>
-      ) : (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 text-center">
-          <p className="text-gray-400">Loading payment method...</p>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 w-full max-w-md mx-auto bg-gray-900 p-6 rounded-lg border border-gray-800"
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-white">Payment</h2>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="text-gray-400 hover:text-white transition"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Loading State */}
+      {!clientSecret && (
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          <span className="ml-3 text-gray-400">Loading payment method...</span>
         </div>
       )}
 
-      {/* Error Message - Dismissible */}
+      {/* Payment Element */}
+      {clientSecret && <PaymentElement />}
+
+      {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 flex gap-3 items-start">
-          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+        <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
           <p className="text-sm text-red-200 flex-1">{error}</p>
           <button
             type="button"
@@ -296,7 +257,7 @@ function CardForm({
           variant="outline"
           className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800 h-12"
           onClick={onCancel}
-          disabled={processing || !stripe}
+          disabled={processing || !stripe || !clientSecret}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
@@ -319,10 +280,90 @@ function CardForm({
 }
 
 export default function StripePaymentForm(props: StripePaymentFormProps) {
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [loadingError, setLoadingError] = useState<string | null>(null);
+
+  // Create payment intent on mount
+  useEffect(() => {
+    if (clientSecret) return;
+
+    const createPaymentIntent = async () => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+        const response = await fetch(
+          createApiUrl("/api/create-payment-intent"),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amount: Math.round(props.amount * 100),
+              email: props.email,
+              imageUrl: props.image,
+            }),
+            signal: controller.signal,
+          },
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          let errorMsg = "Failed to create payment intent";
+          try {
+            const errorData = await response.json();
+            errorMsg = errorData.error || errorMsg;
+          } catch {
+            errorMsg = `Server error (${response.status})`;
+          }
+          throw new Error(errorMsg);
+        }
+
+        const data = await response.json();
+        console.log("Payment intent response:", data);
+
+        if (!data.clientSecret) {
+          throw new Error("No client secret in response");
+        }
+
+        setClientSecret(data.clientSecret);
+      } catch (err) {
+        const errorMsg =
+          err instanceof Error ? err.message : "Failed to initialize payment";
+        setLoadingError(errorMsg);
+        console.error("Payment intent error:", err);
+      }
+    };
+
+    createPaymentIntent();
+  }, [props.amount, props.email, props.image]);
+
+  if (loadingError) {
+    return (
+      <div className="w-full max-w-md mx-auto bg-gray-900 p-6 rounded-lg border border-gray-800">
+        <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <div>
+            <p className="font-semibold text-red-200">Payment Error</p>
+            <p className="text-sm text-red-300">{loadingError}</p>
+          </div>
+        </div>
+        <Button
+          onClick={props.onCancel}
+          className="w-full mt-4 bg-gray-700 hover:bg-gray-600 text-white"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <Elements
       stripe={stripePromise}
       options={{
+        clientSecret: clientSecret || undefined,
         appearance: {
           theme: "night",
           variables: {
@@ -334,7 +375,7 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
         },
       }}
     >
-      <CardForm {...props} />
+      <CardForm {...props} clientSecret={clientSecret} />
     </Elements>
   );
 }
