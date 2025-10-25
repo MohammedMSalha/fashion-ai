@@ -412,5 +412,46 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     );
   }
 
+  // PAYMENT STEP - Show card input form
+  if (step === "payment") {
+    const price = calculatePrice();
+
+    if (!price || !email || !imagePreview) {
+      return (
+        <div className="w-full space-y-6">
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+            <p className="text-red-400">
+              Error: Missing payment information. Please go back and try again.
+            </p>
+          </div>
+          <button
+            onClick={() => setStep("review")}
+            className="text-white underline hover:opacity-80"
+          >
+            Go back
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full space-y-6">
+        <h2 className="text-2xl font-bold text-white mb-6">Payment Details</h2>
+
+        <StripePaymentForm
+          amount={price}
+          email={email}
+          duration={duration}
+          quality={quality}
+          onSuccess={() => {
+            setStep("review");
+            onGenerate?.();
+          }}
+          onCancel={() => setStep("review")}
+        />
+      </div>
+    );
+  }
+
   return null;
 }
