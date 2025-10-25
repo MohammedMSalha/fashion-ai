@@ -105,7 +105,6 @@ const SAMPLE_VIDEOS: Video[] = [
 export default function Index() {
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState<Page>("home");
-  const [mousePos, setMousePos] = useState<MousePosition>({ x: 0, y: 0 });
   const [myVideosStep, setMyVideosStep] = useState<MyVideosStep>("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
