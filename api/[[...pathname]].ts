@@ -137,6 +137,88 @@ export default async function handler(req: any, res: any) {
       }
     }
 
+    // Create payment intent
+    if (pathname === "/api/create-payment-intent" && method === "POST") {
+      try {
+        const { email, videoId, duration, quality, amount } = req.body || {};
+
+        console.log("[Payment] Create payment intent request");
+        console.log("[Payment] Email:", email);
+        console.log("[Payment] VideoId:", videoId);
+        console.log("[Payment] Amount:", amount);
+
+        if (!email || !videoId || !amount) {
+          res.statusCode = 400;
+          res.setHeader("Content-Type", "application/json");
+          res.end(
+            JSON.stringify({
+              success: false,
+              error: "Missing required fields: email, videoId, amount",
+            }),
+          );
+          return;
+        }
+
+        const stripeSecret = process.env.STRIPE_SECRET_KEY;
+        if (!stripeSecret) {
+          console.error("[Payment] STRIPE_SECRET_KEY not set");
+          res.statusCode = 500;
+          res.setHeader("Content-Type", "application/json");
+          res.end(
+            JSON.stringify({
+              success: false,
+              error: "Stripe not configured",
+            }),
+          );
+          return;
+        }
+
+        // Dynamic import of Stripe
+        const Stripe = (await import("stripe")).default;
+        const stripe = new Stripe(stripeSecret);
+
+        console.log("[Payment] Creating Stripe PaymentIntent...");
+
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: Math.round(amount * 100), // Convert to cents
+          currency: "usd",
+          metadata: {
+            email,
+            videoId: String(videoId),
+            duration: String(duration || ""),
+            quality: String(quality || ""),
+          },
+          automatic_payment_methods: {
+            enabled: true,
+          },
+        });
+
+        console.log("[Payment] ✓ PaymentIntent created:", paymentIntent.id);
+
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.end(
+          JSON.stringify({
+            success: true,
+            clientSecret: paymentIntent.client_secret,
+            paymentIntentId: paymentIntent.id,
+          }),
+        );
+        return;
+      } catch (error) {
+        console.error("[Payment] Error:", error);
+        res.statusCode = 500;
+        res.setHeader("Content-Type", "application/json");
+        res.end(
+          JSON.stringify({
+            success: false,
+            error: error instanceof Error ? error.message : "Payment intent creation failed",
+          }),
+        );
+        return;
+      }
+    }
+
     // Stripe webhook endpoint
     if (pathname === "/api/stripe-webhook" && method === "POST") {
       // Always return 200 immediately (Stripe requirement)
