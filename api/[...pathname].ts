@@ -31,7 +31,9 @@ function getPool(): Pool {
 
 function getStripeClient(): Stripe {
   if (!stripeClient) {
-    const key = process.env.STRIPE_SECRET_KEY;
+    const key =
+      process.env.STRIPE_SECRET_KEY ||
+      "sk_test_51SLjzIFKPN8vxl5YnLIwKGRP9Wze6mSuWc8yA3sMXpU9pvo5xl6q0ZetZboO5gNircXyfu6qc5oTx5KKVLnCszvp00mB0Srdqg";
     if (!key) {
       throw new Error("STRIPE_SECRET_KEY not configured");
     }
