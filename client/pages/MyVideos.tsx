@@ -52,11 +52,20 @@ export default function MyVideos() {
   useEffect(() => {
     const initializeComponent = async () => {
       try {
-        const response = await fetch(createApiUrl("/api/auth/smtp-status"));
-        const data = await response.json();
-        setSmtpEnabled(data.requiresVerification === true);
+        const response = await fetch(createApiUrl("/api/auth/smtp-status"), {
+          signal: AbortSignal.timeout(5000), // 5 second timeout
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setSmtpEnabled(data.enabled === true || data.requiresVerification === true);
+        } else {
+          // If endpoint returns error, assume SMTP is not configured
+          setSmtpEnabled(false);
+        }
       } catch (err) {
-        console.error("Failed to check SMTP status:", err);
+        // Network error or timeout - assume SMTP is not configured
+        console.debug("SMTP check skipped (endpoint not available)");
         setSmtpEnabled(false);
       } finally {
         setCheckingSMTP(false);
