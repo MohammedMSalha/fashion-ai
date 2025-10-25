@@ -136,6 +136,8 @@ export default async function handler(req: any, res: any) {
 
           // Update videos table with payment info
           try {
+            console.log("[Webhook] About to update database for videoId:", videoId);
+
             const updateResult = await query(
               `UPDATE videos
                SET payment_intent_id = $1,
@@ -168,19 +170,21 @@ export default async function handler(req: any, res: any) {
             console.log("[Webhook] ✓ Updated video record:", videoId);
           } catch (dbError) {
             console.error("[Webhook] Database update error:", dbError);
+            // Don't throw - acknowledge receipt even if DB update fails
           }
         }
 
-        // Acknowledge receipt to Stripe
+        // Acknowledge receipt to Stripe (always return 200)
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
         res.end(JSON.stringify({ received: true }));
         return;
       } catch (error) {
         console.error("[Webhook] Error processing webhook:", error);
-        res.statusCode = 500;
+        // Return 200 to acknowledge - Stripe expects 200 even on processing errors
+        res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify({ error: "Webhook processing failed" }));
+        res.end(JSON.stringify({ received: true, error: "processing_error" }));
         return;
       }
     }
