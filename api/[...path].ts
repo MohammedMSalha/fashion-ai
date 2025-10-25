@@ -16,7 +16,9 @@ async function getExpressApp() {
         console.log("[Serverless] Express app initialized");
       } else if (typeof serverModule.default === "function") {
         expressApp = await serverModule.default();
-        console.log("[Serverless] Express app initialized (from default export)");
+        console.log(
+          "[Serverless] Express app initialized (from default export)",
+        );
       } else {
         throw new Error(
           "Server module does not export createServer or default function",
