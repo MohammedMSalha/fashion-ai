@@ -4,7 +4,7 @@ import { updateVideoStatusFromFashn } from "../services/video-status.js";
 
 export const checkPendingVideos: RequestHandler = async (req, res) => {
   try {
-    const { email } = req.params;
+    const { email } = req.body;
 
     if (!email) {
       return res.status(400).json({
@@ -15,7 +15,7 @@ export const checkPendingVideos: RequestHandler = async (req, res) => {
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) || email.length > 254) {
       return res.status(400).json({
         success: false,
         error: "Invalid email",
@@ -24,7 +24,7 @@ export const checkPendingVideos: RequestHandler = async (req, res) => {
 
     // Get all pending videos for this email
     const result = await query(
-      `SELECT id, request_id FROM videos 
+      `SELECT id, request_id FROM videos
        WHERE email = $1 AND status = 'processing' AND request_id IS NOT NULL AND deleted_at IS NULL`,
       [email],
     );
