@@ -112,6 +112,25 @@ export default function Index() {
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [showExpiryAlert, setShowExpiryAlert] = useState(true);
 
+  // Handle payment success redirect from Stripe
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentSuccess = params.get("payment") === "success";
+
+    if (paymentSuccess) {
+      // Payment was successful, go to generation page
+      setCurrentPage("in-progress");
+
+      // Clear the URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      // Simulate generation process
+      setTimeout(() => {
+        setCurrentPage("video-preview");
+      }, 3000);
+    }
+  }, []);
+
   // Mouse tracking effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
