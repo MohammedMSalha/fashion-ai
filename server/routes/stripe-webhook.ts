@@ -297,37 +297,44 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                 } catch (generateErr) {
                   console.error(
                     "[Webhook] ✗ Error generating video:",
-                    generateErr,
+                    generateErr instanceof Error ? generateErr.message : generateErr,
                   );
                   // Update status to mark failure
                   const errMsg =
                     generateErr instanceof Error
                       ? generateErr.message
                       : "Unknown error";
-                  const catchResult = await query(
-                    `UPDATE videos
-                     SET payment_intent_id = $1,
-                         payment_status = 'succeeded',
-                         payment_amount = $2,
-                         payment_currency = 'usd',
-                         payment_email = $3,
-                         status = $4,
-                         error_message = $5
-                     WHERE id = $6
-                     RETURNING id, payment_intent_id, status, error_message`,
-                    [
-                      paymentIntent.id,
-                      paymentIntent.amount,
-                      email || null,
-                      "failed",
-                      `Generation error: ${errMsg}`,
-                      videoRecord.id,
-                    ],
-                  );
-                  console.log(
-                    "[Webhook] Database updated after generation error:",
-                    catchResult.rows[0],
-                  );
+                  try {
+                    const catchResult = await query(
+                      `UPDATE videos
+                       SET payment_intent_id = $1,
+                           payment_status = 'succeeded',
+                           payment_amount = $2,
+                           payment_currency = 'usd',
+                           payment_email = $3,
+                           status = $4,
+                           error_message = $5
+                       WHERE id = $6
+                       RETURNING id, payment_intent_id, status, error_message`,
+                      [
+                        paymentIntent.id,
+                        paymentIntent.amount,
+                        email || null,
+                        "failed",
+                        `Generation error: ${errMsg}`,
+                        videoRecord.id,
+                      ],
+                    );
+                    console.log(
+                      "[Webhook] ✓ Database updated after generation error:",
+                      JSON.stringify(catchResult.rows[0]),
+                    );
+                  } catch (dbErr) {
+                    console.error(
+                      "[Webhook] ✗ Failed to update database after generation error:",
+                      dbErr instanceof Error ? dbErr.message : dbErr,
+                    );
+                  }
                 }
               } else {
                 console.error(
