@@ -194,7 +194,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           onDragOver={handleDrag}
           onDrop={handleDrop}
           className={cn(
-            "border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer",
+            "border-2 border-dashed rounded-2xl p-4 md:p-8 text-center transition-all cursor-pointer",
             dragActive
               ? "border-white bg-gray-800"
               : "border-gray-700 hover:border-gray-600",
