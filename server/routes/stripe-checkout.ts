@@ -123,16 +123,24 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     console.error("=== Checkout Session ERROR ===");
-    console.error("Error type:", error instanceof Error ? error.constructor.name : typeof error);
-    console.error("Error message:", error instanceof Error ? error.message : String(error));
+    console.error(
+      "Error type:",
+      error instanceof Error ? error.constructor.name : typeof error,
+    );
+    console.error(
+      "Error message:",
+      error instanceof Error ? error.message : String(error),
+    );
     console.error("Full error:", error);
 
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
 
     return res.status(500).json({
       success: false,
       error: `Failed to create checkout session: ${errorMessage}`,
-      details: process.env.NODE_ENV === "development" ? String(error) : undefined,
+      details:
+        process.env.NODE_ENV === "development" ? String(error) : undefined,
     });
   }
 };
