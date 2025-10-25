@@ -56,7 +56,9 @@ export async function updateVideoStatusFromFashn(
   try {
     const status = await checkVideoGenerationStatus(requestId);
     if (!status) {
-      console.log(`[UpdateStatus] No status response for request: ${requestId}`);
+      console.log(
+        `[UpdateStatus] No status response for request: ${requestId}`,
+      );
       return;
     }
 
@@ -67,17 +69,27 @@ export async function updateVideoStatusFromFashn(
     );
 
     if (videoResult.rows.length === 0) {
-      console.log(`[UpdateStatus] No video record found for request: ${requestId}`);
+      console.log(
+        `[UpdateStatus] No video record found for request: ${requestId}`,
+      );
       return;
     }
 
     const videoId = videoResult.rows[0].id;
-    console.log(`[UpdateStatus] Found video ${videoId} for request ${requestId}`);
+    console.log(
+      `[UpdateStatus] Found video ${videoId} for request ${requestId}`,
+    );
 
     // Update based on status
-    if (status.status === "completed" && status.output && status.output.length > 0) {
+    if (
+      status.status === "completed" &&
+      status.output &&
+      status.output.length > 0
+    ) {
       const videoUrl = status.output[0];
-      console.log(`[UpdateStatus] Video ${videoId} completed! URL: ${videoUrl}`);
+      console.log(
+        `[UpdateStatus] Video ${videoId} completed! URL: ${videoUrl}`,
+      );
 
       await query(
         `UPDATE videos
@@ -89,7 +101,9 @@ export async function updateVideoStatusFromFashn(
         [videoUrl, videoId],
       );
 
-      console.log(`[UpdateStatus] ✓ Video ${videoId} marked as completed with URL`);
+      console.log(
+        `[UpdateStatus] ✓ Video ${videoId} marked as completed with URL`,
+      );
     } else if (status.status === "failed") {
       const errorMessage =
         status.error?.message || "Generation failed without error details";
@@ -147,14 +161,20 @@ export async function checkAndUpdateAllPendingVideos(): Promise<void> {
       return;
     }
 
-    console.log(`[CheckAllPending] Found ${pendingCount} pending video(s) to check`);
+    console.log(
+      `[CheckAllPending] Found ${pendingCount} pending video(s) to check`,
+    );
 
     for (const row of result.rows) {
-      console.log(`[CheckAllPending] Checking video ${row.id} with request ${row.request_id}`);
+      console.log(
+        `[CheckAllPending] Checking video ${row.id} with request ${row.request_id}`,
+      );
       await updateVideoStatusFromFashn(row.request_id);
     }
 
-    console.log(`[CheckAllPending] Completed check for ${pendingCount} video(s)`);
+    console.log(
+      `[CheckAllPending] Completed check for ${pendingCount} video(s)`,
+    );
   } catch (error) {
     console.error("[CheckAllPending] Error checking pending videos:", error);
   }
