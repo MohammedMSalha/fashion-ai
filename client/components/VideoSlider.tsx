@@ -149,7 +149,9 @@ export default function VideoSlider() {
               <div
                 key={idx}
                 className={`h-2 flex-1 rounded-full transition-all backdrop-blur-sm ${
-                  idx === currentIndex ? "bg-white shadow-lg" : "bg-white/40 hover:bg-white/60"
+                  idx === currentIndex
+                    ? "bg-white shadow-lg"
+                    : "bg-white/40 hover:bg-white/60"
                 }`}
               />
             ))}
