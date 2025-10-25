@@ -346,63 +346,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           </Button>
           <Button
             className="flex-1 bg-white hover:bg-gray-100 text-black font-bold h-12 flex items-center justify-center gap-2"
-            onClick={async () => {
-              const price = calculatePrice();
-              if (!price || !email || !imagePreview) {
-                alert("Missing payment information");
-                return;
-              }
-
-              try {
-                console.log("Creating checkout session...", {
-                  price,
-                  email,
-                  duration,
-                  quality,
-                });
-
-                const response = await fetch(
-                  createApiUrl("/api/checkout-session"),
-                  {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      amount: Math.round(price * 100),
-                      email,
-                      duration,
-                      quality,
-                      baseUrl: window.location.origin,
-                    }),
-                  },
-                );
-
-                console.log("Checkout response status:", response.status);
-
-                if (!response.ok) {
-                  const errorData = await response.json();
-                  const errorMsg = errorData.error || `HTTP ${response.status}`;
-                  console.error("Checkout error:", errorMsg);
-                  alert("Payment error: " + errorMsg);
-                  return;
-                }
-
-                const data = await response.json();
-                console.log("Checkout session created:", data);
-
-                if (data.checkoutUrl) {
-                  console.log("Redirecting to:", data.checkoutUrl);
-                  window.location.href = data.checkoutUrl;
-                } else {
-                  alert("No checkout URL returned from server");
-                }
-              } catch (err) {
-                console.error("Checkout error:", err);
-                alert(
-                  "Failed to start checkout: " +
-                    (err instanceof Error ? err.message : "Unknown error"),
-                );
-              }
-            }}
+            onClick={() => setStep("payment")}
           >
             <Check className="w-4 h-4" />
             Pay & Generate
