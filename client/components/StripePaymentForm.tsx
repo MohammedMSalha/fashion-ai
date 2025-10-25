@@ -26,7 +26,7 @@ const stripePublishableKey =
 
 const stripePromise = loadStripe(stripePublishableKey);
 
-const CardForm = ({
+const CardForm = memo(function CardForm({
   amount,
   email,
   image,
@@ -34,7 +34,7 @@ const CardForm = ({
   quality,
   onSuccess,
   onCancel,
-}: StripePaymentFormProps) => {
+}: StripePaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState<string | null>(null);
@@ -310,14 +310,15 @@ const CardForm = ({
       </p>
     </form>
   );
-};
+});
 
-export default function StripePaymentForm(props: StripePaymentFormProps) {
+const StripePaymentFormComponent = memo(function StripePaymentForm(
+  props: StripePaymentFormProps,
+) {
   return (
     <Elements
       stripe={stripePromise}
       options={{
-        clientSecret: undefined,
         appearance: {
           theme: "night",
           variables: {
@@ -332,4 +333,6 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
       <CardForm {...props} />
     </Elements>
   );
-}
+});
+
+export default StripePaymentFormComponent;
