@@ -145,18 +145,6 @@ export default function Index() {
     }
   }, [toast]);
 
-  // Mouse tracking effect
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-
-    if (currentPage === "home") {
-      window.addEventListener("mousemove", handleMouseMove);
-      return () => window.removeEventListener("mousemove", handleMouseMove);
-    }
-  }, [currentPage]);
-
   const handleEmailSubmit = () => {
     if (email) setMyVideosStep("verification");
   };
