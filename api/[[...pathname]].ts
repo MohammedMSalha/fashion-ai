@@ -1,62 +1,52 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import rateLimit from "express-rate-limit";
+import serverless from "serverless-http";
 
 console.log("[VercelAPI] Module loaded");
 
-let appInstance: any = null;
+let handler: any = null;
 
-async function createServerInstance() {
+async function initializeHandler() {
   try {
-    // Try to dynamically import the actual server for full functionality
+    console.log("[VercelAPI] Initializing Express server...");
     const { createServer } = await import("../server/index.js");
-    return await createServer();
-  } catch (e) {
-    console.warn(
-      "[VercelAPI] Could not import full server, creating minimal handler:",
-      e,
-    );
+    const app = await createServer();
+    console.log("[VercelAPI] Express server created successfully");
 
-    // Fallback: create a minimal Express app that returns an error
-    const app = express();
-    app.use(cors());
-    app.use(helmet());
-
-    app.all("*", (req, res) => {
-      res.status(500).json({
-        error: "Server not available",
-        message: "Full server module could not be loaded",
-      });
-    });
-
-    return app;
+    // Wrap Express app with serverless-http
+    handler = serverless(app);
+    console.log("[VercelAPI] Handler initialized with serverless-http");
+    return handler;
+  } catch (error) {
+    console.error("[VercelAPI] Failed to initialize server:", error);
+    throw error;
   }
 }
 
-export default async function handler(req: any, res: any) {
-  console.log("[VercelAPI] Handler called:", req.method, req.url);
+export default async function apiHandler(req: any, res: any) {
+  console.log("[VercelAPI] Request:", {
+    method: req.method,
+    path: req.url,
+    pathname: new URL(req.url || "", "http://localhost").pathname,
+  });
 
   try {
-    // Initialize app on first request
-    if (!appInstance) {
-      console.log("[VercelAPI] Initializing app...");
-      appInstance = await createServerInstance();
-      console.log("[VercelAPI] App initialized");
+    // Initialize handler on first request
+    if (!handler) {
+      console.log("[VercelAPI] First request - initializing handler");
+      handler = await initializeHandler();
     }
 
-    // Handle the request through Express
-    return new Promise<void>((resolve, reject) => {
-      appInstance(req, res, (err: any) => {
-        if (err) reject(err);
-        else resolve();
-      });
-    });
+    // Delegate to serverless-wrapped Express app
+    return await handler(req, res);
   } catch (error) {
-    console.error("[VercelAPI] Error:", error);
-    res.status(500).json({
-      error: "Server initialization failed",
-      details: error instanceof Error ? error.message : String(error),
-    });
+    console.error("[VercelAPI] Handler error:", error);
+
+    // Make sure we don't send headers twice
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        error: "Server error",
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
   }
 }
