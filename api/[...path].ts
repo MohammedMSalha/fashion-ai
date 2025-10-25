@@ -41,7 +41,10 @@ export default async function handler(req: any, res: any) {
     if (pathname === "/api/webhook/stripe") {
       console.log("[Serverless] Webhook request detected");
       console.log("[Serverless] req.body type:", typeof req.body);
-      console.log("[Serverless] req.body is Buffer:", Buffer.isBuffer(req.body));
+      console.log(
+        "[Serverless] req.body is Buffer:",
+        Buffer.isBuffer(req.body),
+      );
 
       // Store raw body for Stripe signature verification
       if (typeof req.body === "string") {
