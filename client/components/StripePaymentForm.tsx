@@ -70,8 +70,21 @@ function CardForm({
     setError(null);
 
     try {
-      console.log("Confirming payment with Stripe Payment Element...");
+      console.log("Submitting payment element...");
 
+      // Step 1: Submit the payment element first (validates form)
+      const { error: submitError } = await elements.submit();
+
+      if (submitError) {
+        console.error("Form validation error:", submitError);
+        setError(submitError.message || "Please fill in all required fields");
+        setProcessing(false);
+        return;
+      }
+
+      console.log("Form submitted, confirming payment with Stripe...");
+
+      // Step 2: Confirm the payment
       const { error: confirmError, paymentIntent } =
         await stripe.confirmPayment({
           elements,
