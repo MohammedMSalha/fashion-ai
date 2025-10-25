@@ -94,6 +94,50 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     }
   };
 
+  const handleSaveAndContinue = async () => {
+    if (!email || !imagePreview) {
+      setSaveError("Please fill in all fields");
+      return;
+    }
+
+    setSavingConfig(true);
+    setSaveError(null);
+
+    try {
+      const response = await fetch(createApiUrl("/api/save-video-config"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          imageBase64: imagePreview,
+          duration: duration === "5s" ? 5 : 10,
+          resolution: quality,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to save configuration");
+      }
+
+      const data = await response.json();
+      console.log("Configuration saved:", data);
+
+      if (data.videoId) {
+        setVideoId(data.videoId);
+        localStorage.setItem("fashionai_email", email);
+        setStep("payment");
+      }
+    } catch (err) {
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to save configuration";
+      console.error("Save config error:", errorMsg);
+      setSaveError(errorMsg);
+    } finally {
+      setSavingConfig(false);
+    }
+  };
+
   const handleGenerateClick = () => {
     if (email && imagePreview) {
       localStorage.setItem("fashionai_email", email);
