@@ -2,6 +2,7 @@ import { Pool } from "pg";
 
 // Database pool - shared across requests
 let pool: Pool | null = null;
+let statusCheckJobStarted = false;
 
 function getPool(): Pool {
   if (pool) return pool;
