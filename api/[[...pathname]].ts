@@ -243,6 +243,53 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
+    // Serve image by video ID (for Fashn AI to access)
+    const imageMatch = pathname.match(/^\/api\/image\/(\d+)$/);
+    if (imageMatch && method === "GET") {
+      try {
+        const videoId = imageMatch[1];
+        console.log("[Image] Serving image for video:", videoId);
+
+        const result = await query(`SELECT image_base64 FROM videos WHERE id = $1`, [videoId]);
+
+        if (!result.rows[0] || !result.rows[0].image_base64) {
+          console.error("[Image] Image not found for video:", videoId);
+          res.statusCode = 404;
+          res.setHeader("Content-Type", "application/json");
+          res.end(JSON.stringify({ error: "Image not found" }));
+          return;
+        }
+
+        const imageBase64 = result.rows[0].image_base64;
+
+        // Extract MIME type from base64 data URL if present
+        let mimeType = "image/jpeg"; // Default
+        let imageData = imageBase64;
+
+        if (imageBase64.startsWith("data:")) {
+          const match = imageBase64.match(/^data:([^;]+);base64,(.+)$/);
+          if (match) {
+            mimeType = match[1];
+            imageData = match[2];
+          }
+        }
+
+        const buffer = Buffer.from(imageData, "base64");
+
+        res.statusCode = 200;
+        res.setHeader("Content-Type", mimeType);
+        res.setHeader("Cache-Control", "public, max-age=3600");
+        res.end(buffer);
+        return;
+      } catch (error) {
+        console.error("[Image] Error serving image:", error);
+        res.statusCode = 500;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ error: "Failed to serve image" }));
+        return;
+      }
+    }
+
     // Default 404
     res.statusCode = 404;
     res.setHeader("Content-Type", "application/json");
