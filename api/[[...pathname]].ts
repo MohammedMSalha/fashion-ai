@@ -250,7 +250,10 @@ export default async function handler(req: any, res: any) {
         const videoId = imageMatch[1];
         console.log("[Image] Serving image for video:", videoId);
 
-        const result = await query(`SELECT image_base64 FROM videos WHERE id = $1`, [videoId]);
+        const result = await query(
+          `SELECT image_base64 FROM videos WHERE id = $1`,
+          [videoId],
+        );
 
         if (!result.rows[0] || !result.rows[0].image_base64) {
           console.error("[Image] Image not found for video:", videoId);
@@ -403,9 +406,7 @@ async function generateVideoWithFashnAI(
 }
 
 // Check Fashn AI video generation status
-async function checkVideoStatus(
-  requestId: string,
-): Promise<{
+async function checkVideoStatus(requestId: string): Promise<{
   status: "submitted" | "processing" | "completed" | "failed" | "unknown";
   videoUrl?: string;
   error?: string;
@@ -453,8 +454,7 @@ async function checkVideoStatus(
       error: data.error,
     };
   } catch (error) {
-    const errorMsg =
-      error instanceof Error ? error.message : "Unknown error";
+    const errorMsg = error instanceof Error ? error.message : "Unknown error";
     console.error("[CheckStatus] Error:", errorMsg);
     return {
       status: "unknown",
@@ -469,9 +469,7 @@ function startStatusCheckingJob() {
 
   const checkFn = async () => {
     try {
-      console.log(
-        "[StatusJob] Checking pending videos (every 30 seconds)...",
-      );
+      console.log("[StatusJob] Checking pending videos (every 30 seconds)...");
 
       // Get all videos that are processing
       const result = await query(
