@@ -145,7 +145,10 @@ export async function createServer() {
   app.post("/api/save-video-config", videoLimiter, saveVideoConfig);
   app.post("/api/save-video", videoLimiter, saveVideo);
   app.get("/api/videos/:email", getVideosByEmail);
-  app.get("/api/video-status/:videoId", getVideoStatus);
+  app.get("/api/video-status/:videoId", (req, res, next) => {
+    console.log("[Express] Route matched: /api/video-status/:videoId with params:", req.params);
+    getVideoStatus(req, res, next);
+  });
   app.get("/api/check-pending/:email", checkPendingVideos);
   app.delete("/api/videos/:videoId", deleteVideo);
 
