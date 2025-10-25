@@ -123,6 +123,7 @@ export async function createServer() {
   app.post("/api/checkout-session", paymentLimiter, createCheckoutSession);
 
   // Video storage endpoints
+  app.post("/api/save-video-config", videoLimiter, saveVideoConfig);
   app.post("/api/save-video", videoLimiter, saveVideo);
   app.get("/api/videos/:email", getVideosByEmail);
   app.get("/api/video-status/:videoId", getVideoStatus);
