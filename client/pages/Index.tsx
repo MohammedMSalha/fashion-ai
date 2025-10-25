@@ -344,7 +344,7 @@ export default function Index() {
                 <div className="text-center">
                   <p className="text-gray-200 text-lg">
                     <span className="text-white font-bold text-xl">
-                      $0.40-$0.90
+                      $0.50-$0.90
                     </span>
                   </p>
                   <p className="text-gray-400 text-sm mt-2">
