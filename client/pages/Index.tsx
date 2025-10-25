@@ -204,18 +204,6 @@ export default function Index() {
         <section className="relative w-full h-full">
           <VideoSlider />
 
-          {/* Mouse tracking background effect */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div
-              className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl transition-all duration-100"
-              style={{
-                top: `${50 + moveY}%`,
-                left: `${50 + moveX}%`,
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-          </div>
-
           {/* CTA Section */}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent pt-16 md:pt-24 pb-8 md:pb-12">
             <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 text-center">
