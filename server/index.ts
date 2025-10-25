@@ -179,16 +179,8 @@ export async function createServer() {
   });
 
   // Catch-all logging handler for debugging 404s
-  app.use((req, res, next) => {
+  app.use((req, res) => {
     console.log("[CatchAll] Unmatched request:", req.method, req.path, req.url);
-    res.status(404).json({
-      success: false,
-      error: "Endpoint not found",
-    });
-  });
-
-  // 404 handler
-  app.use((_req, res) => {
     res.status(404).json({
       success: false,
       error: "Endpoint not found",
