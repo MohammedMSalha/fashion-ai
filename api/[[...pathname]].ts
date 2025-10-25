@@ -658,7 +658,7 @@ async function handleWebhookAsync(req: any) {
               email || "",
               generateResult.requestId,
               "processing",
-              videoId,
+              videoIdNum,
             ],
           );
 
