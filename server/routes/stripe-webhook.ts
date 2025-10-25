@@ -117,7 +117,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             console.log(`[Webhook] Parsed videoId as number: ${videoIdNum}`);
 
             console.log("[Webhook] Executing SELECT query...");
-            console.log("[Webhook] Query: SELECT id, image_base64, resolution, duration, status FROM videos WHERE id = $1");
+            console.log(
+              "[Webhook] Query: SELECT id, image_base64, resolution, duration, status FROM videos WHERE id = $1",
+            );
             console.log("[Webhook] Params: [" + videoIdNum + "]");
 
             const videoResult = await query(
@@ -131,8 +133,12 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             );
 
             if (videoResult.rows.length === 0) {
-              console.error(`[Webhook] ✗ Video record NOT found for id=${videoIdNum}`);
-              console.error(`[Webhook] ✗ This means the video config was not saved before payment`);
+              console.error(
+                `[Webhook] ✗ Video record NOT found for id=${videoIdNum}`,
+              );
+              console.error(
+                `[Webhook] ✗ This means the video config was not saved before payment`,
+              );
               return;
             }
 
@@ -269,9 +275,14 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                         );
 
                         if (verifyResult.rows[0]) {
-                          console.log(`[Webhook] ✓ Verification successful:`, JSON.stringify(verifyResult.rows[0]));
+                          console.log(
+                            `[Webhook] ✓ Verification successful:`,
+                            JSON.stringify(verifyResult.rows[0]),
+                          );
                         } else {
-                          console.error(`[Webhook] ✗ Verification failed: record not found after update`);
+                          console.error(
+                            `[Webhook] ✗ Verification failed: record not found after update`,
+                          );
                         }
                       } else {
                         console.error(
