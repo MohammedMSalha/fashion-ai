@@ -1,50 +1,102 @@
-import serverless from "serverless-http";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
-console.log("[VercelAPI] Module loaded");
+console.log("[Vercel API] Module initializing");
 
-let handler: any = null;
+let expressApp: any = null;
 
-async function initializeHandler() {
+async function getExpressApp() {
+  if (expressApp) {
+    return expressApp;
+  }
+
   try {
-    console.log("[VercelAPI] Initializing Express server...");
+    console.log("[Vercel API] Loading Express server...");
     const { createServer } = await import("../server/index.js");
-    const app = await createServer();
-    console.log("[VercelAPI] Express server created successfully");
-
-    // Wrap Express app with serverless-http
-    handler = serverless(app);
-    console.log("[VercelAPI] Handler initialized with serverless-http");
-    return handler;
+    expressApp = await createServer();
+    console.log("[Vercel API] Express server loaded successfully");
+    return expressApp;
   } catch (error) {
-    console.error("[VercelAPI] Failed to initialize server:", error);
+    console.error("[Vercel API] Failed to load Express server:", error);
     throw error;
   }
 }
 
-export default async function apiHandler(req: any, res: any) {
-  console.log("[VercelAPI] Request:", {
-    method: req.method,
-    path: req.url,
-    pathname: new URL(req.url || "", "http://localhost").pathname,
-  });
-
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse,
+) {
   try {
-    // Initialize handler on first request
-    if (!handler) {
-      console.log("[VercelAPI] First request - initializing handler");
-      handler = await initializeHandler();
-    }
+    console.log("[Vercel API] Request:", {
+      method: req.method,
+      path: req.url,
+      headers: Object.keys(req.headers).join(", "),
+    });
 
-    // Delegate to serverless-wrapped Express app
-    return await handler(req, res);
+    // Get the Express app
+    const app = await getExpressApp();
+
+    // Create a simple HTTP request handler
+    // Vercel passes the request directly, so we just need to call the Express app
+    return new Promise<void>((resolve, reject) => {
+      // Handle the request through Express
+      const originalEnd = res.end;
+      let ended = false;
+
+      res.end = function (...args: any[]) {
+        if (!ended) {
+          ended = true;
+          originalEnd.apply(res, args);
+        }
+        resolve();
+      };
+
+      // If Express doesn't call res.end, resolve after a timeout
+      const timeout = setTimeout(() => {
+        if (!ended) {
+          console.warn("[Vercel API] Request handling timeout");
+          ended = true;
+          if (!res.headersSent) {
+            res.status(500).json({ error: "Request timeout" });
+          }
+          resolve();
+        }
+      }, 29000); // Vercel timeout is 30 seconds
+
+      try {
+        app(req, res, (err?: any) => {
+          clearTimeout(timeout);
+          if (err) {
+            console.error("[Vercel API] Express middleware error:", err);
+            if (!res.headersSent) {
+              res.status(500).json({ error: "Internal server error" });
+            }
+            if (!ended) {
+              ended = true;
+              res.end();
+            }
+            resolve();
+          }
+        });
+      } catch (error) {
+        clearTimeout(timeout);
+        console.error("[Vercel API] Express call error:", error);
+        if (!res.headersSent) {
+          res.status(500).json({ error: "Server error" });
+        }
+        if (!ended) {
+          ended = true;
+          res.end();
+        }
+        resolve();
+      }
+    });
   } catch (error) {
-    console.error("[VercelAPI] Handler error:", error);
+    console.error("[Vercel API] Handler error:", error);
 
-    // Make sure we don't send headers twice
     if (!res.headersSent) {
       res.status(500).json({
         success: false,
-        error: "Server error",
+        error: "Server initialization failed",
         message: error instanceof Error ? error.message : "Unknown error",
       });
     }
