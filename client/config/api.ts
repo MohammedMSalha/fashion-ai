@@ -1,10 +1,5 @@
-// Get the API base URL from environment or use default
-export const API_BASE_URL = 
-  process.env.REACT_APP_API_URL || 
-  process.env.VITE_API_URL ||
-  (typeof window !== 'undefined' && window.location.hostname.includes('vercel') 
-    ? 'https://c9490d0ac88e4b849e13d3d7de56a268-8cae1a264aad42febe4fa3fff.fly.dev'
-    : '');
+// Get the API base URL from Vercel environment variable
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export const createApiUrl = (path: string) => {
   if (API_BASE_URL) {
