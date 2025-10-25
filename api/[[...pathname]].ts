@@ -1,65 +1,53 @@
-import serverless from "serverless-http";
-import { createServer } from "../server/index";
-
-let handler: any = null;
-let initError: Error | null = null;
-
-async function getHandler() {
-  if (handler) return handler;
-  if (initError) throw initError;
-
-  try {
-    console.log("[Serverless] Initializing Express app...");
-    const app = await createServer();
-    console.log("[Serverless] Wrapping with serverless-http...");
-    handler = serverless(app);
-    console.log("[Serverless] ✓ Handler ready");
-    return handler;
-  } catch (error) {
-    initError = error as Error;
-    console.error("[Serverless] ✗ Failed to initialize:", error);
-    throw error;
-  }
-}
-
-export default async function vercelHandler(req: any, res: any) {
+export default async function handler(req: any, res: any) {
   try {
     const pathname = req.url?.split("?")[0] || "/";
-    console.log(`[Serverless] ${req.method} ${pathname}`);
+    const method = req.method || "GET";
 
-    // Get the handler (initializes Express app on first call)
-    const handler = await getHandler();
+    console.log(`[API] ${method} ${pathname}`);
 
-    // Preserve raw body for Stripe webhook
-    if (pathname === "/api/stripe-webhook" && req.method === "POST") {
-      console.log("[Serverless] Webhook request - preserving raw body");
-
-      if (typeof req.body === "string") {
-        req.rawBody = req.body;
-      } else if (Buffer.isBuffer(req.body)) {
-        req.rawBody = req.body.toString("utf-8");
-      } else if (typeof req.body === "object") {
-        req.rawBody = JSON.stringify(req.body);
-      } else {
-        req.rawBody = "";
-      }
-    }
-
-    // Route through Express app via serverless-http
-    return handler(req, res);
-  } catch (error) {
-    console.error("[Serverless] Error:", error);
-
-    if (!res.headersSent) {
-      res.statusCode = 500;
+    // Health check
+    if (pathname === "/api/health") {
+      res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
-      res.end(
-        JSON.stringify({
-          success: false,
-          error: "Server initialization failed",
-          details: error instanceof Error ? error.message : String(error),
-        }),
-      );
+      res.end(JSON.stringify({ status: "ok" }));
+      return;
     }
+
+    // Stripe webhook endpoint
+    if (pathname === "/api/stripe-webhook" && method === "POST") {
+      console.log("[API] Stripe webhook received");
+
+      // Parse body if not already parsed
+      let body = req.body;
+      if (typeof body === "string") {
+        try {
+          body = JSON.parse(body);
+        } catch (e) {
+          console.error("[API] Failed to parse body");
+        }
+      }
+
+      // For now, just acknowledge receipt
+      // In production, this would verify the signature and process the event
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ received: true }));
+      return;
+    }
+
+    // Default 404
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ error: "Endpoint not found" }));
+  } catch (error) {
+    console.error("[API] Error:", error);
+    res.statusCode = 500;
+    res.setHeader("Content-Type", "application/json");
+    res.end(
+      JSON.stringify({
+        error: "Internal server error",
+        message: error instanceof Error ? error.message : String(error),
+      }),
+    );
   }
 }
