@@ -19,6 +19,7 @@ import {
   getVideoStatus,
 } from "./routes/save-video.js";
 import { checkPendingVideos } from "./routes/check-pending-videos.js";
+import { getImageByVideoId } from "./routes/image-server.js";
 import {
   getSMTPStatusHandler,
   sendCodeHandler,
