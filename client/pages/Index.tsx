@@ -175,10 +175,6 @@ export default function Index() {
 
   const currentVideo = SAMPLE_VIDEOS[currentVideoIndex];
 
-  // Calculate mouse effect offset
-  const moveX = (mousePos.x / window.innerWidth - 0.5) * 20;
-  const moveY = (mousePos.y / window.innerHeight - 0.5) * 20;
-
   return (
     <div className="fixed inset-0 bg-black text-white overflow-hidden">
       {/* HOME PAGE */}
