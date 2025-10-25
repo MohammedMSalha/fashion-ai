@@ -7,7 +7,8 @@ function getPool(): Pool {
     return pool;
   }
 
-  const DATABASE_URL = process.env.DATABASE_URL || process.env.fashion_DATABASE_URL;
+  const DATABASE_URL =
+    process.env.DATABASE_URL || process.env.fashion_DATABASE_URL;
   if (!DATABASE_URL) {
     throw new Error("DATABASE_URL environment variable not set");
   }
@@ -31,10 +32,13 @@ export default async function handler(req: any, res: any) {
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
   );
 
   // Handle OPTIONS
@@ -58,11 +62,17 @@ export default async function handler(req: any, res: any) {
     }
 
     // Get videos by email: GET /api/videos/:email
-    if (pathname.startsWith("/api/videos/") && req.method === "GET" && !pathname.includes("DELETE")) {
+    if (
+      pathname.startsWith("/api/videos/") &&
+      req.method === "GET" &&
+      !pathname.includes("DELETE")
+    ) {
       const email = decodeURIComponent(pathname.split("/api/videos/")[1]);
 
       if (!email) {
-        return res.status(400).json({ success: false, error: "Email required" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Email required" });
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -104,10 +114,14 @@ export default async function handler(req: any, res: any) {
 
     // Check pending videos: GET /api/check-pending/:email
     if (pathname.startsWith("/api/check-pending/") && req.method === "GET") {
-      const email = decodeURIComponent(pathname.split("/api/check-pending/")[1]);
+      const email = decodeURIComponent(
+        pathname.split("/api/check-pending/")[1],
+      );
 
       if (!email) {
-        return res.status(400).json({ success: false, error: "Email required" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Email required" });
       }
 
       // Get pending videos for this email
@@ -134,7 +148,8 @@ export default async function handler(req: any, res: any) {
       if (!email || !imageBase64 || !duration || !resolution) {
         return res.status(400).json({
           success: false,
-          error: "Missing required fields: email, imageBase64, duration, resolution",
+          error:
+            "Missing required fields: email, imageBase64, duration, resolution",
         });
       }
 
