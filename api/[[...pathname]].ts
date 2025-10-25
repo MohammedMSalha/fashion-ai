@@ -7,13 +7,20 @@ export default async function handler(
   try {
     console.log("[API] Request:", req.method, req.url);
 
+    // Get pathname without query string
+    const pathname = req.url?.split("?")[0] || "/";
+    console.log("[API] Pathname:", pathname);
+
     // Simple health check to verify function works
-    if (req.url === "/api/health") {
+    if (pathname === "/api/health" || pathname === "health") {
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify({ status: "ok", time: new Date().toISOString() }));
       return;
     }
+
+    // Log all requests for debugging
+    console.log("[API] No route matched for:", pathname);
 
     // Default 404 for now
     res.statusCode = 404;
