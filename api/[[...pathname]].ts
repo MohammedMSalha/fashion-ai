@@ -214,12 +214,17 @@ async function handleWebhookAsync(req: any) {
       // Update videos table with payment info
       try {
         console.log("[Webhook] About to update database for videoId:", videoId);
+        console.log("[Webhook] Getting query function...");
         const queryFn = await getQueryFunction();
 
         if (!queryFn) {
-          console.error("[Webhook] Database not available");
+          console.error("[Webhook] Query function is null - database not available");
+          console.error("[Webhook] fashion_DATABASE_URL:", !!process.env.fashion_DATABASE_URL);
+          console.error("[Webhook] DATABASE_URL:", !!process.env.DATABASE_URL);
           return;
         }
+
+        console.log("[Webhook] Query function available, updating database...");
 
         const updateResult = await queryFn(
           `UPDATE videos 
