@@ -106,6 +106,10 @@ export default function Index() {
     if (location.pathname === "/generate") {
       return "generate";
     }
+    // Check if we're on the /my-videos route
+    if (location.pathname === "/my-videos") {
+      return "my-videos";
+    }
     return "home";
   });
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
