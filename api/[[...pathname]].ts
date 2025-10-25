@@ -55,6 +55,7 @@ export default async function handler(req: any, res: any) {
         }
 
         // Insert into database
+        const query = await getQueryFunction();
         const result = await query(
           `INSERT INTO videos (email, image_base64, duration, resolution, status)
            VALUES ($1, $2, $3, $4, 'awaiting_payment')
