@@ -102,13 +102,93 @@ export default function MyVideos() {
 
     setLoading(true);
     setError(null);
+
+    // If SMTP is enabled, send verification code
+    if (smtpEnabled) {
+      try {
+        const response = await fetch(createApiUrl("/api/auth/send-code"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to send verification code");
+        }
+
+        setStep("verification");
+        setLoading(false);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to send verification code",
+        );
+        setLoading(false);
+      }
+    } else {
+      // SMTP not enabled, directly load videos
+      try {
+        // Check for any pending videos and update their status in the background
+        await fetch(
+          createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
+        ).catch(() => null);
+
+        // Then fetch all videos (will include any that just completed)
+        const response = await fetch(
+          createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch videos");
+        }
+
+        const data = await response.json();
+        const userVideos = data.videos || [];
+
+        setVideos(userVideos);
+        setStep("videos");
+        if (userVideos.length > 0) {
+          setCurrentVideoIndex(0);
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load videos. Please try again.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleCodeSubmit = async () => {
+    if (!code) return;
+
+    setLoading(true);
+    setError(null);
     try {
-      // Check for any pending videos and update their status in the background
+      // Verify the code
+      const verifyResponse = await fetch(createApiUrl("/api/auth/verify-code"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
+
+      const verifyData = await verifyResponse.json();
+
+      if (!verifyResponse.ok) {
+        throw new Error(verifyData.error || "Verification failed");
+      }
+
+      // Code verified, now fetch videos
       await fetch(
         createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
       ).catch(() => null);
 
-      // Then fetch all videos (will include any that just completed)
       const response = await fetch(
         createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
       );
@@ -121,19 +201,12 @@ export default function MyVideos() {
       const userVideos = data.videos || [];
 
       setVideos(userVideos);
-
-      if (userVideos.length === 0) {
-        setStep("videos");
-      } else {
-        setStep("videos");
+      setStep("videos");
+      if (userVideos.length > 0) {
         setCurrentVideoIndex(0);
       }
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to load videos. Please try again.",
-      );
+      setError(err instanceof Error ? err.message : "Failed to load videos");
     } finally {
       setLoading(false);
     }
