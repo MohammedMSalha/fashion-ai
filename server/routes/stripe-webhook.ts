@@ -117,6 +117,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             console.log(`[Webhook] Parsed videoId as number: ${videoIdNum}`);
 
             console.log("[Webhook] Executing SELECT query...");
+            console.log("[Webhook] Query: SELECT id, image_base64, resolution, duration, status FROM videos WHERE id = $1");
+            console.log("[Webhook] Params: [" + videoIdNum + "]");
+
             const videoResult = await query(
               `SELECT id, image_base64, resolution, duration, status FROM videos
                WHERE id = $1`,
@@ -126,6 +129,12 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             console.log(
               `[Webhook] ✓ Query result: ${videoResult.rowCount} rows affected, ${videoResult.rows.length} rows returned`,
             );
+
+            if (videoResult.rows.length === 0) {
+              console.error(`[Webhook] ✗ Video record NOT found for id=${videoIdNum}`);
+              console.error(`[Webhook] ✗ This means the video config was not saved before payment`);
+              return;
+            }
 
             if (videoResult.rows.length > 0) {
               const videoRecord = videoResult.rows[0];
