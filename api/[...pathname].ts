@@ -440,7 +440,10 @@ async function handler(req: any, res: any) {
               console.log("[Webhook] Payment stored for video:", videoId);
 
               // Now trigger video generation with fashion.ai
-              console.log("[Webhook] Triggering video generation for videoId:", videoId);
+              console.log(
+                "[Webhook] Triggering video generation for videoId:",
+                videoId,
+              );
 
               try {
                 // Import the generation service
@@ -485,18 +488,27 @@ async function handler(req: any, res: any) {
                   // Update status to failed
                   await query(
                     `UPDATE videos SET status = $1, error_message = $2 WHERE id = $3`,
-                    ["failed", generateResult.error || "Generation failed", videoId],
+                    [
+                      "failed",
+                      generateResult.error || "Generation failed",
+                      videoId,
+                    ],
                   );
                 }
               } catch (genError) {
-                console.error("[Webhook] Error triggering generation:", genError);
+                console.error(
+                  "[Webhook] Error triggering generation:",
+                  genError,
+                );
 
                 // Mark as failed
                 await query(
                   `UPDATE videos SET status = $1, error_message = $2 WHERE id = $3`,
                   [
                     "failed",
-                    genError instanceof Error ? genError.message : "Unknown error",
+                    genError instanceof Error
+                      ? genError.message
+                      : "Unknown error",
                     videoId,
                   ],
                 );
