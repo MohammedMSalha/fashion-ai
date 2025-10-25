@@ -205,7 +205,7 @@ export default function MyVideos() {
                 Your Videos
               </h2>
               <p className="text-gray-400 text-lg">
-                Sign in to view your generated fashion videos
+                Enter your email to view your generated fashion videos
               </p>
             </div>
 
@@ -219,69 +219,13 @@ export default function MyVideos() {
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 text-base bg-gray-900 border-gray-800 text-white"
-                />
-              </div>
-
-              <Button
-                disabled={!email}
-                onClick={handleEmailSubmit}
-                className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 text-base"
-              >
-                Proceed
-              </Button>
-
-              <p className="text-xs text-gray-500 text-center mt-6">
-                We'll send you a verification code
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Code Verification Step */}
-      {step === "verification" && (
-        <section className="min-h-screen bg-black flex items-center justify-center py-12">
-          <div className="w-full max-w-md px-4">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-900 mb-6 border border-gray-800">
-                <svg
-                  className="w-8 h-8 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-3xl font-bold text-white mb-2">
-                Verify Code
-              </h2>
-              <p className="text-gray-400 text-lg">
-                Check your email for the verification code
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Verification Code
-                </label>
-                <Input
-                  type="text"
-                  placeholder="123456"
-                  value={code}
-                  onChange={(e) =>
-                    setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-                  }
-                  maxLength="6"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && email && !loading) {
+                      handleEmailSubmit();
+                    }
+                  }}
                   disabled={loading}
-                  className="h-12 text-base bg-gray-900 border-gray-800 text-white text-center text-2xl tracking-widest"
+                  className="h-12 text-base bg-gray-900 border-gray-800 text-white"
                 />
               </div>
 
@@ -292,35 +236,30 @@ export default function MyVideos() {
               )}
 
               <Button
-                disabled={code.length !== 6 || loading}
-                onClick={handleCodeSubmit}
+                disabled={!email || loading}
+                onClick={handleEmailSubmit}
                 className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 text-base disabled:opacity-50"
               >
                 {loading ? (
                   <>
                     <Loader className="w-4 h-4 mr-2 animate-spin" />
-                    Loading Videos...
+                    Loading...
                   </>
                 ) : (
-                  "Verify"
+                  "Load My Videos"
                 )}
               </Button>
 
               <Button
                 variant="ghost"
-                onClick={() => {
-                  setStep("email");
-                  setCode("");
-                  setError(null);
-                }}
-                disabled={loading}
+                onClick={() => navigate("/")}
                 className="w-full text-gray-400 hover:text-white hover:bg-gray-900"
               >
-                Back
+                Back to Home
               </Button>
 
-              <p className="text-xs text-gray-500 text-center">
-                Didn't receive code? Check spam folder or try again.
+              <p className="text-xs text-gray-500 text-center mt-6">
+                Use the same email you used to generate videos
               </p>
             </div>
           </div>
