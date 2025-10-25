@@ -14,19 +14,22 @@ const validateEmail = (email: string): boolean => {
   return emailRegex.test(email) && email.length <= 254;
 };
 
-let stripeClient: Stripe | null = null;
-
 function getStripeClient(): Stripe {
-  if (!stripeClient) {
-    const stripeSecretKey =
-      process.env.STRIPE_SECRET_KEY ||
-      "sk_test_51SLjzIFKPN8vxl5YnLIwKGRP9Wze6mSuWc8yA3sMXpU9pvo5xl6q0ZetZboO5gNircXyfu6qc5oTx5KKVLnCszvp00mB0Srdqg";
-    if (!stripeSecretKey) {
-      throw new Error("STRIPE_SECRET_KEY not configured");
-    }
-    stripeClient = new Stripe(stripeSecretKey);
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+  if (!stripeSecretKey) {
+    console.error("ERROR: STRIPE_SECRET_KEY environment variable is not set!");
+    throw new Error("STRIPE_SECRET_KEY not configured. Please set it in environment variables.");
   }
-  return stripeClient;
+
+  if (!stripeSecretKey.startsWith("sk_")) {
+    console.error("ERROR: STRIPE_SECRET_KEY does not look like a valid Stripe secret key!");
+    throw new Error("STRIPE_SECRET_KEY is invalid. Must start with 'sk_'");
+  }
+
+  return new Stripe(stripeSecretKey, {
+    apiVersion: "2024-06-20",
+  });
 }
 
 export const createCheckoutSession: RequestHandler = async (req, res) => {
