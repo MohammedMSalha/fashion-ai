@@ -9,7 +9,7 @@ async function getExpressApp() {
     try {
       console.log("[Serverless] Initializing Express app...");
       // Import the server module - createServer is a named export
-      const serverModule = await import("../server/index.ts");
+      const serverModule = await import("../server/index.js");
       const createServer = (serverModule as any).createServer;
 
       if (typeof createServer !== "function") {
