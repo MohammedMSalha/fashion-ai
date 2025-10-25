@@ -63,7 +63,9 @@ export default function EmbeddedPaymentForm({
       console.log("✓ Payment intent created");
 
       // Step 2: Confirm payment with Stripe
-      const stripe = window.Stripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+      const stripe = window.Stripe(
+        process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY,
+      );
       const elements = stripe.elements({ clientSecret });
       const paymentElement = elements.create("payment");
       paymentElement.mount("#payment-element");
@@ -85,8 +87,7 @@ export default function EmbeddedPaymentForm({
       console.log("✓ Payment successful");
       onSuccess();
     } catch (err) {
-      const errorMsg =
-        err instanceof Error ? err.message : "Payment failed";
+      const errorMsg = err instanceof Error ? err.message : "Payment failed";
       setError(errorMsg);
       setLoading(false);
     }
@@ -97,11 +98,15 @@ export default function EmbeddedPaymentForm({
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-6 border border-gray-700">
         <p className="text-gray-400 text-sm mb-1">Total Amount</p>
         <p className="text-3xl font-bold text-white">${amount.toFixed(2)}</p>
-        <p className="text-xs text-gray-400 mt-2">Duration: {duration} | Quality: {quality}</p>
+        <p className="text-xs text-gray-400 mt-2">
+          Duration: {duration} | Quality: {quality}
+        </p>
       </div>
 
       <div className="space-y-4">
-        <label className="block text-sm font-medium text-white">Card Details</label>
+        <label className="block text-sm font-medium text-white">
+          Card Details
+        </label>
         <div
           id="payment-element"
           className="bg-gray-900 border border-gray-700 rounded-lg p-4"
