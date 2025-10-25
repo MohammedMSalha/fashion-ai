@@ -18,6 +18,10 @@ export default async function handler(req: any, res: any) {
     const method = req.method || "GET";
 
     console.log(`[API] ${method} ${pathname}`);
+    console.log(
+      "[API] Database URL set:",
+      !!process.env.DATABASE_URL || !!process.env.fashion_DATABASE_URL,
+    );
 
     // Health check
     if (pathname === "/api/health") {
