@@ -35,17 +35,6 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     }
   }, []);
 
-  // Payment callbacks - must be defined before any conditional returns
-  const handlePaymentSuccess = useCallback(() => {
-    console.log("Payment successful! Navigating...");
-    localStorage.setItem("fashionai_email", email);
-    setStep("upload");
-    onGenerate?.();
-  }, [email, onGenerate]);
-
-  const handlePaymentCancel = useCallback(() => {
-    setStep("review");
-  }, []);
 
   const detectImageResolution = (file: File) => {
     const reader = new FileReader();
