@@ -36,11 +36,7 @@ export default async function handler(
 
     const app = await getServer();
 
-    console.log(
-      "[Handler] Express app ready, routing:",
-      req.method,
-      req.url,
-    );
+    console.log("[Handler] Express app ready, routing:", req.method, req.url);
 
     // Create a promise that resolves when the response is finished
     return new Promise<void>((resolve, reject) => {
@@ -58,10 +54,7 @@ export default async function handler(
       // Handle response finish
       res.on("finish", () => {
         clearTimeout(timeout);
-        console.log(
-          "[Handler] Response finished with status:",
-          res.statusCode,
-        );
+        console.log("[Handler] Response finished with status:", res.statusCode);
         resolve();
       });
 
