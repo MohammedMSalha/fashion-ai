@@ -161,12 +161,12 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                       );
                     }
                   } else {
-                    console.warn(
-                      "Video generation failed from webhook:",
+                    console.error(
+                      "[Webhook] ✗ Video generation failed:",
                       generateResult.error,
                     );
                     // Update payment status but mark video as failed
-                    await query(
+                    const failResult = await query(
                       `UPDATE videos
                        SET payment_intent_id = $1,
                            payment_status = 'succeeded',
@@ -175,7 +175,8 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                            payment_email = $3,
                            status = $4,
                            error_message = $5
-                       WHERE id = $6`,
+                       WHERE id = $6
+                       RETURNING id, payment_intent_id, status, error_message`,
                       [
                         paymentIntent.id,
                         paymentIntent.amount,
@@ -184,6 +185,10 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                         generateResult.error || "Generation failed",
                         videoRecord.id,
                       ],
+                    );
+                    console.log(
+                      "[Webhook] Database updated with error:",
+                      failResult.rows[0],
                     );
                   }
                 } catch (generateErr) {
