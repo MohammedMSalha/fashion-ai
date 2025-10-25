@@ -98,10 +98,8 @@ const SAMPLE_VIDEOS: Video[] = [
 
 export default function Index() {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<Page>("home");
-  const [myVideosStep, setMyVideosStep] = useState<MyVideosStep>("email");
-  const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [generatedVideo] = useState<Video>(SAMPLE_VIDEOS[0]);
   const [showFabMenu, setShowFabMenu] = useState(false);
