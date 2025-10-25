@@ -442,7 +442,7 @@ async function handler(req: any, res: any) {
         const parsedLimit = limitParam ? parseInt(limitParam, 10) : undefined;
         const hasValidLimit = Number.isFinite(parsedLimit ?? Number.NaN);
         const limit = hasValidLimit
-          ? Math.min(Math.max((parsedLimit as number), 1), 50)
+          ? Math.min(Math.max(parsedLimit as number, 1), 50)
           : 20;
 
         const params: Array<string | number> = [];
