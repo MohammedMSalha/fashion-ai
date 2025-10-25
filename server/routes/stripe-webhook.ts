@@ -96,13 +96,33 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
 
           try {
             // Get the video record with image data
+            console.log(`[Webhook] Querying video with ID: ${videoId}`);
+
+            const videoIdNum = parseInt(videoId);
+            console.log(`[Webhook] Parsed videoId as number: ${videoIdNum}`);
+
             const videoResult = await query(
-              `SELECT id, image_base64, resolution, duration FROM videos
-               WHERE id = $1 AND status IN ('awaiting_payment', 'processing')`,
-              [parseInt(videoId)],
+              `SELECT id, image_base64, resolution, duration, status FROM videos
+               WHERE id = $1`,
+              [videoIdNum],
             );
 
+            console.log(`[Webhook] Query result: ${videoResult.rows.length} rows found`);
+
             if (videoResult.rows.length > 0) {
+              const videoRecord = videoResult.rows[0];
+              console.log("[Webhook] Video record found:");
+              console.log("[Webhook]   - id:", videoRecord.id);
+              console.log("[Webhook]   - status:", videoRecord.status);
+              console.log("[Webhook]   - has image:", !!videoRecord.image_base64);
+              console.log("[Webhook]   - duration:", videoRecord.duration);
+              console.log("[Webhook]   - resolution:", videoRecord.resolution);
+
+              if (!["awaiting_payment", "processing"].includes(videoRecord.status)) {
+                console.warn(
+                  `[Webhook] ⚠ Video status is '${videoRecord.status}', not awaiting_payment or processing`,
+                );
+              }
               const videoRecord = videoResult.rows[0];
               const resolution = videoRecord.resolution as "720p" | "1080p";
               const duration = videoRecord.duration as 5 | 10;
