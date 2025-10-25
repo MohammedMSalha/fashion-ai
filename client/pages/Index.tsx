@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
 import SmartVideoForm from "@/components/SmartVideoForm";
+import MyVideos from "./MyVideos";
 import { useToast } from "@/hooks/use-toast";
 import {
   Sparkles,
@@ -21,6 +22,7 @@ import {
 type Page =
   | "home"
   | "generate"
+  | "my-videos"
   | "contact"
   | "terms"
   | "privacy"
