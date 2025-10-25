@@ -124,6 +124,8 @@ export async function createServer() {
       db_url_set: !!(
         process.env.DATABASE_URL || process.env.fashion_DATABASE_URL
       ),
+      background_job_active: true,
+      timestamp: new Date().toISOString(),
     });
   });
 
