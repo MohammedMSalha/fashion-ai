@@ -15,14 +15,14 @@ export default async function handler(
 ) {
   try {
     const app = getServer();
-    
+
     // Preserve raw body for Stripe webhook signature verification
     if (req.url?.includes("/api/stripe-webhook") && req.method === "POST") {
       console.log("[Serverless] Webhook request detected, preserving raw body");
-      
+
       // Collect raw body
       let rawBody = "";
-      
+
       // If body is already parsed, reconstruct it
       if (req.body) {
         if (typeof req.body === "string") {
@@ -46,23 +46,23 @@ export default async function handler(
           req.on("error", reject);
         });
       }
-      
+
       // Set raw body for middleware
       (req as any).rawBody = rawBody;
-      
+
       // Parse body for Express
       try {
         (req as any).body = JSON.parse(rawBody);
       } catch {
         (req as any).body = rawBody;
       }
-      
+
       console.log("[Serverless] Raw body set, length:", rawBody.length);
     }
-    
+
     // Route to Express app
     console.log(`[Serverless] ${req.method} ${req.url}`);
-    
+
     // Create a promise that resolves when the response is finished
     return new Promise<void>((resolve, reject) => {
       // Set a timeout to prevent hanging
@@ -75,19 +75,19 @@ export default async function handler(
         }
         resolve();
       }, 25000);
-      
+
       // Handle response finish
       res.on("finish", () => {
         clearTimeout(timeout);
         resolve();
       });
-      
+
       res.on("error", (err) => {
         clearTimeout(timeout);
         console.error("[Serverless] Response error:", err);
         reject(err);
       });
-      
+
       // Call Express app
       try {
         app(req, res);
