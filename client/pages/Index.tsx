@@ -532,7 +532,7 @@ export default function Index() {
                   onChange={(e) =>
                     setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
                   }
-                  maxLength="6"
+                  maxLength={6}
                   className="h-11 bg-gray-800 border-gray-700 text-white text-center text-lg tracking-widest"
                 />
                 <Button
