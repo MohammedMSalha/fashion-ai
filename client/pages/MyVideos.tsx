@@ -252,6 +252,18 @@ export default function MyVideos() {
     });
   };
 
+  // Don't render until SMTP status is checked
+  if (checkingSMTP) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <Loader className="w-12 h-12 mx-auto mb-4 text-white animate-spin" />
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
