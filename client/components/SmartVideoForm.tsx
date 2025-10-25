@@ -370,17 +370,6 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   }
 
   // PAYMENT STEP
-  const handlePaymentSuccess = useCallback(() => {
-    console.log("Payment successful! Navigating...");
-    localStorage.setItem("fashionai_email", email);
-    setStep("upload");
-    onGenerate?.();
-  }, [email, onGenerate]);
-
-  const handlePaymentCancel = useCallback(() => {
-    setStep("review");
-  }, []);
-
   if (step === "payment") {
     return (
       <div className="w-full space-y-6">
