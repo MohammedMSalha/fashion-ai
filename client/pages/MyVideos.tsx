@@ -91,13 +91,14 @@ export default function MyVideos() {
           try {
             const response = await fetch(
               createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
+              { signal: AbortSignal.timeout(5000) } // 5 second timeout
             );
             if (response.ok) {
               const data = await response.json();
               setVideos(data.videos || []);
             }
           } catch (err) {
-            console.error("Error polling video status", err);
+            console.debug("Error polling video status", err);
           }
         }, 5000);
 
