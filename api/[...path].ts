@@ -30,6 +30,7 @@ import { startCleanupJob } from "../server/jobs/cleanup-videos";
 import { startVideoStatusCheckJob } from "../server/jobs/check-video-status";
 
 let expressApp: express.Express | null = null;
+let serverlessHandler: any = null;
 let initPromise: Promise<express.Express> | null = null;
 
 async function createApp(): Promise<express.Express> {
