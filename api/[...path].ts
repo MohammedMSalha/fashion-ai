@@ -8,23 +8,16 @@ async function getExpressApp() {
   initPromise = (async () => {
     try {
       console.log("[Serverless] Initializing Express app...");
-      // Import the server module - use dynamic import to get the actual implementation
+      // Import the server module - createServer is a named export
       const serverModule = await import("../server/index.js");
+      const createServer = (serverModule as any).createServer;
 
-      if (typeof serverModule.createServer === "function") {
-        expressApp = await serverModule.createServer();
-        console.log("[Serverless] Express app initialized");
-      } else if (typeof serverModule.default === "function") {
-        expressApp = await serverModule.default();
-        console.log(
-          "[Serverless] Express app initialized (from default export)",
-        );
-      } else {
-        throw new Error(
-          "Server module does not export createServer or default function",
-        );
+      if (typeof createServer !== "function") {
+        throw new Error("Server module does not export createServer function");
       }
 
+      expressApp = await createServer();
+      console.log("[Serverless] Express app initialized");
       return expressApp;
     } catch (error) {
       console.error("[Serverless] Failed to initialize:", error);
@@ -43,7 +36,6 @@ export default async function handler(req: any, res: any) {
 
     const app = await getExpressApp();
 
-    // Create a simple Node.js request/response pair for Express
     // Pass through the request to Express
     return new Promise((resolve) => {
       const originalEnd = res.end;
