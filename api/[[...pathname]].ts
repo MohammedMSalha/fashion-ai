@@ -1,5 +1,32 @@
 import { Pool } from "pg";
 
+let pool: Pool | null = null;
+
+function getPool(): Pool {
+  if (pool) {
+    return pool;
+  }
+
+  const DATABASE_URL = process.env.DATABASE_URL || process.env.fashion_DATABASE_URL;
+  if (!DATABASE_URL) {
+    throw new Error("DATABASE_URL environment variable not set");
+  }
+
+  pool = new Pool({
+    connectionString: DATABASE_URL,
+    max: 5, // Serverless-friendly connection limit
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 3000,
+  });
+
+  return pool;
+}
+
+async function query(sql: string, params?: any[]) {
+  const pg = getPool();
+  return pg.query(sql, params);
+}
+
 export default async function handler(req: any, res: any) {
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -31,7 +58,7 @@ export default async function handler(req: any, res: any) {
     }
 
     // Get videos by email: GET /api/videos/:email
-    if (pathname.startsWith("/api/videos/") && req.method === "GET") {
+    if (pathname.startsWith("/api/videos/") && req.method === "GET" && !pathname.includes("DELETE")) {
       const email = decodeURIComponent(pathname.split("/api/videos/")[1]);
 
       if (!email) {
@@ -100,20 +127,20 @@ export default async function handler(req: any, res: any) {
 
     // Save video config: POST /api/save-video-config
     if (pathname === "/api/save-video-config" && req.method === "POST") {
-      const body = req.body;
+      const body = req.body || {};
       const { email, imageBase64, duration, resolution } = body;
 
       // Validate inputs
       if (!email || !imageBase64 || !duration || !resolution) {
         return res.status(400).json({
           success: false,
-          error: "Missing required fields",
+          error: "Missing required fields: email, imageBase64, duration, resolution",
         });
       }
 
       // Validate email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
+      if (!emailRegex.test(email) || email.length > 254) {
         return res.status(400).json({ success: false, error: "Invalid email" });
       }
 
@@ -129,6 +156,14 @@ export default async function handler(req: any, res: any) {
         return res.status(400).json({
           success: false,
           error: "Resolution must be 720p or 1080p",
+        });
+      }
+
+      // Validate image format
+      if (typeof imageBase64 !== "string" || imageBase64.length < 100) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid image data",
         });
       }
 
