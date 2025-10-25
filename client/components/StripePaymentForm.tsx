@@ -46,16 +46,12 @@ const CardForm = ({
   // Auto-dismiss error after 6 seconds
   useEffect(() => {
     if (error) {
-      if (errorTimeout) {
-        clearTimeout(errorTimeout);
-      }
       const timeout = setTimeout(() => {
         setError(null);
       }, 6000);
-      setErrorTimeout(timeout);
       return () => clearTimeout(timeout);
     }
-  }, [error, errorTimeout]);
+  }, [error]);
 
   // Create payment intent on mount
   useEffect(() => {
