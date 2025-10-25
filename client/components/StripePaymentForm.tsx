@@ -123,95 +123,16 @@ function CardForm({
         );
       }
 
-      const paymentIntentId = paymentIntent.id;
-
-      // Step 2: Generate video after successful payment
-      let videoUrl = "";
-      let requestId = "";
-
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 60000);
-
-        const generateResponse = await fetch(
-          createApiUrl("/api/generate-video"),
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              image,
-              duration: parseInt(duration),
-              resolution: quality,
-              email,
-            }),
-            signal: controller.signal,
-          },
-        );
-
-        clearTimeout(timeout);
-
-        if (generateResponse.ok) {
-          const generateData = await generateResponse.json();
-          videoUrl = generateData.videoUrl || "";
-          requestId = generateData.requestId || "";
-          console.log("Video generation started:", { requestId, videoUrl });
-        } else {
-          console.warn(
-            "Video generation response not ok:",
-            generateResponse.status,
-          );
-        }
-      } catch (err) {
-        console.warn("Video generation error:", err);
-      }
-
-      // Step 3: Save video to database with payment data
-      console.log("Saving video to database...", { requestId, videoUrl });
-      if (requestId || videoUrl) {
-        try {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 30000);
-
-          const saveResponse = await fetch(createApiUrl("/api/save-video"), {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email,
-              videoUrl: videoUrl || undefined,
-              requestId: requestId || undefined,
-              duration: parseInt(duration),
-              resolution: quality,
-              paymentIntentId: paymentIntentId,
-              paymentAmount: amount,
-              paymentCurrency: "usd",
-              paymentStatus: paymentIntent.status,
-              paymentMethodType:
-                paymentIntent.payment_method_types?.[0] || "card",
-              paymentEmail: email,
-            }),
-            signal: controller.signal,
-          });
-
-          clearTimeout(timeout);
-
-          if (!saveResponse.ok) {
-            console.warn("Save video response not ok:", saveResponse.status);
-          } else {
-            console.log("Video saved successfully");
-          }
-        } catch (err) {
-          console.warn("Failed to save video to database", err);
-        }
-      }
+      console.log("Payment succeeded! Video ID:", videoId);
+      console.log(
+        "Webhook will handle video generation for payment:",
+        paymentIntent.id,
+      );
 
       // Save email for later
       localStorage.setItem("fashionai_email", email);
 
-      // Success!
+      // Success! Payment is complete, webhook will handle video generation
       setProcessing(false);
       onSuccess();
     } catch (err) {
