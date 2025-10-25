@@ -142,14 +142,30 @@ export async function generateVideoAsync(
   try {
     const apiKey = process.env.FASHN_AI_API_KEY;
     if (!apiKey) {
+      console.error("[GenerateVideo] FASHN_AI_API_KEY not configured");
       return {
         success: false,
         error: "FASHN_AI_API_KEY not configured",
       };
     }
 
+    console.log("[GenerateVideo] Starting video generation");
+    console.log("[GenerateVideo] Image URL:", imageUrl);
+    console.log("[GenerateVideo] Duration:", duration, "Resolution:", resolution);
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
+
+    const payload = {
+      model_name: "image-to-video",
+      inputs: {
+        image: imageUrl,
+        duration,
+        resolution,
+      },
+    };
+
+    console.log("[GenerateVideo] Sending to Fashn API:", JSON.stringify(payload));
 
     const response = await fetch("https://api.fashn.ai/v1/run", {
       method: "POST",
@@ -157,35 +173,41 @@ export async function generateVideoAsync(
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        model_name: "image-to-video",
-        inputs: {
-          image: imageUrl,
-          duration,
-          resolution,
-        },
-      }),
+      body: JSON.stringify(payload),
       signal: controller.signal,
     });
 
     clearTimeout(timeout);
 
+    console.log("[GenerateVideo] Response status:", response.status);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error(
+        "[GenerateVideo] Fashn API error:",
+        response.status,
+        errorText,
+      );
       return {
         success: false,
-        error: `Fashn API error: ${response.status}`,
+        error: `Fashn API error: ${response.status} - ${errorText}`,
       };
     }
 
     const data = await response.json();
+    console.log("[GenerateVideo] Response data:", data);
+
     const requestId = data.id || data.request_id;
 
     if (!requestId) {
+      console.error("[GenerateVideo] No request ID in response");
       return {
         success: false,
         error: "No request ID received from Fashn API",
       };
     }
+
+    console.log("[GenerateVideo] ✓ Success! Request ID:", requestId);
 
     return {
       success: true,
@@ -197,7 +219,7 @@ export async function generateVideoAsync(
       error instanceof Error
         ? error.message
         : "Unknown error during video generation";
-    console.error("Video generation error:", error);
+    console.error("[GenerateVideo] ✗ Error:", errorMsg);
     return {
       success: false,
       error: errorMsg,
