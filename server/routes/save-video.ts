@@ -23,6 +23,75 @@ interface SaveVideoResponse {
   error?: string;
 }
 
+export const saveVideoConfig: RequestHandler = async (req, res) => {
+  try {
+    const { email, imageBase64, duration, resolution } = req.body;
+
+    // Validate inputs
+    if (!email || !imageBase64 || !duration || !resolution) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing required fields",
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || email.length > 254) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid email",
+      });
+    }
+
+    // Validate duration and resolution
+    if (![5, 10].includes(duration)) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid duration",
+      });
+    }
+
+    if (!["720p", "1080p"].includes(resolution)) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid resolution",
+      });
+    }
+
+    // Check if image_base64 is valid (should start with data:image/)
+    if (!imageBase64.startsWith("data:image/")) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid image data",
+      });
+    }
+
+    // Create a video record with awaiting_payment status
+    const result = await query(
+      `INSERT INTO videos (email, image_base64, duration, resolution, status)
+       VALUES ($1, $2, $3, $4, 'awaiting_payment')
+       RETURNING id, created_at, expires_at`,
+      [email, imageBase64, duration, resolution],
+    );
+
+    const videoRecord = result.rows[0];
+
+    return res.status(200).json({
+      success: true,
+      videoId: videoRecord.id,
+      status: "awaiting_payment",
+      createdAt: videoRecord.created_at,
+    });
+  } catch (error) {
+    console.error("Save video config error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to save video configuration",
+    });
+  }
+};
+
 export const saveVideo: RequestHandler = async (req, res) => {
   try {
     const {
