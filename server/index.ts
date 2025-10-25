@@ -244,17 +244,18 @@ export async function createServer() {
     }
   });
 
-  // Only add static file serving and SPA fallback in production
-  if (process.env.NODE_ENV === "production") {
-    const distPath = path.join(import.meta.dirname, "../spa");
-
-    // Serve static files from SPA directory
-    app.use(express.static(distPath));
-
-    // SPA fallback - serve index.html for all non-API routes
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
+  // Only add static file serving and SPA fallback for local development
+  // Skip in serverless environment - Vercel handles static files separately
+  if (process.env.NODE_ENV === "production" && !process.env.VERCEL) {
+    try {
+      const distPath = path.join(import.meta.dirname, "../spa");
+      app.use(express.static(distPath));
+      app.get("*", (_req, res) => {
+        res.sendFile(path.join(distPath, "index.html"));
+      });
+    } catch (error) {
+      console.warn("[Express] Could not set up static file serving:", error instanceof Error ? error.message : error);
+    }
   }
 
   return app;
