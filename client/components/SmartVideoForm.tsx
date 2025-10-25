@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 
 interface SmartVideoFormProps {
   onGenerate?: () => void;
-  onPaymentSuccess?: () => void;
 }
 
 const PRICING = {
