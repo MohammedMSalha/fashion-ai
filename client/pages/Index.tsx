@@ -112,12 +112,12 @@ export default function Index() {
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [showExpiryAlert, setShowExpiryAlert] = useState(true);
 
-  // Handle payment success redirect from Stripe
+  // Handle payment success/failure redirect from Stripe
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const paymentSuccess = params.get("payment") === "success";
+    const paymentStatus = params.get("payment");
 
-    if (paymentSuccess) {
+    if (paymentStatus === "success") {
       // Payment was successful, go to generation page
       setCurrentPage("in-progress");
 
@@ -128,8 +128,21 @@ export default function Index() {
       setTimeout(() => {
         setCurrentPage("video-preview");
       }, 3000);
+    } else if (paymentStatus === "cancelled") {
+      // Payment was cancelled, show error and go back to generate
+      setCurrentPage("generate");
+
+      // Clear the URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      // Show error toast
+      toast({
+        title: "Payment Cancelled",
+        description: "Your payment was not completed. Please try again.",
+        variant: "destructive",
+      });
     }
-  }, []);
+  }, [toast]);
 
   // Mouse tracking effect
   useEffect(() => {
