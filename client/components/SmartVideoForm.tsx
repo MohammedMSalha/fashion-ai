@@ -425,7 +425,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   if (step === "payment") {
     const price = calculatePrice();
 
-    if (!price || !email || !imagePreview) {
+    if (!price || !email || !videoId) {
       return (
         <div className="w-full space-y-6">
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
@@ -450,13 +450,19 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
         <StripePaymentForm
           amount={price}
           email={email}
+          videoId={videoId}
           duration={duration}
           quality={quality}
           onSuccess={() => {
-            setStep("review");
+            setStep("upload");
+            setVideoId(null);
+            setImagePreview("");
             onGenerate?.();
           }}
-          onCancel={() => setStep("review")}
+          onCancel={() => {
+            setStep("review");
+            setVideoId(null);
+          }}
         />
       </div>
     );
