@@ -17,6 +17,19 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    // Parse body for POST requests
+    if (req.method === "POST" && !req.body) {
+      req.body = {};
+      if (req.headers["content-type"]?.includes("application/json")) {
+        const chunks = [];
+        for await (const chunk of req) {
+          chunks.push(chunk);
+        }
+        const bodyStr = Buffer.concat(chunks).toString("utf-8");
+        req.body = bodyStr ? JSON.parse(bodyStr) : {};
+      }
+    }
+
     const url = new URL(req.url || "", "http://localhost");
     const pathname = url.pathname;
     const searchParams = url.searchParams;
