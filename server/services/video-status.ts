@@ -62,9 +62,20 @@ export async function updateVideoStatusFromFashn(
       return;
     }
 
+    console.log(
+      `[UpdateStatus] Fashion.ai response status: ${status.status}`,
+    );
+    console.log(
+      `[UpdateStatus] Fashion.ai response output:`,
+      status.output ? `${status.output.length} item(s)` : "none",
+    );
+    if (status.error) {
+      console.log(`[UpdateStatus] Fashion.ai error:`, status.error);
+    }
+
     // Find the video record by request_id
     const videoResult = await query(
-      `SELECT id FROM videos WHERE request_id = $1`,
+      `SELECT id, status FROM videos WHERE request_id = $1`,
       [requestId],
     );
 
@@ -76,8 +87,9 @@ export async function updateVideoStatusFromFashn(
     }
 
     const videoId = videoResult.rows[0].id;
+    const currentStatus = videoResult.rows[0].status;
     console.log(
-      `[UpdateStatus] Found video ${videoId} for request ${requestId}`,
+      `[UpdateStatus] Found video ${videoId} with current status: ${currentStatus}`,
     );
 
     // Update based on status
@@ -91,7 +103,7 @@ export async function updateVideoStatusFromFashn(
         `[UpdateStatus] Video ${videoId} completed! URL: ${videoUrl}`,
       );
 
-      await query(
+      const updateResult = await query(
         `UPDATE videos
          SET status = 'completed',
              video_url = $1,
@@ -104,12 +116,16 @@ export async function updateVideoStatusFromFashn(
       console.log(
         `[UpdateStatus] ✓ Video ${videoId} marked as completed with URL`,
       );
+      console.log(
+        `[UpdateStatus] Update result:`,
+        JSON.stringify(updateResult.rows[0]),
+      );
     } else if (status.status === "failed") {
       const errorMessage =
         status.error?.message || "Generation failed without error details";
       console.log(`[UpdateStatus] Video ${videoId} failed: ${errorMessage}`);
 
-      await query(
+      const updateResult = await query(
         `UPDATE videos
          SET status = 'failed',
              error_message = $1
@@ -119,12 +135,22 @@ export async function updateVideoStatusFromFashn(
       );
 
       console.log(`[UpdateStatus] ✓ Video ${videoId} marked as failed`);
+      console.log(
+        `[UpdateStatus] Update result:`,
+        JSON.stringify(updateResult.rows[0]),
+      );
     } else if (
       status.status === "processing" ||
       status.status === "submitted"
     ) {
       // Still processing, no update needed
-      console.log(`[UpdateStatus] Video ${videoId} still ${status.status}`);
+      console.log(
+        `[UpdateStatus] Video ${videoId} still ${status.status} - next check in 10 seconds`,
+      );
+    } else {
+      console.log(
+        `[UpdateStatus] Unknown status from Fashion.ai: ${status.status}`,
+      );
     }
   } catch (error) {
     console.error("[UpdateStatus] Error updating video status:", error);
