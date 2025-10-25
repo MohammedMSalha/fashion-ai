@@ -203,41 +203,58 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     console.log("[Webhook]   - status: processing");
                     console.log("[Webhook]   - WHERE id:", videoRecord.id);
 
-                    const updateResult = await query(
-                      `UPDATE videos
-                       SET payment_intent_id = $1,
-                           payment_status = 'succeeded',
-                           payment_amount = $2,
-                           payment_currency = 'usd',
-                           payment_email = $3,
-                           video_url = $4,
-                           request_id = $5,
-                           status = $6
-                       WHERE id = $7
-                       RETURNING id, request_id, payment_intent_id, status, payment_intent_id, payment_amount, payment_email`,
-                      [
-                        paymentIntent.id,
-                        paymentIntent.amount,
-                        email || null,
-                        generateResult.videoUrl || null,
-                        generateResult.requestId || null,
-                        "processing",
-                        videoRecord.id,
-                      ],
+                    console.log(`[Webhook] Executing UPDATE query...`);
+                    console.log(
+                      `[Webhook] Parameters: paymentIntentId=${paymentIntent.id}, amount=${paymentIntent.amount}, email=${email}, requestId=${generateResult.requestId}, videoId=${videoRecord.id}`,
                     );
 
-                    if (updateResult.rows[0]) {
-                      console.log(
-                        `[Webhook] ✓ Database updated successfully:`,
-                        updateResult.rows[0],
+                    try {
+                      const updateResult = await query(
+                        `UPDATE videos
+                         SET payment_intent_id = $1,
+                             payment_status = 'succeeded',
+                             payment_amount = $2,
+                             payment_currency = 'usd',
+                             payment_email = $3,
+                             video_url = $4,
+                             request_id = $5,
+                             status = $6
+                         WHERE id = $7
+                         RETURNING id, request_id, payment_intent_id, status, payment_intent_id, payment_amount, payment_email`,
+                        [
+                          paymentIntent.id,
+                          paymentIntent.amount,
+                          email || null,
+                          generateResult.videoUrl || null,
+                          generateResult.requestId || null,
+                          "processing",
+                          videoRecord.id,
+                        ],
                       );
+
                       console.log(
-                        `[Webhook] Video generation started for payment: ${paymentIntent.id}`,
+                        `[Webhook] UPDATE query result: ${updateResult.rowCount} rows affected`,
                       );
-                    } else {
+
+                      if (updateResult.rows[0]) {
+                        console.log(
+                          `[Webhook] ✓ Database updated successfully:`,
+                          JSON.stringify(updateResult.rows[0]),
+                        );
+                        console.log(
+                          `[Webhook] Video generation started for payment: ${paymentIntent.id}`,
+                        );
+                      } else {
+                        console.error(
+                          `[Webhook] ✗ UPDATE executed but no rows returned for video: ${videoRecord.id}`,
+                        );
+                      }
+                    } catch (updateErr) {
                       console.error(
-                        `[Webhook] ✗ Failed to update database for video: ${videoRecord.id}`,
+                        `[Webhook] ✗ UPDATE query failed:`,
+                        updateErr instanceof Error ? updateErr.message : updateErr,
                       );
+                      throw updateErr;
                     }
                   } else {
                     console.error(
