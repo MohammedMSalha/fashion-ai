@@ -27,45 +27,69 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
   try {
     const { email, imageBase64, duration, resolution } = req.body;
 
+    console.log("[Save Config] Received request:", {
+      hasEmail: !!email,
+      hasImageBase64: !!imageBase64,
+      imageLength: imageBase64?.length,
+      duration,
+      resolution,
+    });
+
     // Validate inputs
     if (!email || !imageBase64 || !duration || !resolution) {
+      console.error("[Save Config] Missing required fields");
       return res.status(400).json({
         success: false,
-        error: "Missing required fields",
+        error: "Missing required fields: email, imageBase64, duration, resolution",
       });
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email) || email.length > 254) {
+      console.error("[Save Config] Invalid email:", email);
       return res.status(400).json({
         success: false,
-        error: "Invalid email",
+        error: "Invalid email format",
       });
     }
 
     // Validate duration and resolution
     if (![5, 10].includes(duration)) {
+      console.error("[Save Config] Invalid duration:", duration);
       return res.status(400).json({
         success: false,
-        error: "Invalid duration",
+        error: "Duration must be 5 or 10",
       });
     }
 
     if (!["720p", "1080p"].includes(resolution)) {
+      console.error("[Save Config] Invalid resolution:", resolution);
       return res.status(400).json({
         success: false,
-        error: "Invalid resolution",
+        error: "Resolution must be 720p or 1080p",
       });
     }
 
-    // Check if image_base64 is valid (should start with data:image/)
-    if (!imageBase64.startsWith("data:image/")) {
+    // Check if image_base64 is a string and has content
+    if (typeof imageBase64 !== "string" || imageBase64.length < 100) {
+      console.error("[Save Config] Invalid image data (too short):", imageBase64?.substring(0, 50));
       return res.status(400).json({
         success: false,
-        error: "Invalid image data",
+        error: "Invalid image data (image too small or corrupted)",
       });
     }
+
+    // Check if it looks like a data URL (flexible check)
+    if (!imageBase64.includes("data:") || !imageBase64.includes("base64")) {
+      console.error("[Save Config] Invalid image format, should be data URL");
+      return res.status(400).json({
+        success: false,
+        error: "Image must be in data URL format (data:image/...;base64,...)",
+      });
+    }
+
+    console.log("[Save Config] Validation passed, inserting into database...");
 
     // Create a video record with awaiting_payment status
     const result = await query(
@@ -75,7 +99,13 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
       [email, imageBase64, duration, resolution],
     );
 
+    if (!result.rows[0]) {
+      throw new Error("No rows returned from insert");
+    }
+
     const videoRecord = result.rows[0];
+
+    console.log("[Save Config] Success! Created video record:", videoRecord.id);
 
     return res.status(200).json({
       success: true,
@@ -84,10 +114,10 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
       createdAt: videoRecord.created_at,
     });
   } catch (error) {
-    console.error("Save video config error:", error);
+    console.error("[Save Config] Database error:", error);
     return res.status(500).json({
       success: false,
-      error: "Failed to save video configuration",
+      error: error instanceof Error ? error.message : "Failed to save video configuration",
     });
   }
 };
