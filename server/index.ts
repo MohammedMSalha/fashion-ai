@@ -170,9 +170,9 @@ export async function createServer() {
         });
     });
   app.post("/api/save-video", videoLimiter, saveVideo);
-  app.get("/api/videos/:email", getVideosByEmail);
+  app.post("/api/videos", videoLimiter, getVideosByEmail);
   app.get("/api/video-status/:videoId", getVideoStatus);
-  app.get("/api/check-pending/:email", checkPendingVideos);
+  app.post("/api/check-pending", videoLimiter, checkPendingVideos);
   app.delete("/api/videos/:videoId", deleteVideo);
 
   // Image serving endpoint (for fashion.ai to access images)
