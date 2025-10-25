@@ -62,16 +62,19 @@ function CardForm({
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-        const response = await fetch("/api/create-payment-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: Math.round(amount * 100),
-            email,
-            imageUrl: image,
-          }),
-          signal: controller.signal,
-        });
+        const response = await fetch(
+          createApiUrl("/api/create-payment-intent"),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amount: Math.round(amount * 100),
+              email,
+              imageUrl: image,
+            }),
+            signal: controller.signal,
+          },
+        );
 
         clearTimeout(timeoutId);
 
