@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Upload, Zap, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createApiUrl } from "@/config/api";
+import StripePaymentForm from "./StripePaymentForm";
 
 interface SmartVideoFormProps {
   onGenerate?: () => void;
