@@ -1,7 +1,7 @@
 import "dotenv/config";
 import path from "path";
 import express from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { handleDemo } from "./routes/demo.js";
@@ -46,12 +46,13 @@ export async function createServer() {
   app.use(helmet());
 
   // CORS configuration
-  app.use(
-    cors({
-      origin: process.env.CORS_ORIGIN || "*",
-      credentials: true,
-    }),
-  );
+  const corsOptions: CorsOptions = {
+    origin: process.env.CORS_ORIGIN || "*",
+    credentials: true,
+  };
+
+  app.use(cors(corsOptions));
+  app.options(/\/api\/.*/, cors(corsOptions));
 
   // Stripe webhook handler - MUST be FIRST and use raw body middleware
   // This captures the raw bytes BEFORE any JSON parsing
