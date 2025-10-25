@@ -695,7 +695,7 @@ async function handleWebhookAsync(req: any) {
               email || "",
               "failed",
               generateResult.error || "Video generation failed",
-              videoId,
+              videoIdNum,
             ],
           );
         }
