@@ -1,10 +1,19 @@
-import cron from "node-cron";
 import { checkAndUpdateAllPendingVideos } from "../services/video-status.js";
 
+let jobStarted = false;
+let jobInterval: NodeJS.Timeout | null = null;
+
 export function startVideoStatusCheckJob() {
-  // Check every 10 seconds for pending videos
-  // Using setInterval instead of cron for more precise timing
-  setInterval(async () => {
+  // Only start the job once, even if createServer() is called multiple times
+  if (jobStarted) {
+    console.log("[VideoStatusJob] Job already started, skipping duplicate initialization");
+    return;
+  }
+
+  jobStarted = true;
+
+  // Start the polling job
+  jobInterval = setInterval(async () => {
     try {
       console.log(
         `[VideoStatusJob] ${new Date().toISOString()} - Checking for pending video generations...`,
@@ -18,4 +27,14 @@ export function startVideoStatusCheckJob() {
   console.log(
     "[VideoStatusJob] Started! Will check for pending videos every 10 seconds",
   );
+}
+
+// Optional: graceful shutdown
+export function stopVideoStatusCheckJob() {
+  if (jobInterval) {
+    clearInterval(jobInterval);
+    jobInterval = null;
+    jobStarted = false;
+    console.log("[VideoStatusJob] Stopped");
+  }
 }
