@@ -465,7 +465,6 @@ export default function Index() {
         </section>
       )}
 
-
       {/* CONTACT PAGE */}
       {currentPage === "contact" && (
         <section className="relative w-full h-full flex items-center justify-center">
