@@ -199,7 +199,8 @@ export default async function handler(req: any, res: any) {
     const pathname = req.url?.split("?")[0] || "/";
     console.log(`[Serverless] ${req.method} ${pathname}`);
 
-    const app = await getExpressApp();
+    // Get serverless handler (wraps Express app)
+    const handler = await getServerlessHandler();
 
     // Preserve raw body for Stripe webhook before any parsing
     if (pathname === "/api/webhook/stripe") {
@@ -218,17 +219,8 @@ export default async function handler(req: any, res: any) {
       console.log("[Serverless] rawBody length:", req.rawBody?.length || 0);
     }
 
-    // Pass request to Express app
-    return new Promise<void>((resolve) => {
-      const originalEnd = res.end.bind(res);
-
-      res.end = function (...args: any[]) {
-        originalEnd(...args);
-        resolve();
-      };
-
-      app(req, res);
-    });
+    // Use serverless-http handler
+    return handler(req, res);
   } catch (error) {
     console.error("[Serverless] Error:", error);
 
