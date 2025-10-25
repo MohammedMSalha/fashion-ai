@@ -262,30 +262,37 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                       generateResult.error,
                     );
                     // Update payment status but mark video as failed
-                    const failResult = await query(
-                      `UPDATE videos
-                       SET payment_intent_id = $1,
-                           payment_status = 'succeeded',
-                           payment_amount = $2,
-                           payment_currency = 'usd',
-                           payment_email = $3,
-                           status = $4,
-                           error_message = $5
-                       WHERE id = $6
-                       RETURNING id, payment_intent_id, status, error_message`,
-                      [
-                        paymentIntent.id,
-                        paymentIntent.amount,
-                        email || null,
-                        "failed",
-                        generateResult.error || "Generation failed",
-                        videoRecord.id,
-                      ],
-                    );
-                    console.log(
-                      "[Webhook] Database updated with error:",
-                      failResult.rows[0],
-                    );
+                    try {
+                      const failResult = await query(
+                        `UPDATE videos
+                         SET payment_intent_id = $1,
+                             payment_status = 'succeeded',
+                             payment_amount = $2,
+                             payment_currency = 'usd',
+                             payment_email = $3,
+                             status = $4,
+                             error_message = $5
+                         WHERE id = $6
+                         RETURNING id, payment_intent_id, status, error_message`,
+                        [
+                          paymentIntent.id,
+                          paymentIntent.amount,
+                          email || null,
+                          "failed",
+                          generateResult.error || "Generation failed",
+                          videoRecord.id,
+                        ],
+                      );
+                      console.log(
+                        "[Webhook] Database updated with generation error:",
+                        JSON.stringify(failResult.rows[0]),
+                      );
+                    } catch (failUpdateErr) {
+                      console.error(
+                        "[Webhook] ✗ Failed to update database with error:",
+                        failUpdateErr instanceof Error ? failUpdateErr.message : failUpdateErr,
+                      );
+                    }
                   }
                 } catch (generateErr) {
                   console.error(
