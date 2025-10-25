@@ -1,149 +1,94 @@
 import { RequestHandler } from "express";
 import Stripe from "stripe";
 
-interface CheckoutSessionRequest {
-  amount: number;
-  email: string;
-  duration: "5s" | "10s";
-  quality: "720p" | "1080p";
-  baseUrl?: string;
-}
-
-const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email) && email.length <= 254;
-};
-
-function getStripeClient(): Stripe {
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-
-  if (!stripeSecretKey) {
-    console.error("ERROR: STRIPE_SECRET_KEY environment variable is not set!");
-    throw new Error("STRIPE_SECRET_KEY not configured. Please set it in environment variables.");
-  }
-
-  if (!stripeSecretKey.startsWith("sk_")) {
-    console.error("ERROR: STRIPE_SECRET_KEY does not look like a valid Stripe secret key!");
-    throw new Error("STRIPE_SECRET_KEY is invalid. Must start with 'sk_'");
-  }
-
-  return new Stripe(stripeSecretKey, {
-    apiVersion: "2024-06-20",
-  });
-}
-
 export const createCheckoutSession: RequestHandler = async (req, res) => {
   try {
-    console.log("=== Checkout Session Request ===");
-    console.log("Body:", req.body);
+    const { amount, email, duration, quality, baseUrl } = req.body;
 
-    const { amount, email, duration, quality, baseUrl } =
-      req.body as CheckoutSessionRequest;
-
-    console.log("Parsed:", { amount, email, duration, quality, baseUrl });
+    console.log("Checkout request:", { amount, email, duration, quality });
 
     // Validate required fields
     if (!amount || !email) {
-      console.error("Missing fields - amount:", amount, "email:", email);
       return res.status(400).json({
         success: false,
-        error: "Missing required fields",
+        error: "Missing amount or email",
       });
     }
 
-    // Validate amount
-    if (typeof amount !== "number" || !Number.isInteger(amount)) {
-      console.error("Invalid amount type/format:", typeof amount, amount);
-      return res.status(400).json({
+    // Check Stripe secret key
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeKey) {
+      console.error("❌ STRIPE_SECRET_KEY not set in environment variables");
+      return res.status(500).json({
         success: false,
-        error: "Invalid amount format",
+        error: "Payment service not configured",
       });
     }
 
-    if (amount < 50 || amount > 99999) {
-      console.error("Amount out of range:", amount);
-      return res.status(400).json({
-        success: false,
-        error: "Invalid amount",
-      });
-    }
+    console.log("✓ STRIPE_SECRET_KEY is set");
 
-    // Validate email
-    if (!validateEmail(email)) {
-      console.error("Invalid email:", email);
-      return res.status(400).json({
-        success: false,
-        error: "Invalid email",
-      });
-    }
+    // Initialize Stripe
+    const stripe = new Stripe(stripeKey);
+    console.log("✓ Stripe client initialized");
 
-    console.log("Validation passed, getting Stripe client...");
-    const stripe = getStripeClient();
-    console.log("Stripe client initialized");
+    // Build return URLs
+    const baseURL = baseUrl || `${req.protocol}://${req.get("host")}`;
+    const successUrl = `${baseURL}/generate?payment=success`;
+    const cancelUrl = `${baseURL}/generate?payment=cancelled`;
 
-    const successUrl =
-      baseUrl || `${req.protocol}://${req.get("host")}/generate`;
-    const cancelUrl =
-      baseUrl || `${req.protocol}://${req.get("host")}/generate`;
-
-    console.log("URLs:", { successUrl, cancelUrl });
+    console.log("Creating session with URLs:", { successUrl, cancelUrl });
 
     // Create checkout session
-    console.log("Creating Stripe checkout session...");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       customer_email: email,
-      success_url: `${successUrl}?payment=success&email=${encodeURIComponent(email)}&duration=${duration}&quality=${quality}`,
-      cancel_url: `${cancelUrl}?payment=cancelled`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       line_items: [
         {
           price_data: {
             currency: "usd",
             product_data: {
-              name: `AI Fashion Video - ${duration} @ ${quality}`,
-              description: `Generate a ${duration} AI fashion video in ${quality} quality`,
+              name: `AI Fashion Video`,
+              description: `Duration: ${duration || "5s"}, Quality: ${quality || "1080p"}`,
             },
-            unit_amount: amount,
+            unit_amount: Math.round(amount),
           },
           quantity: 1,
         },
       ],
       metadata: {
         email,
-        duration,
-        quality,
+        duration: String(duration || "5s"),
+        quality: String(quality || "1080p"),
       },
     });
 
-    console.log("Session created successfully:", session.id);
-    console.log("Checkout URL:", session.url);
+    console.log("✓ Session created:", session.id);
+    console.log("✓ Checkout URL:", session.url);
 
-    return res.status(200).json({
+    res.json({
       success: true,
       sessionId: session.id,
       checkoutUrl: session.url,
     });
   } catch (error) {
-    console.error("=== Checkout Session ERROR ===");
-    console.error(
-      "Error type:",
-      error instanceof Error ? error.constructor.name : typeof error,
-    );
-    console.error(
-      "Error message:",
-      error instanceof Error ? error.message : String(error),
-    );
-    console.error("Full error:", error);
+    console.error("❌ Stripe error:", error);
 
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
+    if (error instanceof Stripe.errors.StripeError) {
+      return res.status(error.statusCode || 500).json({
+        success: false,
+        error: error.message,
+      });
+    }
 
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
-      error: `Failed to create checkout session: ${errorMessage}`,
-      details:
-        process.env.NODE_ENV === "development" ? String(error) : undefined,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to create checkout session",
     });
   }
 };
