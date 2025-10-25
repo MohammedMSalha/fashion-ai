@@ -1,5 +1,12 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
 let expressApp: any = null;
 let initError: Error | null = null;
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function initializeApp() {
   // Return cached app if already initialized
@@ -10,39 +17,42 @@ async function initializeApp() {
 
   try {
     console.log("[Serverless] Initializing Express app...");
+    console.log("[Serverless] __dirname:", __dirname);
 
-    // Try to import the createServer function from server module
+    // Calculate the path to server/index
+    const serverPath = path.resolve(__dirname, "..", "server", "index.ts");
+    const serverPathJS = path.resolve(__dirname, "..", "server", "index.js");
+
+    console.log("[Serverless] Attempting to import from:", serverPath);
+
     let createServer: any;
 
     try {
-      // First try: Direct ESM import from TypeScript source
-      console.log("[Serverless] Attempting import from ../server/index.ts...");
-      const mod = await import("../server/index.ts");
+      // Try direct import with full path
+      const mod = await import(serverPath);
       createServer = mod.createServer;
     } catch (e1) {
-      console.log(
-        `[Serverless] Failed to import from ../server/index.ts: ${e1}`,
-      );
+      console.log("[Serverless] Failed with .ts path:", e1);
 
       try {
-        // Second try: ESM import from compiled JS
-        console.log("[Serverless] Attempting import from ../server/index.js...");
-        const mod = await import("../server/index.js");
+        // Try .js path
+        console.log("[Serverless] Attempting to import from:", serverPathJS);
+        const mod = await import(serverPathJS);
         createServer = mod.createServer;
       } catch (e2) {
-        console.log(
-          `[Serverless] Failed to import from ../server/index.js: ${e2}`,
-        );
+        console.log("[Serverless] Failed with .js path:", e2);
 
+        // Try relative import as fallback
         try {
-          // Third try: ESM import from relative path without extension
-          console.log("[Serverless] Attempting import from ../server...");
-          const mod = await import("../server/index");
+          console.log(
+            "[Serverless] Attempting fallback relative import from ../server/index.ts...",
+          );
+          const mod = await import("../server/index.ts");
           createServer = mod.createServer;
         } catch (e3) {
-          console.log(`[Serverless] Failed to import from ../server: ${e3}`);
+          console.log("[Serverless] All import attempts failed");
           throw new Error(
-            `Failed to import createServer from any path. Tried: ../server/index.ts, ../server/index.js, ../server. Errors: ${e1}, ${e2}, ${e3}`,
+            `Failed to import createServer. Tried: ${serverPath}, ${serverPathJS}, ../server/index.ts`,
           );
         }
       }
@@ -82,8 +92,6 @@ export default async function handler(req: any, res: any) {
     if (pathname === "/api/webhook/stripe") {
       console.log("[Serverless] Webhook request detected");
 
-      // In Vercel, the body might already be parsed
-      // We need to reconstruct the raw body for Stripe signature verification
       if (typeof req.body === "string") {
         console.log("[Serverless] Body is string");
         req.rawBody = req.body;
@@ -110,7 +118,6 @@ export default async function handler(req: any, res: any) {
         resolve();
       };
 
-      // Invoke the Express app
       app(req, res);
     });
   } catch (error) {
