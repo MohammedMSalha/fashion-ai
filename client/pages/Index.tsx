@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
@@ -20,14 +21,12 @@ import {
 type Page =
   | "home"
   | "generate"
-  | "my-videos"
   | "contact"
   | "terms"
   | "privacy"
   | "about"
   | "in-progress"
   | "video-preview";
-type MyVideosStep = "email" | "verification" | "videos";
 
 interface Video {
   id: string;
