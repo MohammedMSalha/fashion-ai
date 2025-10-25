@@ -28,7 +28,10 @@ async function query(sql: string, params?: any[]) {
     const pg = getPool();
     return await pg.query(sql, params);
   } catch (error) {
-    console.error("[Database] Query failed:", error instanceof Error ? error.message : error);
+    console.error(
+      "[Database] Query failed:",
+      error instanceof Error ? error.message : error,
+    );
     throw error;
   }
 }
