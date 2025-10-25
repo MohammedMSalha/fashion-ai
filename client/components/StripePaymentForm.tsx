@@ -296,49 +296,62 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
 
     const createPaymentIntent = async () => {
       try {
+        console.log("[Stripe] Creating payment intent...", {
+          amount: Math.round(props.amount * 100),
+          email: props.email,
+        });
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-        const response = await fetch(
-          createApiUrl("/api/create-payment-intent"),
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              amount: Math.round(props.amount * 100),
-              email: props.email,
-              imageUrl: props.image,
-            }),
-            signal: controller.signal,
-          },
-        );
+        const apiUrl = createApiUrl("/api/create-payment-intent");
+        console.log("[Stripe] Calling:", apiUrl);
+
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: Math.round(props.amount * 100),
+            email: props.email,
+            imageUrl: props.image,
+          }),
+          signal: controller.signal,
+        });
 
         clearTimeout(timeoutId);
+
+        console.log("[Stripe] Response status:", response.status);
 
         if (!response.ok) {
           let errorMsg = "Failed to create payment intent";
           try {
             const errorData = await response.json();
+            console.log("[Stripe] Error response:", errorData);
             errorMsg = errorData.error || errorMsg;
           } catch {
+            const text = await response.text();
+            console.log("[Stripe] Response text:", text);
             errorMsg = `Server error (${response.status})`;
           }
           throw new Error(errorMsg);
         }
 
         const data = await response.json();
-        console.log("Payment intent response:", data);
+        console.log("[Stripe] Payment intent response:", data);
 
         if (!data.clientSecret) {
-          throw new Error("No client secret in response");
+          throw new Error(
+            `No client secret in response. Got: ${JSON.stringify(data)}`,
+          );
         }
 
+        console.log("[Stripe] Setting clientSecret");
         setClientSecret(data.clientSecret);
       } catch (err) {
         const errorMsg =
           err instanceof Error ? err.message : "Failed to initialize payment";
+        console.error("[Stripe] Error:", errorMsg, err);
         setLoadingError(errorMsg);
-        console.error("Payment intent error:", err);
       }
     };
 
