@@ -191,6 +191,7 @@ export default function MyVideos() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, code }),
+          signal: AbortSignal.timeout(10000), // 10 second timeout
         },
       );
 
@@ -203,10 +204,12 @@ export default function MyVideos() {
       // Code verified, now fetch videos
       await fetch(
         createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
+        { signal: AbortSignal.timeout(5000) }
       ).catch(() => null);
 
       const response = await fetch(
         createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
+        { signal: AbortSignal.timeout(10000) } // 10 second timeout
       );
 
       if (!response.ok) {
