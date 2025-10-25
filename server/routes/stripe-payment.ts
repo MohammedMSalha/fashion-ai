@@ -28,7 +28,10 @@ function getStripeClient(): Stripe {
     if (!stripeSecretKey) {
       throw new Error("STRIPE_SECRET_KEY not configured");
     }
-    stripeClient = new Stripe(stripeSecretKey);
+    stripeClient = new Stripe(stripeSecretKey, {
+      httpClient: Stripe.createFetchHttpClient(),
+      timeout: 10000, // 10 second timeout
+    });
   }
   return stripeClient;
 }
