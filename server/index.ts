@@ -51,6 +51,10 @@ export async function createServer() {
     }),
   );
 
+  // Request size limits - MUST be before webhook route!
+  app.use(express.json({ limit: "5mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "5mb" }));
+
   // Log all incoming requests (for debugging)
   app.use((req, res, next) => {
     console.log(`[Express] ${req.method} ${req.path} ${req.url}`);
@@ -62,6 +66,8 @@ export async function createServer() {
   const stripeWebhookMiddleware = (req: any, res: any, next: any) => {
     console.log("[Webhook] POST /api/stripe-webhook received");
     console.log("[Webhook] Headers:", req.headers);
+    console.log("[Webhook] Body type:", typeof req.body);
+    console.log("[Webhook] Body:", typeof req.body === "object" ? JSON.stringify(req.body) : req.body);
 
     // The raw body should already be set by the serverless wrapper
     if (!req.rawBody) {
@@ -75,15 +81,12 @@ export async function createServer() {
       }
     }
 
+    console.log("[Webhook] rawBody length:", req.rawBody?.length || 0);
     // Pass to the next middleware (which is the actual handler)
     next();
   };
 
   app.post("/api/stripe-webhook", stripeWebhookMiddleware, handleStripeWebhook);
-
-  // Request size limits
-  app.use(express.json({ limit: "5mb" }));
-  app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
   // Rate limiting
   const limiter = rateLimit({
