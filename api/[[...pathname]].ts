@@ -1,39 +1,54 @@
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+
 console.log("[VercelAPI] Module loaded");
 
 let appInstance: any = null;
 
+async function createServerInstance() {
+  try {
+    // Try to dynamically import the actual server for full functionality
+    const { createServer } = await import("../server/index.js");
+    return await createServer();
+  } catch (e) {
+    console.warn("[VercelAPI] Could not import full server, creating minimal handler:", e);
+
+    // Fallback: create a minimal Express app that returns an error
+    const app = express();
+    app.use(cors());
+    app.use(helmet());
+
+    app.all("*", (req, res) => {
+      res.status(500).json({
+        error: "Server not available",
+        message: "Full server module could not be loaded",
+      });
+    });
+
+    return app;
+  }
+}
+
 export default async function handler(req: any, res: any) {
-  console.log("[VercelAPI] Handler called:", req.method, req.path || req.url);
+  console.log("[VercelAPI] Handler called:", req.method, req.url);
 
   try {
-    // Import the compiled server (built by Vite to dist/server/production.mjs)
-    // Use dynamic import with proper path for Vercel environment
+    // Initialize app on first request
     if (!appInstance) {
-      try {
-        // Try the compiled path first (production build)
-        const serverModule = await import("../server/production.mjs");
-        appInstance = serverModule.default || serverModule.app;
-      } catch (e) {
-        console.log("[VercelAPI] Compiled import failed, trying TypeScript import...", e);
-        // Fallback to TypeScript import for local development
-        const { createServer } = await import("../server/index.ts");
-        appInstance = await createServer();
-      }
+      console.log("[VercelAPI] Initializing app...");
+      appInstance = await createServerInstance();
+      console.log("[VercelAPI] App initialized");
     }
 
-    console.log("[VercelAPI] App instance ready, handling request");
-
-    // Handle the request with Express
-    if (typeof appInstance === "function") {
-      return appInstance(req, res);
-    } else {
-      // If it's an Express app, use it directly
-      return new Promise((resolve) => {
-        appInstance(req, res, () => {
-          resolve(undefined);
-        });
+    // Handle the request through Express
+    return new Promise<void>((resolve, reject) => {
+      appInstance(req, res, (err: any) => {
+        if (err) reject(err);
+        else resolve();
       });
-    }
+    });
   } catch (error) {
     console.error("[VercelAPI] Error:", error);
     res.status(500).json({
