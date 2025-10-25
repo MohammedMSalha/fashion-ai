@@ -485,7 +485,8 @@ export default function MyVideos() {
                 </h2>
 
                 <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto drop-shadow-md">
-                  You haven't generated any videos yet. Create your first AI fashion video now!
+                  You haven't generated any videos yet. Create your first AI
+                  fashion video now!
                 </p>
 
                 <div className="space-y-4">
