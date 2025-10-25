@@ -72,10 +72,15 @@ export default async function handler(req: any, res: any) {
 
         // Try to insert into database
         try {
+          console.log("[Save Config] Getting query function...");
           const queryFn = await getQueryFunction();
           if (!queryFn) {
-            throw new Error("Database not available");
+            console.error("[Save Config] Query function is null");
+            throw new Error(
+              "Database connection failed - check DATABASE_URL environment variable",
+            );
           }
+          console.log("[Save Config] Query function available, inserting video...");
 
           const result = await queryFn(
             `INSERT INTO videos (email, image_base64, duration, resolution, status)
