@@ -243,7 +243,7 @@ export default function Index() {
           </div>
 
           {/* Floating Action Button Menu */}
-          <div className="fixed bottom-1 right-4 z-40">
+          <div className="fixed bottom-1 right-1 z-40">
             <div
               className={`flex flex-col gap-3 mb-4 transition-all duration-300 ${
                 showFabMenu ? "opacity-100 visible" : "opacity-0 invisible"
