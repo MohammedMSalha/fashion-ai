@@ -151,7 +151,12 @@ export async function generateVideoAsync(
 
     console.log("[GenerateVideo] Starting video generation");
     console.log("[GenerateVideo] Image URL:", imageUrl);
-    console.log("[GenerateVideo] Duration:", duration, "Resolution:", resolution);
+    console.log(
+      "[GenerateVideo] Duration:",
+      duration,
+      "Resolution:",
+      resolution,
+    );
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
@@ -165,7 +170,10 @@ export async function generateVideoAsync(
       },
     };
 
-    console.log("[GenerateVideo] Sending to Fashn API:", JSON.stringify(payload));
+    console.log(
+      "[GenerateVideo] Sending to Fashn API:",
+      JSON.stringify(payload),
+    );
 
     const response = await fetch("https://api.fashn.ai/v1/run", {
       method: "POST",

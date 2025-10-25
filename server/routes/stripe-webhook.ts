@@ -95,7 +95,8 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                 try {
                   // Build image URL that fashion.ai can access
                   // Format: https://domain/api/image/videoId
-                  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+                  const protocol =
+                    process.env.NODE_ENV === "production" ? "https" : "http";
                   const host =
                     process.env.VERCEL_URL ||
                     process.env.API_URL ||
@@ -113,10 +114,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     resolution,
                   );
 
-                  console.log(
-                    `[Webhook] Generation result:`,
-                    generateResult,
-                  );
+                  console.log(`[Webhook] Generation result:`, generateResult);
 
                   if (generateResult.success && generateResult.requestId) {
                     console.log(
