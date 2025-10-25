@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => ({
       process.env.STRIPE_PUBLISHABLE_KEY,
     ),
   },
+  root: ".",
   server: {
     host: "::",
     port: 8080,
@@ -20,6 +21,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: "dist/spa",
+    minify: "terser",
   },
   plugins: [react(), expressPlugin()],
   resolve: {
