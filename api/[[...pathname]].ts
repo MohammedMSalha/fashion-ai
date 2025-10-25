@@ -35,6 +35,15 @@ export default async function handler(req: any, res: any) {
 
     console.log(`[API] ${method} ${pathname}`);
 
+    // Check environment variables on first call
+    if (method === "POST" && pathname === "/api/save-video-config") {
+      const hasFashionDbUrl = !!process.env.fashion_DATABASE_URL;
+      const hasDbUrl = !!process.env.DATABASE_URL;
+      console.log("[API] Database URL status:");
+      console.log("[API]   fashion_DATABASE_URL:", hasFashionDbUrl ? "SET" : "NOT SET");
+      console.log("[API]   DATABASE_URL:", hasDbUrl ? "SET" : "NOT SET");
+    }
+
     // Health check
     if (pathname === "/api/health") {
       res.statusCode = 200;
