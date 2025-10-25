@@ -120,6 +120,7 @@ export default async function handler(req: any, res: any) {
     "Access-Control-Allow-Headers",
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Stripe-Signature",
   );
+  res.setHeader("Cache-Control", "no-store");
 
   // Handle OPTIONS
   if (req.method === "OPTIONS") {
