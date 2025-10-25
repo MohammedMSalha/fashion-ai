@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, Zap, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import CheckoutButton from "./CheckoutButton";
 
 interface SmartVideoFormProps {
   onGenerate?: () => void;
