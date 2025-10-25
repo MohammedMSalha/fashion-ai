@@ -52,8 +52,10 @@ const CardForm = ({
     }
   }, [error]);
 
-  // Create payment intent on mount
+  // Create payment intent on mount (only once)
   useEffect(() => {
+    if (clientSecret) return; // Don't recreate if already set
+
     const createPaymentIntent = async () => {
       try {
         const controller = new AbortController();
@@ -73,8 +75,15 @@ const CardForm = ({
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to create payment intent");
+          let errorMsg = "Failed to create payment intent";
+          try {
+            const errorData = await response.json();
+            errorMsg = errorData.error || errorMsg;
+          } catch {
+            // If response body is already read or invalid JSON, use status code
+            errorMsg = `Server error (${response.status})`;
+          }
+          throw new Error(errorMsg);
         }
 
         const data = await response.json();
@@ -88,7 +97,7 @@ const CardForm = ({
     };
 
     createPaymentIntent();
-  }, [amount, email, image]);
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
