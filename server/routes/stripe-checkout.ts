@@ -15,6 +15,8 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
 
     // Validate required fields
     if (!amount || !email) {
+      console.error("Missing fields:", { amount, email });
+      res.setHeader("Content-Type", "application/json");
       return res.status(400).json({
         success: false,
         error: "Missing amount or email",
@@ -25,6 +27,7 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeKey) {
       console.error("❌ STRIPE_SECRET_KEY not set in environment variables");
+      res.setHeader("Content-Type", "application/json");
       return res.status(500).json({
         success: false,
         error: "Payment service not configured",
