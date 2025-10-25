@@ -61,13 +61,17 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
     switch (event.type) {
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log("Payment succeeded:", paymentIntent.id);
+        console.log("[Webhook] =========== PAYMENT SUCCEEDED ===========");
+        console.log("[Webhook] Payment ID:", paymentIntent.id);
+        console.log("[Webhook] Amount:", paymentIntent.amount, "cents");
+        console.log("[Webhook] Currency:", paymentIntent.currency);
+        console.log("[Webhook] Metadata:", paymentIntent.metadata);
 
         const videoId = paymentIntent.metadata?.videoId;
         const email = paymentIntent.metadata?.email;
 
         if (videoId) {
-          console.log(`Payment succeeded for video: ${videoId}`);
+          console.log(`[Webhook] Processing payment for video: ${videoId}`);
 
           try {
             // Get the video record with image data
