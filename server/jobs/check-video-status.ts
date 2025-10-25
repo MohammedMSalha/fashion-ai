@@ -6,7 +6,9 @@ let jobInterval: NodeJS.Timeout | null = null;
 export function startVideoStatusCheckJob() {
   // Only start the job once, even if createServer() is called multiple times
   if (jobStarted) {
-    console.log("[VideoStatusJob] Job already started, skipping duplicate initialization");
+    console.log(
+      "[VideoStatusJob] Job already started, skipping duplicate initialization",
+    );
     return;
   }
 
