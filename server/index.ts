@@ -60,7 +60,7 @@ export async function createServer() {
   // Stripe webhook handler - MUST be before any other middleware
   // Use custom middleware to preserve raw body, then pass to webhook handler
   const stripeWebhookMiddleware = (req: any, res: any, next: any) => {
-    console.log("[Webhook] POST /api/webhook/stripe received");
+    console.log("[Webhook] POST /api/stripe-webhook received");
     console.log("[Webhook] Headers:", req.headers);
 
     // The raw body should already be set by the serverless wrapper
@@ -79,7 +79,7 @@ export async function createServer() {
     next();
   };
 
-  app.post("/api/webhook/stripe", stripeWebhookMiddleware, handleStripeWebhook);
+  app.post("/api/stripe-webhook", stripeWebhookMiddleware, handleStripeWebhook);
 
   // Request size limits
   app.use(express.json({ limit: "5mb" }));
