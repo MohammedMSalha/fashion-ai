@@ -579,9 +579,22 @@ async function handleWebhookAsync(req: any) {
       try {
         console.log("[Webhook] Fetching video record for videoId:", videoId);
 
+        // Convert videoId to number (Stripe metadata contains strings)
+        const videoIdNum = parseInt(videoId);
+        if (isNaN(videoIdNum)) {
+          console.error(
+            "[Webhook] Invalid videoId:",
+            videoId,
+            "is not a number",
+          );
+          return;
+        }
+
+        console.log("[Webhook] Converted videoId to number:", videoIdNum);
+
         const videoResult = await query(
           `SELECT id, image_base64, duration, resolution FROM videos WHERE id = $1`,
-          [videoId],
+          [videoIdNum],
         );
 
         if (!videoResult.rows[0]) {
