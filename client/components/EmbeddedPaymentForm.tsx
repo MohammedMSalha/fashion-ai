@@ -27,7 +27,8 @@ export default function EmbeddedPaymentForm({
   const [cardComplete, setCardComplete] = useState(false);
 
   const handlePayment = async () => {
-    if (!window.Stripe) {
+    const stripe = (window as any).Stripe;
+    if (!stripe) {
       setError("Stripe not loaded");
       return;
     }
