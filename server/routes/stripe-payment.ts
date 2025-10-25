@@ -38,9 +38,14 @@ function getStripeClient(): Stripe {
 
 export const createPaymentIntent: RequestHandler = async (req, res) => {
   try {
-    const { amount, email, imageUrl } = req.body as PaymentIntentRequest;
+    const { amount, email, imageUrl, videoId, duration, quality } =
+      req.body as PaymentIntentRequest;
 
-    console.log("createPaymentIntent called with:", { amount, email });
+    console.log("createPaymentIntent called with:", {
+      amount,
+      email,
+      videoId,
+    });
     console.log(
       "STRIPE_SECRET_KEY configured:",
       !!process.env.STRIPE_SECRET_KEY,
