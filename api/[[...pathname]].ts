@@ -26,7 +26,8 @@ export default async function handler(req: any, res: any) {
           res.end(
             JSON.stringify({
               success: false,
-              error: "Missing required fields: email, imageBase64, duration, resolution",
+              error:
+                "Missing required fields: email, imageBase64, duration, resolution",
             }),
           );
           return;
