@@ -96,8 +96,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
         const interval = setInterval(async () => {
           try {
             const response = await fetch(
-              createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
-              { signal: AbortSignal.timeout(5000) }, // 5 second timeout
+              createApiUrl("/api/videos"),
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+                signal: AbortSignal.timeout(5000),
+              },
             );
             if (response.ok) {
               const data = await response.json();
@@ -151,14 +156,24 @@ export default function MyVideos({ onBack }: MyVideosProps) {
       try {
         // Check for any pending videos and update their status in the background
         await fetch(
-          createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
-          { signal: AbortSignal.timeout(5000) },
+          createApiUrl("/api/check-pending"),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+            signal: AbortSignal.timeout(5000),
+          },
         ).catch(() => null);
 
         // Then fetch all videos (will include any that just completed)
         const response = await fetch(
-          createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
-          { signal: AbortSignal.timeout(10000) }, // 10 second timeout
+          createApiUrl("/api/videos"),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+            signal: AbortSignal.timeout(10000),
+          },
         );
 
         if (!response.ok) {
@@ -210,13 +225,23 @@ export default function MyVideos({ onBack }: MyVideosProps) {
 
       // Code verified, now fetch videos
       await fetch(
-        createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
-        { signal: AbortSignal.timeout(5000) },
+        createApiUrl("/api/check-pending"),
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+          signal: AbortSignal.timeout(5000),
+        },
       ).catch(() => null);
 
       const response = await fetch(
-        createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
-        { signal: AbortSignal.timeout(10000) }, // 10 second timeout
+        createApiUrl("/api/videos"),
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+          signal: AbortSignal.timeout(10000),
+        },
       );
 
       if (!response.ok) {
@@ -652,12 +677,14 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                           <Button
                             className="w-full bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2 h-12"
                             onClick={() => {
-                              const a = document.createElement("a");
-                              a.href = currentVideo.video_url || "";
-                              a.download = `video-${currentVideo.id}.mp4`;
-                              document.body.appendChild(a);
-                              a.click();
-                              document.body.removeChild(a);
+                              if (currentVideo.video_url) {
+                            const a = document.createElement("a");
+                            a.href = currentVideo.video_url;
+                            a.download = `video-${currentVideo.id}.mp4`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                          }
                             }}
                           >
                             <Download className="w-4 h-4" />
