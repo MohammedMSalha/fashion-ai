@@ -46,16 +46,32 @@ function verifySignature(body: string, signature: string): StripeEvent {
 export const handleStripeWebhook: RequestHandler = async (req, res) => {
   const signature = req.headers["stripe-signature"] as string;
 
+  console.log("\n[Webhook] ========== WEBHOOK REQUEST RECEIVED ==========");
+  console.log("[Webhook] Signature present:", !!signature);
+
   if (!signature) {
+    console.error("[Webhook] ✗ Missing stripe-signature header");
     return res.status(400).json({ error: "Missing stripe-signature header" });
   }
 
   try {
     // Get raw body for signature verification
     const rawBody = (req as any).rawBody || JSON.stringify(req.body);
+    console.log("[Webhook] Raw body length:", rawBody.length);
 
     // Verify and parse the event
-    const event = verifySignature(rawBody, signature);
+    let event;
+    try {
+      event = verifySignature(rawBody, signature);
+      console.log("[Webhook] ✓ Signature verified");
+      console.log("[Webhook] Event type:", event.type);
+    } catch (sigErr) {
+      console.error("[Webhook] ✗ Signature verification failed:", sigErr);
+      return res.status(400).json({
+        error:
+          sigErr instanceof Error ? sigErr.message : "Signature verification failed",
+      });
+    }
 
     // Handle different event types
     switch (event.type) {
