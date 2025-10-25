@@ -104,34 +104,59 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     setSaveError(null);
 
     try {
-      const response = await fetch(createApiUrl("/api/save-video-config"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          imageBase64: imagePreview,
-          duration: duration === "5s" ? 5 : 10,
-          resolution: quality,
-        }),
+      const payload = {
+        email,
+        imageBase64: imagePreview,
+        duration: duration === "5s" ? 5 : 10,
+        resolution: quality,
+      };
+
+      console.log("[SmartVideoForm] Sending config:", {
+        email,
+        imageLength: imagePreview.length,
+        imagePreview: imagePreview.substring(0, 100),
+        duration: payload.duration,
+        resolution: payload.resolution,
       });
 
+      const apiUrl = createApiUrl("/api/save-video-config");
+      console.log("[SmartVideoForm] API URL:", apiUrl);
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      console.log("[SmartVideoForm] Response status:", response.status);
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to save configuration");
+        let errorMsg = "Failed to save configuration";
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.error || errorMsg;
+          console.error("[SmartVideoForm] Server error:", errorData);
+        } catch {
+          const text = await response.text();
+          console.error("[SmartVideoForm] Response text:", text);
+        }
+        throw new Error(errorMsg);
       }
 
       const data = await response.json();
-      console.log("Configuration saved:", data);
+      console.log("[SmartVideoForm] Configuration saved:", data);
 
       if (data.videoId) {
         setVideoId(data.videoId);
         localStorage.setItem("fashionai_email", email);
         setStep("payment");
+      } else {
+        throw new Error("No videoId in response");
       }
     } catch (err) {
       const errorMsg =
         err instanceof Error ? err.message : "Failed to save configuration";
-      console.error("Save config error:", errorMsg);
+      console.error("[SmartVideoForm] Save config error:", errorMsg);
       setSaveError(errorMsg);
     } finally {
       setSavingConfig(false);
