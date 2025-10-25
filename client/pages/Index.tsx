@@ -258,7 +258,9 @@ export default function Index() {
                 title="My Videos"
               >
                 <Play className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline">My Videos</span>
+                <span className="text-xs md:text-sm hidden md:inline">
+                  My Videos
+                </span>
               </button>
 
               <button
@@ -270,7 +272,9 @@ export default function Index() {
                 title="About Us"
               >
                 <Info className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">About Us</span>
+                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                  About Us
+                </span>
               </button>
 
               <button
@@ -282,7 +286,9 @@ export default function Index() {
                 title="Contact"
               >
                 <Mail className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">Contact</span>
+                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                  Contact
+                </span>
               </button>
 
               <button
@@ -294,7 +300,9 @@ export default function Index() {
                 title="Terms"
               >
                 <FileText className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">Terms</span>
+                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                  Terms
+                </span>
               </button>
 
               <button
@@ -306,7 +314,9 @@ export default function Index() {
                 title="Privacy"
               >
                 <Lock className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">Privacy</span>
+                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                  Privacy
+                </span>
               </button>
             </div>
 
