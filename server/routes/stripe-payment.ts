@@ -103,7 +103,12 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       });
     } catch (stripeError) {
       console.error("Stripe API error:", stripeError);
-      console.error("Error type:", stripeError instanceof Error ? stripeError.message : String(stripeError));
+      console.error(
+        "Error type:",
+        stripeError instanceof Error
+          ? stripeError.message
+          : String(stripeError),
+      );
 
       if (stripeError instanceof Stripe.errors.StripeInvalidRequestError) {
         return res.status(400).json({
