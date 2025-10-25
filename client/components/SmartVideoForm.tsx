@@ -218,14 +218,16 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                 className="hidden"
                 id="image-input"
               />
-              <label htmlFor="image-input">
-                <Button
-                  variant="outline"
-                  className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 cursor-pointer"
-                >
-                  Browse Files
-                </Button>
-              </label>
+              <Button
+                variant="outline"
+                className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 cursor-pointer"
+                onClick={() => {
+                  const input = document.getElementById("image-input") as HTMLInputElement;
+                  input?.click();
+                }}
+              >
+                Browse Files
+              </Button>
               <p className="text-xs text-gray-500 mt-3">Max 10MB • JPG, PNG</p>
             </div>
           ) : (
