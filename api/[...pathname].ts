@@ -89,7 +89,9 @@ async function parseRequestBody(req: any): Promise<any> {
   return req.body || {};
 }
 
-export default async function handler(req: any, res: any) {
+export default handler;
+
+async function handler(req: any, res: any) {
   // Capture raw body for Stripe webhook
   if (req.url?.includes("/api/stripe-webhook")) {
     const chunks: any[] = [];
