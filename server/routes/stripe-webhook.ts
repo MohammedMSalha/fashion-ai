@@ -108,8 +108,15 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             console.log(`[Webhook] Querying video with ID: ${videoId}`);
 
             const videoIdNum = parseInt(videoId);
+            if (isNaN(videoIdNum)) {
+              console.error(
+                `[Webhook] ✗ Invalid videoId: "${videoId}" is not a number`,
+              );
+              return;
+            }
             console.log(`[Webhook] Parsed videoId as number: ${videoIdNum}`);
 
+            console.log("[Webhook] Executing SELECT query...");
             const videoResult = await query(
               `SELECT id, image_base64, resolution, duration, status FROM videos
                WHERE id = $1`,
@@ -117,7 +124,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             );
 
             console.log(
-              `[Webhook] Query result: ${videoResult.rows.length} rows found`,
+              `[Webhook] ✓ Query result: ${videoResult.rowCount} rows affected, ${videoResult.rows.length} rows returned`,
             );
 
             if (videoResult.rows.length > 0) {
