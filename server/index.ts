@@ -37,6 +37,9 @@ export async function createServer() {
 
   const app = express();
 
+  // Trust proxy - required for Vercel and other reverse proxies that set X-Forwarded-For
+  app.set("trust proxy", 1);
+
   // Security middleware
   app.use(helmet());
 
