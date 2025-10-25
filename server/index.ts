@@ -78,8 +78,9 @@ export async function createServer() {
   // Stricter rate limiting for payment and video generation
   const paymentLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
-    max: 10, // limit each IP to 10 requests per hour
-    skipSuccessfulRequests: true,
+    max: 50, // limit each IP to 50 requests per hour (for testing)
+    skipSuccessfulRequests: false, // Count all requests
+    message: "Too many payment requests, please try again later",
   });
 
   const videoLimiter = rateLimit({
