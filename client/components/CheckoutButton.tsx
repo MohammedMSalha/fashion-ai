@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { createApiUrl } from "@/config/api";
 
 interface CheckoutButtonProps {
   amount: number;
