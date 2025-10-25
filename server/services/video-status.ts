@@ -135,7 +135,7 @@ interface GenerateVideoResult {
 }
 
 export async function generateVideoAsync(
-  imageUrl: string,
+  imageUrlOrBase64: string,
   duration: 5 | 10,
   resolution: "720p" | "1080p",
 ): Promise<GenerateVideoResult> {
@@ -150,7 +150,7 @@ export async function generateVideoAsync(
     }
 
     console.log("[GenerateVideo] Starting video generation");
-    console.log("[GenerateVideo] Image URL:", imageUrl);
+    console.log("[GenerateVideo] Image type:", imageUrlOrBase64.startsWith("data:") ? "base64 data URL" : "URL");
     console.log(
       "[GenerateVideo] Duration:",
       duration,
@@ -161,18 +161,20 @@ export async function generateVideoAsync(
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
 
+    // Pass image as-is (can be URL or base64 data URL)
     const payload = {
       model_name: "image-to-video",
       inputs: {
-        image: imageUrl,
+        image: imageUrlOrBase64,
         duration,
         resolution,
       },
     };
 
     console.log(
-      "[GenerateVideo] Sending to Fashn API:",
-      JSON.stringify(payload),
+      "[GenerateVideo] Image payload length:",
+      imageUrlOrBase64.length,
+      "bytes",
     );
 
     const response = await fetch("https://api.fashn.ai/v1/run", {
