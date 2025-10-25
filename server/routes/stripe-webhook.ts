@@ -383,6 +383,10 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
               "[Webhook] ✗ Database error:",
               dbErr instanceof Error ? dbErr.message : dbErr,
             );
+            console.error(
+              "[Webhook] Stack trace:",
+              dbErr instanceof Error ? dbErr.stack : "No stack trace",
+            );
           }
         } else if (email) {
           console.warn(
