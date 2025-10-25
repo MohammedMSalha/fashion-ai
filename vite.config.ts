@@ -6,9 +6,8 @@ import { createServer } from "./server";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   define: {
-    "import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY": JSON.stringify(
-      process.env.STRIPE_PUBLISHABLE_KEY ||
-        process.env.VITE_STRIPE_PUBLISHABLE_KEY,
+    "import.meta.env.STRIPE_PUBLISHABLE_KEY": JSON.stringify(
+      process.env.STRIPE_PUBLISHABLE_KEY,
     ),
   },
   root: ".",
