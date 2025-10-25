@@ -37,19 +37,37 @@ export default function MyVideos() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [videos, setVideos] = useState<DatabaseVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pollInterval, setPollInterval] = useState<NodeJS.Timeout | null>(null);
+  const [smtpEnabled, setSmtpEnabled] = useState(false);
+  const [checkingSMTP, setCheckingSMTP] = useState(true);
 
-  // Load saved email from localStorage on mount
+  // Check SMTP status and load saved email from localStorage on mount
   useEffect(() => {
+    const initializeComponent = async () => {
+      try {
+        const response = await fetch(createApiUrl("/api/auth/smtp-status"));
+        const data = await response.json();
+        setSmtpEnabled(data.requiresVerification === true);
+      } catch (err) {
+        console.error("Failed to check SMTP status:", err);
+        setSmtpEnabled(false);
+      } finally {
+        setCheckingSMTP(false);
+      }
+    };
+
     const savedEmail = localStorage.getItem("fashionai_email");
     if (savedEmail) {
       setEmail(savedEmail);
     }
+
+    initializeComponent();
   }, []);
 
   // Poll for video status updates
