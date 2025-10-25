@@ -119,8 +119,12 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                   );
 
                   if (generateResult.success && generateResult.requestId) {
+                    console.log(
+                      `[Webhook] Generation successful! Request ID: ${generateResult.requestId}`,
+                    );
+
                     // Update the database with generated video info
-                    await query(
+                    const updateResult = await query(
                       `UPDATE videos
                        SET payment_intent_id = $1,
                            payment_status = 'succeeded',
@@ -130,7 +134,8 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                            video_url = $4,
                            request_id = $5,
                            status = $6
-                       WHERE id = $7`,
+                       WHERE id = $7
+                       RETURNING id, request_id, payment_intent_id, status`,
                       [
                         paymentIntent.id,
                         paymentIntent.amount,
@@ -142,9 +147,19 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                       ],
                     );
 
-                    console.log(
-                      `Video generation started for payment: ${paymentIntent.id}`,
-                    );
+                    if (updateResult.rows[0]) {
+                      console.log(
+                        `[Webhook] ✓ Database updated successfully:`,
+                        updateResult.rows[0],
+                      );
+                      console.log(
+                        `[Webhook] Video generation started for payment: ${paymentIntent.id}`,
+                      );
+                    } else {
+                      console.error(
+                        `[Webhook] ✗ Failed to update database for video: ${videoRecord.id}`,
+                      );
+                    }
                   } else {
                     console.warn(
                       "Video generation failed from webhook:",
