@@ -217,7 +217,7 @@ export async function createServer() {
     },
   );
 
-  // Error handling middleware - must be last
+  // Error handling middleware
   app.use((err: any, req: any, res: any, next: any) => {
     console.error("[Error Handler]", err.message || err);
 
@@ -228,6 +228,19 @@ export async function createServer() {
       });
     }
   });
+
+  // Only add static file serving and SPA fallback in production
+  if (process.env.NODE_ENV === "production") {
+    const distPath = path.join(import.meta.dirname, "../spa");
+
+    // Serve static files from SPA directory
+    app.use(express.static(distPath));
+
+    // SPA fallback - serve index.html for all non-API routes
+    app.get("*", (_req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
+  }
 
   return app;
 }
