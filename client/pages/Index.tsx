@@ -258,7 +258,7 @@ export default function Index() {
                 title="My Videos"
               >
                 <Play className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline">
+                <span className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}>
                   My Videos
                 </span>
               </button>
@@ -272,7 +272,7 @@ export default function Index() {
                 title="About Us"
               >
                 <Info className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                <span className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}>
                   About Us
                 </span>
               </button>
@@ -286,7 +286,7 @@ export default function Index() {
                 title="Contact"
               >
                 <Mail className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                <span className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}>
                   Contact
                 </span>
               </button>
@@ -300,7 +300,7 @@ export default function Index() {
                 title="Terms"
               >
                 <FileText className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                <span className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}>
                   Terms
                 </span>
               </button>
@@ -314,7 +314,7 @@ export default function Index() {
                 title="Privacy"
               >
                 <Lock className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="text-xs md:text-sm hidden md:inline font-medium">
+                <span className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}>
                   Privacy
                 </span>
               </button>
