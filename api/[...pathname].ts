@@ -1,5 +1,5 @@
 import { createServer } from "../server/index.js";
-import { createServerlessHandler } from "serverless-http";
+import serverless from "serverless-http";
 
 let cachedApp: any = null;
 let cachedHandler: any = null;
@@ -8,7 +8,7 @@ async function getHandler() {
   if (!cachedHandler) {
     try {
       const app = await createServer();
-      cachedHandler = createServerlessHandler(app);
+      cachedHandler = serverless(app);
       cachedApp = app;
     } catch (error) {
       console.error("[Serverless] Failed to initialize Express app:", error);
