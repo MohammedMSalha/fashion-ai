@@ -7,7 +7,10 @@ async function getQueryFunction() {
 
   try {
     console.log("[API] Importing database module...");
-    console.log("[API] fashion_DATABASE_URL set:", !!process.env.fashion_DATABASE_URL);
+    console.log(
+      "[API] fashion_DATABASE_URL set:",
+      !!process.env.fashion_DATABASE_URL,
+    );
     console.log("[API] DATABASE_URL set:", !!process.env.DATABASE_URL);
 
     const dbModule = await import("../server/db");
@@ -40,7 +43,10 @@ export default async function handler(req: any, res: any) {
       const hasFashionDbUrl = !!process.env.fashion_DATABASE_URL;
       const hasDbUrl = !!process.env.DATABASE_URL;
       console.log("[API] Database URL status:");
-      console.log("[API]   fashion_DATABASE_URL:", hasFashionDbUrl ? "SET" : "NOT SET");
+      console.log(
+        "[API]   fashion_DATABASE_URL:",
+        hasFashionDbUrl ? "SET" : "NOT SET",
+      );
       console.log("[API]   DATABASE_URL:", hasDbUrl ? "SET" : "NOT SET");
     }
 
@@ -89,7 +95,9 @@ export default async function handler(req: any, res: any) {
               "Database connection failed - check DATABASE_URL environment variable",
             );
           }
-          console.log("[Save Config] Query function available, inserting video...");
+          console.log(
+            "[Save Config] Query function available, inserting video...",
+          );
 
           const result = await queryFn(
             `INSERT INTO videos (email, image_base64, duration, resolution, status)
@@ -227,8 +235,13 @@ async function handleWebhookAsync(req: any) {
         const queryFn = await getQueryFunction();
 
         if (!queryFn) {
-          console.error("[Webhook] Query function is null - database not available");
-          console.error("[Webhook] fashion_DATABASE_URL:", !!process.env.fashion_DATABASE_URL);
+          console.error(
+            "[Webhook] Query function is null - database not available",
+          );
+          console.error(
+            "[Webhook] fashion_DATABASE_URL:",
+            !!process.env.fashion_DATABASE_URL,
+          );
           console.error("[Webhook] DATABASE_URL:", !!process.env.DATABASE_URL);
           return;
         }
