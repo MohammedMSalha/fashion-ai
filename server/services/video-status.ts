@@ -2,7 +2,13 @@ import { query } from "../db.js";
 
 interface FashnStatusResponse {
   id: string;
-  status: "submitted" | "processing" | "completed" | "failed";
+  status:
+    | "starting"
+    | "in_queue"
+    | "processing"
+    | "submitted"
+    | "completed"
+    | "succeeded";
   output?: string[];
   error?: {
     message?: string;
@@ -313,7 +319,7 @@ export async function generateVideoAsync(
       error instanceof Error
         ? error.message
         : "Unknown error during video generation";
-    console.error("[GenerateVideo] ✗ Error:", errorMsg);
+    console.error("[GenerateVideo] ��� Error:", errorMsg);
     return {
       success: false,
       error: errorMsg,
