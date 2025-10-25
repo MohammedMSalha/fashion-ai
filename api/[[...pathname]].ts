@@ -19,6 +19,21 @@ export default async function handler(
       return;
     }
 
+    // Stripe webhook endpoint
+    if (pathname === "/api/stripe-webhook" && req.method === "POST") {
+      console.log("[API] Stripe webhook detected");
+      // Preserve raw body for Stripe signature verification
+      if (typeof req.body === "string") {
+        (req as any).rawBody = req.body;
+      } else if (Buffer.isBuffer(req.body)) {
+        (req as any).rawBody = req.body.toString("utf-8");
+      } else if (typeof req.body === "object") {
+        (req as any).rawBody = JSON.stringify(req.body);
+      } else {
+        (req as any).rawBody = "";
+      }
+    }
+
     // Log all requests for debugging
     console.log("[API] No route matched for:", pathname);
 
