@@ -144,12 +144,12 @@ export default function VideoSlider() {
           </button>
 
           {/* Progress Indicator */}
-          <div className="absolute top-6 left-0 right-0 px-6 flex gap-1 z-10">
+          <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent px-6 py-4 flex gap-1 z-10">
             {SAMPLE_VIDEOS.map((_, idx) => (
               <div
                 key={idx}
-                className={`h-1 flex-1 rounded-full transition-all ${
-                  idx === currentIndex ? "bg-white" : "bg-white/40"
+                className={`h-2 flex-1 rounded-full transition-all backdrop-blur-sm ${
+                  idx === currentIndex ? "bg-white shadow-lg" : "bg-white/40 hover:bg-white/60"
                 }`}
               />
             ))}
