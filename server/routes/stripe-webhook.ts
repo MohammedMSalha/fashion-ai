@@ -162,6 +162,17 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     );
 
                     // Update the database with generated video info
+                    console.log("[Webhook] Updating database with payment and generation info...");
+                    console.log("[Webhook] UPDATE params:");
+                    console.log("[Webhook]   - payment_intent_id:", paymentIntent.id);
+                    console.log("[Webhook]   - payment_amount:", paymentIntent.amount);
+                    console.log("[Webhook]   - payment_currency: usd");
+                    console.log("[Webhook]   - payment_email:", email);
+                    console.log("[Webhook]   - request_id:", generateResult.requestId);
+                    console.log("[Webhook]   - video_url:", generateResult.videoUrl);
+                    console.log("[Webhook]   - status: processing");
+                    console.log("[Webhook]   - WHERE id:", videoRecord.id);
+
                     const updateResult = await query(
                       `UPDATE videos
                        SET payment_intent_id = $1,
@@ -173,7 +184,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                            request_id = $5,
                            status = $6
                        WHERE id = $7
-                       RETURNING id, request_id, payment_intent_id, status`,
+                       RETURNING id, request_id, payment_intent_id, status, payment_intent_id, payment_amount, payment_email`,
                       [
                         paymentIntent.id,
                         paymentIntent.amount,
