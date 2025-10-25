@@ -297,7 +297,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-4 flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={() => navigate("/")}
+            onClick={() => {
+              if (onBack) {
+                onBack();
+              } else {
+                navigate("/");
+              }
+            }}
             className="text-white hover:bg-gray-900 flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
