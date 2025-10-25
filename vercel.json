@@ -4,16 +4,5 @@
   "outputDirectory": "dist/spa",
   "env": {
     "NODE_ENV": "production"
-  },
-  "routes": [
-    {
-      "src": "^/api/(.*?)/?$",
-      "dest": "/api/[...path].ts",
-      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
-    },
-    {
-      "src": "^/(?!api).*",
-      "dest": "/index.html"
-    }
-  ]
+  }
 }
