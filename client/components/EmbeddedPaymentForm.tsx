@@ -60,7 +60,7 @@ export default function EmbeddedPaymentForm({
       console.log("✓ Payment intent created");
 
       // Step 2: Confirm payment with Stripe
-      const stripe = window.Stripe(
+      const stripeInstance = stripe(
         process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY,
       );
       const elements = stripe.elements({ clientSecret });
