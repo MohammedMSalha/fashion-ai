@@ -51,7 +51,28 @@ export async function createServer() {
     }),
   );
 
-  // Request size limits - MUST be before webhook route!
+  // Stripe webhook handler - MUST be FIRST and use raw body middleware
+  // This captures the raw bytes BEFORE any JSON parsing
+  app.post(
+    "/api/stripe-webhook",
+    express.raw({ type: "application/json" }),
+    (req: any, res: any, next: any) => {
+      // Convert Buffer to string for Stripe SDK
+      if (Buffer.isBuffer(req.body)) {
+        req.rawBody = req.body.toString("utf-8");
+      } else if (typeof req.body === "string") {
+        req.rawBody = req.body;
+      } else {
+        req.rawBody = JSON.stringify(req.body);
+      }
+
+      console.log("[Webhook] Raw body captured, length:", req.rawBody.length);
+      next();
+    },
+    handleStripeWebhook,
+  );
+
+  // Request size limits - MUST be after webhook route!
   app.use(express.json({ limit: "5mb" }));
   app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
@@ -60,36 +81,6 @@ export async function createServer() {
     console.log(`[Express] ${req.method} ${req.path} ${req.url}`);
     next();
   });
-
-  // Stripe webhook handler - MUST be before any other middleware
-  // Use custom middleware to preserve raw body, then pass to webhook handler
-  const stripeWebhookMiddleware = (req: any, res: any, next: any) => {
-    console.log("[Webhook] POST /api/stripe-webhook received");
-    console.log("[Webhook] Headers:", req.headers);
-    console.log("[Webhook] Body type:", typeof req.body);
-    console.log(
-      "[Webhook] Body:",
-      typeof req.body === "object" ? JSON.stringify(req.body) : req.body,
-    );
-
-    // The raw body should already be set by the serverless wrapper
-    if (!req.rawBody) {
-      console.log("[Webhook] Setting rawBody from req.body");
-      if (typeof req.body === "string") {
-        req.rawBody = req.body;
-      } else if (Buffer.isBuffer(req.body)) {
-        req.rawBody = req.body.toString("utf-8");
-      } else {
-        req.rawBody = JSON.stringify(req.body);
-      }
-    }
-
-    console.log("[Webhook] rawBody length:", req.rawBody?.length || 0);
-    // Pass to the next middleware (which is the actual handler)
-    next();
-  };
-
-  app.post("/api/stripe-webhook", stripeWebhookMiddleware, handleStripeWebhook);
 
   // Rate limiting
   const limiter = rateLimit({
