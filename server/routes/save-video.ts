@@ -357,7 +357,10 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
       videos: result.rows,
     });
   } catch (error) {
-    console.error("[GetVideosByEmail] Error:", error instanceof Error ? error.message : error);
+    console.error(
+      "[GetVideosByEmail] Error:",
+      error instanceof Error ? error.message : error,
+    );
     return res.status(500).json({
       success: false,
       error: "Failed to retrieve videos",

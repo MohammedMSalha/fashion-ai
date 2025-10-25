@@ -19,11 +19,13 @@ async function start() {
     app.all("*", (req, res) => {
       // Don't serve index.html for API routes
       if (req.path.startsWith("/api/") || req.path.startsWith("/health")) {
-        console.warn(`[API] 404: ${req.method} ${req.path} - endpoint not found`);
+        console.warn(
+          `[API] 404: ${req.method} ${req.path} - endpoint not found`,
+        );
         return res.status(404).json({
           error: "API endpoint not found",
           path: req.path,
-          method: req.method
+          method: req.method,
         });
       }
 
