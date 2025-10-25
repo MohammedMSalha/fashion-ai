@@ -74,7 +74,8 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
     console.log("✓ Session created:", session.id);
     console.log("✓ Checkout URL:", session.url);
 
-    res.json({
+    res.setHeader("Content-Type", "application/json");
+    return res.status(200).json({
       success: true,
       sessionId: session.id,
       checkoutUrl: session.url,
