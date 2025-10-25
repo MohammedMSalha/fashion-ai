@@ -36,7 +36,7 @@ const stripePromise = loadStripe(stripePublishableKey);
 function CardForm({
   amount,
   email,
-  image,
+  videoId,
   duration,
   quality,
   onSuccess,
