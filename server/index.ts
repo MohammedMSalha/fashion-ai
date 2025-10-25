@@ -102,7 +102,9 @@ export async function createServer() {
     res.json({
       status: "ok",
       stripe_key_set: !!process.env.STRIPE_SECRET_KEY,
-      db_url_set: !!(process.env.DATABASE_URL || process.env.fashion_DATABASE_URL),
+      db_url_set: !!(
+        process.env.DATABASE_URL || process.env.fashion_DATABASE_URL
+      ),
     });
   });
 

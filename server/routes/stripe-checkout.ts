@@ -11,7 +11,12 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
 
     const { amount, email, duration, quality, baseUrl } = req.body;
 
-    console.log("Parsed checkout request:", { amount, email, duration, quality });
+    console.log("Parsed checkout request:", {
+      amount,
+      email,
+      duration,
+      quality,
+    });
 
     // Validate required fields
     if (!amount || !email) {

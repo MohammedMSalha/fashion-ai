@@ -40,22 +40,22 @@ async function performInitialization() {
     }
 
     console.log("Testing database connection...");
-    
+
     // Quick connection test with timeout
     const client = await Promise.race([
       pool.connect(),
       new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Connection timeout")), 5000)
+        setTimeout(() => reject(new Error("Connection timeout")), 5000),
       ),
     ]);
 
     await client.query("SELECT 1");
     client.release();
-    
+
     console.log("✓ Database connection OK");
 
     // Initialize tables in the background (non-blocking)
-    initializeTables().catch(err => {
+    initializeTables().catch((err) => {
       console.error("Background table initialization error:", err);
     });
 
@@ -108,7 +108,7 @@ async function initializeTables() {
       try {
         const [colName] = column.split(" ");
         await pool.query(
-          `ALTER TABLE videos ADD COLUMN IF NOT EXISTS ${column};`
+          `ALTER TABLE videos ADD COLUMN IF NOT EXISTS ${column};`,
         );
       } catch (e) {
         // Ignore column exists errors
