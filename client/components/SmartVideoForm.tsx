@@ -33,7 +33,6 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     }
   }, []);
 
-
   const detectImageResolution = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -353,7 +352,12 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
               }
 
               try {
-                console.log("Creating checkout session...", { price, email, duration, quality });
+                console.log("Creating checkout session...", {
+                  price,
+                  email,
+                  duration,
+                  quality,
+                });
 
                 const response = await fetch("/api/checkout-session", {
                   method: "POST",
@@ -388,7 +392,10 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                 }
               } catch (err) {
                 console.error("Checkout error:", err);
-                alert("Failed to start checkout: " + (err instanceof Error ? err.message : "Unknown error"));
+                alert(
+                  "Failed to start checkout: " +
+                    (err instanceof Error ? err.message : "Unknown error"),
+                );
               }
             }}
           >
