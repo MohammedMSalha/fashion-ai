@@ -341,30 +341,37 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                   "[Webhook] ✗ No image data for video record:",
                   videoId,
                 );
-                const noImageResult = await query(
-                  `UPDATE videos
-                   SET payment_intent_id = $1,
-                       payment_status = 'succeeded',
-                       payment_amount = $2,
-                       payment_currency = 'usd',
-                       payment_email = $3,
-                       status = $4,
-                       error_message = $5
-                   WHERE id = $6
-                   RETURNING id, payment_intent_id, status, error_message`,
-                  [
-                    paymentIntent.id,
-                    paymentIntent.amount,
-                    email || null,
-                    "failed",
-                    "No image data stored",
-                    videoRecord.id,
-                  ],
-                );
-                console.log(
-                  "[Webhook] Database updated (no image data):",
-                  noImageResult.rows[0],
-                );
+                try {
+                  const noImageResult = await query(
+                    `UPDATE videos
+                     SET payment_intent_id = $1,
+                         payment_status = 'succeeded',
+                         payment_amount = $2,
+                         payment_currency = 'usd',
+                         payment_email = $3,
+                         status = $4,
+                         error_message = $5
+                     WHERE id = $6
+                     RETURNING id, payment_intent_id, status, error_message`,
+                    [
+                      paymentIntent.id,
+                      paymentIntent.amount,
+                      email || null,
+                      "failed",
+                      "No image data stored",
+                      videoRecord.id,
+                    ],
+                  );
+                  console.log(
+                    "[Webhook] ✓ Database updated (no image data):",
+                    JSON.stringify(noImageResult.rows[0]),
+                  );
+                } catch (noImageErr) {
+                  console.error(
+                    "[Webhook] ✗ Failed to update database (no image):",
+                    noImageErr instanceof Error ? noImageErr.message : noImageErr,
+                  );
+                }
               }
             } else {
               console.error(
