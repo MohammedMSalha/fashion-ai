@@ -78,7 +78,11 @@ export async function createServer() {
 
   // Log all incoming requests (for debugging)
   app.use((req, res, next) => {
-    console.log(`[Express] ${req.method} ${req.path} ${req.url}`);
+    console.log(`[Express] ${req.method} ${req.path} ${req.url}`, {
+      path: req.path,
+      originalUrl: req.originalUrl,
+      baseUrl: req.baseUrl,
+    });
     next();
   });
 
