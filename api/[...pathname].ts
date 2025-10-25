@@ -423,7 +423,7 @@ async function handler(req: any, res: any) {
                    payment_email = $5,
                    status = $6
                WHERE id = $7
-               RETURNING id`,
+               RETURNING id, image_base64, duration, resolution`,
               [
                 paymentIntent.id,
                 "succeeded",
@@ -436,7 +436,71 @@ async function handler(req: any, res: any) {
             );
 
             if (updateResult.rows.length > 0) {
+              const videoRecord = updateResult.rows[0];
               console.log("[Webhook] Payment stored for video:", videoId);
+
+              // Now trigger video generation with fashion.ai
+              console.log("[Webhook] Triggering video generation for videoId:", videoId);
+
+              try {
+                // Import the generation service
+                const { generateVideoAsync } = await import(
+                  "../server/services/video-status.js"
+                );
+
+                // Call fashion.ai API with the base64 image
+                const generateResult = await generateVideoAsync(
+                  videoRecord.image_base64,
+                  videoRecord.duration as 5 | 10,
+                  videoRecord.resolution as "720p" | "1080p",
+                );
+
+                console.log(
+                  "[Webhook] Generation result:",
+                  JSON.stringify(generateResult),
+                );
+
+                if (generateResult.success && generateResult.requestId) {
+                  console.log(
+                    "[Webhook] ✓ Video generation started! Request ID:",
+                    generateResult.requestId,
+                  );
+
+                  // Update with request ID
+                  await query(
+                    `UPDATE videos SET request_id = $1 WHERE id = $2`,
+                    [generateResult.requestId, videoId],
+                  );
+
+                  console.log(
+                    "[Webhook] ✓ Request ID stored in database:",
+                    generateResult.requestId,
+                  );
+                } else {
+                  console.error(
+                    "[Webhook] ✗ Video generation failed:",
+                    generateResult.error,
+                  );
+
+                  // Update status to failed
+                  await query(
+                    `UPDATE videos SET status = $1, error_message = $2 WHERE id = $3`,
+                    ["failed", generateResult.error || "Generation failed", videoId],
+                  );
+                }
+              } catch (genError) {
+                console.error("[Webhook] Error triggering generation:", genError);
+
+                // Mark as failed
+                await query(
+                  `UPDATE videos SET status = $1, error_message = $2 WHERE id = $3`,
+                  [
+                    "failed",
+                    genError instanceof Error ? genError.message : "Unknown error",
+                    videoId,
+                  ],
+                );
+              }
             } else {
               console.warn("[Webhook] Video not found:", videoId);
             }
