@@ -1,6 +1,7 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "pnpm install --no-frozen-lockfile",
+  "outputDirectory": "dist/spa",
   "env": {
     "NODE_ENV": "production"
   },
@@ -11,9 +12,12 @@
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "status": 200
+      "src": "/(.+)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
     }
   ]
 }
