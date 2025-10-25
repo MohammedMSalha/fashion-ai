@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
 import SmartVideoForm from "@/components/SmartVideoForm";
+import { useToast } from "@/hooks/use-toast";
 import {
   Sparkles,
   X,
