@@ -63,11 +63,11 @@ export default function EmbeddedPaymentForm({
       const stripeInstance = stripe(
         process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY,
       );
-      const elements = stripe.elements({ clientSecret });
+      const elements = stripeInstance.elements({ clientSecret });
       const paymentElement = elements.create("payment");
       paymentElement.mount("#payment-element");
 
-      const result = await stripe.confirmPayment({
+      const result = await stripeInstance.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/generate?payment=success`,
