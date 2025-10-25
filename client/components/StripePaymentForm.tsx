@@ -359,11 +359,23 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
     );
   }
 
+  // Only render Elements when we have a clientSecret
+  if (!clientSecret) {
+    return (
+      <div className="w-full max-w-md mx-auto bg-gray-900 p-6 rounded-lg border border-gray-800">
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          <span className="ml-3 text-gray-400">Loading payment method...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Elements
       stripe={stripePromise}
       options={{
-        clientSecret: clientSecret || undefined,
+        clientSecret: clientSecret,
         appearance: {
           theme: "night",
           variables: {
