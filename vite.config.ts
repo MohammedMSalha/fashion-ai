@@ -38,17 +38,11 @@ function expressPlugin(): Plugin {
     async configureServer(server) {
       const app = await createServer();
 
-      // Add Express app as middleware BEFORE other middleware
-      // This ensures API routes are handled before Vite's own routing
-      server.middlewares.use("/api", app);
-
-      // Also handle the root path through Express for catch-all routes
-      server.middlewares.use((req, res, next) => {
-        // If it's not an API request and not a static file, let Vite handle it
-        if (req.url.startsWith("/api/") || req.url.startsWith("/.")) {
-          return app(req, res, next);
-        }
-        next();
+      // Add Express app as middleware to handle /api routes
+      // Place it early in the middleware chain
+      server.middlewares.use("/api", (req, res, next) => {
+        // Route all /api requests through Express
+        return app(req, res, next);
       });
 
       return () => {
