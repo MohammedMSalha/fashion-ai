@@ -387,7 +387,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
 
               <Button
                 variant="ghost"
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  if (onBack) {
+                    onBack();
+                  } else {
+                    navigate("/");
+                  }
+                }}
                 className="w-full text-gray-400 hover:text-white hover:bg-gray-900"
               >
                 Back to Home
