@@ -19,7 +19,7 @@ function getStripeClient(): Stripe {
   return new Stripe(stripeSecretKey);
 }
 
-function verifySignature(body: string, signature: string): StripeEvent {
+function verifySignature(body: string | Buffer, signature: string): StripeEvent {
   try {
     const stripe = getStripeClient();
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -28,15 +28,29 @@ function verifySignature(body: string, signature: string): StripeEvent {
       throw new Error("STRIPE_WEBHOOK_SECRET not configured");
     }
 
+    console.log("[Stripe] Verifying webhook signature");
+    console.log("[Stripe] Body type:", typeof body);
+    console.log("[Stripe] Body is Buffer:", Buffer.isBuffer(body));
+    console.log("[Stripe] Body length:", (body as any).length);
+    console.log("[Stripe] Signature:", signature.substring(0, 20) + "...");
+
     const event = stripe.webhooks.constructEvent(
-      body,
+      body as any,
       signature,
       webhookSecret,
     );
 
     return event as StripeEvent;
   } catch (err) {
-    throw new Error(`Webhook signature verification failed: ${err}`);
+    console.error(
+      "[Stripe] Verification failed with error:",
+      err instanceof Error ? err.message : String(err),
+    );
+    throw new Error(
+      `Webhook signature verification failed: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
   }
 }
 
