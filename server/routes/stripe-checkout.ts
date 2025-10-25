@@ -69,7 +69,10 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     clearTimeout(timeout);
-    console.error("[Checkout] Error:", error instanceof Error ? error.message : error);
+    console.error(
+      "[Checkout] Error:",
+      error instanceof Error ? error.message : error,
+    );
 
     if (!res.headersSent) {
       res.status(500).json({
