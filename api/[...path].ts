@@ -1,22 +1,63 @@
-export default function handler(req: any, res: any) {
-  console.log("[API] Request received:", req.method, req.url);
+let expressApp: any = null;
+let initPromise: Promise<any> | null = null;
 
-  // Simple health check endpoint
-  if (req.method === "GET" && req.url === "/api/health") {
-    return res.status(200).json({
-      status: "ok",
-      message: "API endpoint is reachable",
-      timestamp: new Date().toISOString(),
+async function getExpressApp() {
+  if (expressApp) return expressApp;
+  if (initPromise) return initPromise;
+
+  initPromise = (async () => {
+    try {
+      console.log("[Serverless] Initializing Express app...");
+      // Import the server module - use dynamic import to get the actual implementation
+      const serverModule = await import("../server/index.js");
+
+      if (typeof serverModule.createServer === "function") {
+        expressApp = await serverModule.createServer();
+        console.log("[Serverless] Express app initialized");
+      } else if (typeof serverModule.default === "function") {
+        expressApp = await serverModule.default();
+        console.log("[Serverless] Express app initialized (from default export)");
+      } else {
+        throw new Error(
+          "Server module does not export createServer or default function",
+        );
+      }
+
+      return expressApp;
+    } catch (error) {
+      console.error("[Serverless] Failed to initialize:", error);
+      initPromise = null;
+      throw error;
+    }
+  })();
+
+  return initPromise;
+}
+
+export default async function handler(req: any, res: any) {
+  try {
+    const pathname = req.url.split("?")[0]; // Remove query params
+    console.log(`[Serverless] ${req.method} ${pathname}`);
+
+    const app = await getExpressApp();
+
+    // Create a simple Node.js request/response pair for Express
+    // Pass through the request to Express
+    return new Promise((resolve) => {
+      const originalEnd = res.end;
+      res.end = function () {
+        originalEnd.apply(res, arguments);
+        resolve(undefined);
+      };
+
+      app(req, res);
+    });
+  } catch (error) {
+    console.error("[Serverless] Error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Server initialization failed",
+      details: (error as Error).message,
     });
   }
-
-  // For now, return error for all other routes
-  // Once we verify this endpoint works, we'll add the full server
-  return res.status(404).json({
-    success: false,
-    error: "API endpoint not found",
-    path: req.url,
-    method: req.method,
-    note: "API is being initialized...",
-  });
 }
