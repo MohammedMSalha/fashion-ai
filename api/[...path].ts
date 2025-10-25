@@ -37,17 +37,28 @@ export default async function handler(req: any, res: any) {
     const app = await getExpressApp();
 
     // For Stripe webhook, preserve the raw body
+    // Vercel might have already parsed it, so we reconstruct it
     if (pathname === "/api/webhook/stripe") {
-      console.log("[Serverless] Webhook request detected, preserving raw body");
+      console.log("[Serverless] Webhook request detected");
+      console.log("[Serverless] req.body type:", typeof req.body);
+      console.log("[Serverless] req.body is Buffer:", Buffer.isBuffer(req.body));
+
       // Store raw body for Stripe signature verification
       if (typeof req.body === "string") {
+        console.log("[Serverless] Body is string, using as-is");
         req.rawBody = req.body;
       } else if (Buffer.isBuffer(req.body)) {
+        console.log("[Serverless] Body is Buffer, converting to string");
         req.rawBody = req.body.toString("utf-8");
-      } else {
-        // If body is already parsed, stringify it
+      } else if (typeof req.body === "object") {
+        console.log("[Serverless] Body is parsed object, stringifying");
         req.rawBody = JSON.stringify(req.body);
+      } else {
+        console.log("[Serverless] Unknown body type, setting empty string");
+        req.rawBody = "";
       }
+
+      console.log("[Serverless] rawBody length:", req.rawBody?.length || 0);
     }
 
     // Pass through the request to Express
