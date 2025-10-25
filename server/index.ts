@@ -96,6 +96,15 @@ export async function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  // Health check endpoint (no rate limiting)
+  app.get("/api/health", (_req, res) => {
+    res.json({
+      status: "ok",
+      stripe_key_set: !!process.env.STRIPE_SECRET_KEY,
+      db_url_set: !!(process.env.DATABASE_URL || process.env.fashion_DATABASE_URL),
+    });
+  });
+
   // Video generation endpoint (with stricter rate limiting)
   app.post("/api/generate-video", videoLimiter, generateVideo);
 
