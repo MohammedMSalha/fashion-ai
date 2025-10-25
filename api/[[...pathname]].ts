@@ -80,6 +80,8 @@ export default async function handler(req: any, res: any) {
         return res.status(400).json({ success: false, error: "Invalid email" });
       }
 
+      console.log("[API Handler] Querying videos for email:", email);
+
       const result = await query(
         `SELECT id, email, video_url, duration, resolution, status, error_message, created_at, expires_at, request_id,
                 payment_intent_id, payment_amount, payment_currency, payment_status, payment_method_type, payment_email
@@ -89,6 +91,8 @@ export default async function handler(req: any, res: any) {
          LIMIT 50`,
         [email],
       );
+
+      console.log("[API Handler] Query result: rows =", result.rows.length);
 
       return res.status(200).json({
         success: true,
