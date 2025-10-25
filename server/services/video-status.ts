@@ -124,7 +124,7 @@ export async function checkAndUpdateAllPendingVideos(): Promise<void> {
     let result;
     try {
       result = await query(
-        `SELECT request_id FROM videos WHERE status = 'processing' AND request_id IS NOT NULL`,
+        `SELECT id, request_id FROM videos WHERE status = 'processing' AND request_id IS NOT NULL ORDER BY created_at DESC`,
       );
     } catch (columnError) {
       // If request_id column doesn't exist, try without it
@@ -133,18 +133,30 @@ export async function checkAndUpdateAllPendingVideos(): Promise<void> {
         columnError.message.includes('column "request_id" does not exist')
       ) {
         console.warn(
-          "request_id column not found, skipping status checks. Run database migration.",
+          "[CheckAllPending] request_id column not found, skipping status checks. Run database migration.",
         );
         return;
       }
       throw columnError;
     }
 
+    const pendingCount = result.rows.length;
+
+    if (pendingCount === 0) {
+      console.log("[CheckAllPending] No pending videos to check");
+      return;
+    }
+
+    console.log(`[CheckAllPending] Found ${pendingCount} pending video(s) to check`);
+
     for (const row of result.rows) {
+      console.log(`[CheckAllPending] Checking video ${row.id} with request ${row.request_id}`);
       await updateVideoStatusFromFashn(row.request_id);
     }
+
+    console.log(`[CheckAllPending] Completed check for ${pendingCount} video(s)`);
   } catch (error) {
-    console.error("Error checking pending videos:", error);
+    console.error("[CheckAllPending] Error checking pending videos:", error);
   }
 }
 
