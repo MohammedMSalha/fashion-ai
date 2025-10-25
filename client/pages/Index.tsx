@@ -137,14 +137,6 @@ export default function Index() {
     }
   }, [toast]);
 
-  const handleEmailSubmit = () => {
-    if (email) setMyVideosStep("verification");
-  };
-
-  const handleCodeSubmit = () => {
-    if (code) setMyVideosStep("videos");
-  };
-
   const handleGenerateClick = useCallback(() => {
     setCurrentPage("in-progress");
     // Simulate generation process
@@ -165,9 +157,6 @@ export default function Index() {
 
   const goHome = () => {
     setCurrentPage("home");
-    setMyVideosStep("email");
-    setEmail("");
-    setCode("");
   };
 
   const currentVideo = SAMPLE_VIDEOS[currentVideoIndex];
