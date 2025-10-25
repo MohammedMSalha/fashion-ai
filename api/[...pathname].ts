@@ -6,7 +6,10 @@ let pool: Pool | null = null;
 let stripeClient: Stripe | null = null;
 
 // In-memory storage for verification codes
-const verificationCodes = new Map<string, { code: string; expiresAt: number; attempts: number }>();
+const verificationCodes = new Map<
+  string,
+  { code: string; expiresAt: number; attempts: number }
+>();
 
 function getPool(): Pool {
   if (pool) {
@@ -111,11 +114,11 @@ export default async function handler(req: any, res: any) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT",
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Stripe-Signature"
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Stripe-Signature",
   );
 
   // Handle OPTIONS
@@ -295,8 +298,10 @@ export default async function handler(req: any, res: any) {
 
       try {
         const stripe = getStripeClient();
-        const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
-        const host = req.headers["x-forwarded-host"] || req.headers.host || "localhost";
+        const protocol =
+          req.headers["x-forwarded-proto"] || req.protocol || "https";
+        const host =
+          req.headers["x-forwarded-host"] || req.headers.host || "localhost";
         const baseUrl = `${protocol}://${host}`;
 
         const session = await stripe.checkout.sessions.create({
@@ -357,16 +362,19 @@ export default async function handler(req: any, res: any) {
           console.error("[Webhook] STRIPE_WEBHOOK_SECRET env var not set");
           // For development, we might not have the webhook secret, so just log the event
           console.log("[Webhook] Event payload:", rawBody.substring(0, 200));
-          const bodyObj = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+          const bodyObj =
+            typeof req.body === "string" ? JSON.parse(req.body) : req.body;
           console.log("[Webhook] Event type:", bodyObj?.type);
-          return res.status(200).json({ received: true, warning: "No webhook secret configured" });
+          return res
+            .status(200)
+            .json({ received: true, warning: "No webhook secret configured" });
         }
 
         console.log("[Webhook] Verifying signature with secret...");
         const event = stripe.webhooks.constructEvent(
           rawBody,
           signature,
-          webhookSecret
+          webhookSecret,
         );
 
         console.log("[Webhook] Event:", event.type);
@@ -398,7 +406,7 @@ export default async function handler(req: any, res: any) {
                 email || "",
                 "processing",
                 videoId,
-              ]
+              ],
             );
 
             if (updateResult.rows.length > 0) {
@@ -454,7 +462,7 @@ export default async function handler(req: any, res: any) {
           `INSERT INTO videos (email, image_base64, duration, resolution, status)
            VALUES ($1, $2, $3, $4, 'awaiting_payment')
            RETURNING id, created_at, expires_at`,
-          [email, imageBase64, duration, resolution]
+          [email, imageBase64, duration, resolution],
         );
 
         const videoRecord = result.rows[0];
@@ -496,7 +504,7 @@ export default async function handler(req: any, res: any) {
            WHERE email = $1 AND deleted_at IS NULL
            ORDER BY created_at DESC
            LIMIT 50`,
-          [email]
+          [email],
         );
 
         return res.status(200).json({
@@ -528,7 +536,7 @@ export default async function handler(req: any, res: any) {
           `UPDATE videos SET deleted_at = CURRENT_TIMESTAMP
            WHERE id = $1 AND deleted_at IS NULL
            RETURNING id`,
-          [videoId]
+          [videoId],
         );
 
         if (result.rows.length === 0) {
@@ -553,7 +561,9 @@ export default async function handler(req: any, res: any) {
 
     // ============ CHECK PENDING VIDEOS ============
     if (pathname.startsWith("/api/check-pending/") && req.method === "GET") {
-      const email = decodeURIComponent(pathname.split("/api/check-pending/")[1]);
+      const email = decodeURIComponent(
+        pathname.split("/api/check-pending/")[1],
+      );
 
       if (!validateEmail(email)) {
         return res.status(400).json({
@@ -568,7 +578,7 @@ export default async function handler(req: any, res: any) {
            WHERE email = $1 AND status = 'processing' AND request_id IS NOT NULL AND deleted_at IS NULL
            ORDER BY created_at DESC
            LIMIT 10`,
-          [email]
+          [email],
         );
 
         return res.status(200).json({
@@ -586,7 +596,9 @@ export default async function handler(req: any, res: any) {
 
     // ============ GET VIDEO STATUS ============
     if (pathname.startsWith("/api/video-status/") && req.method === "GET") {
-      const videoId = decodeURIComponent(pathname.split("/api/video-status/")[1]);
+      const videoId = decodeURIComponent(
+        pathname.split("/api/video-status/")[1],
+      );
 
       if (!videoId) {
         return res.status(400).json({
@@ -598,7 +610,7 @@ export default async function handler(req: any, res: any) {
       try {
         const result = await query(
           `SELECT id, status, video_url, error_message FROM videos WHERE id = $1`,
-          [videoId]
+          [videoId],
         );
 
         if (result.rows.length === 0) {
