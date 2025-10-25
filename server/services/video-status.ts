@@ -150,7 +150,10 @@ export async function generateVideoAsync(
     }
 
     console.log("[GenerateVideo] Starting video generation");
-    console.log("[GenerateVideo] Image type:", imageUrlOrBase64.startsWith("data:") ? "base64 data URL" : "URL");
+    console.log(
+      "[GenerateVideo] Image type:",
+      imageUrlOrBase64.startsWith("data:") ? "base64 data URL" : "URL",
+    );
     console.log(
       "[GenerateVideo] Duration:",
       duration,

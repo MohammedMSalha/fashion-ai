@@ -253,7 +253,11 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
           );
 
           // Pass base64 image directly to fashion.ai
-          console.log("[Webhook] Using base64 image (length:", videoRecord.image_base64.length, "bytes)");
+          console.log(
+            "[Webhook] Using base64 image (length:",
+            videoRecord.image_base64.length,
+            "bytes)",
+          );
 
           const generateResult = await generateVideoAsync(
             videoRecord.image_base64,
