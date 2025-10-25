@@ -128,6 +128,11 @@ export async function createServer() {
   app.get("/api/check-pending/:email", checkPendingVideos);
   app.delete("/api/videos/:videoId", deleteVideo);
 
+  // Email authentication endpoints
+  app.get("/api/auth/smtp-status", getSMTPStatusHandler);
+  app.post("/api/auth/send-code", sendCodeHandler);
+  app.post("/api/auth/verify-code", verifyCodeHandler);
+
   // 404 handler
   app.use((_req, res) => {
     res.status(404).json({
