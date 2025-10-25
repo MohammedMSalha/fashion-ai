@@ -361,12 +361,17 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
   try {
     const { videoId } = req.params;
 
+    console.log("[GetVideoStatus] Request received with videoId:", videoId);
+
     if (!videoId) {
+      console.error("[GetVideoStatus] No videoId provided");
       return res.status(400).json({
         success: false,
         error: "Video ID required",
       });
     }
+
+    console.log("[GetVideoStatus] Querying database for video:", videoId);
 
     const result = await query(
       `SELECT id, status, error_message, video_url, created_at, expires_at,
@@ -376,12 +381,17 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
       [videoId],
     );
 
+    console.log("[GetVideoStatus] Query result rows:", result.rows.length);
+
     if (result.rows.length === 0) {
+      console.log("[GetVideoStatus] Video not found for id:", videoId);
       return res.status(404).json({
         success: false,
         error: "Video not found",
       });
     }
+
+    console.log("[GetVideoStatus] Video found:", result.rows[0].id);
 
     return res.status(200).json({
       success: true,
