@@ -145,7 +145,7 @@ function CardForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 w-full md:max-w-md md:mx-auto bg-gray-900 p-6 rounded-lg border border-gray-800"
+      className="space-y-6 w-full bg-gray-900 p-6 rounded-lg border border-gray-800"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
