@@ -131,6 +131,9 @@ export async function createServer() {
   app.get("/api/check-pending/:email", checkPendingVideos);
   app.delete("/api/videos/:videoId", deleteVideo);
 
+  // Image serving endpoint (for fashion.ai to access images)
+  app.get("/api/image/:videoId", getImageByVideoId);
+
   // Email authentication endpoints
   app.get("/api/auth/smtp-status", getSMTPStatusHandler);
   app.post("/api/auth/send-code", sendCodeHandler);
