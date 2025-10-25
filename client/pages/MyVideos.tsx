@@ -62,7 +62,7 @@ export default function MyVideos() {
         const interval = setInterval(async () => {
           try {
             const response = await fetch(
-              `/api/videos/${encodeURIComponent(email)}`,
+              createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
             );
             if (response.ok) {
               const data = await response.json();
@@ -79,42 +79,45 @@ export default function MyVideos() {
     }
   }, [step, videos, email]);
 
-  const handleEmailSubmit = () => {
-    if (email) {
-      setStep("verification");
-    }
-  };
+  const handleEmailSubmit = async () => {
+    if (!email) return;
 
-  const handleCodeSubmit = async () => {
-    if (code) {
-      setLoading(true);
-      setError(null);
-      try {
-        // First, check for any pending videos and update their status in the background
-        await fetch(`/api/check-pending/${encodeURIComponent(email)}`).catch(
-          () => null,
-        );
+    setLoading(true);
+    setError(null);
+    try {
+      // Check for any pending videos and update their status in the background
+      await fetch(
+        createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
+      ).catch(() => null);
 
-        // Then fetch all videos (will include any that just completed)
-        const response = await fetch(
-          `/api/videos/${encodeURIComponent(email)}`,
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch videos");
-        }
-        const data = await response.json();
-        setVideos(data.videos || []);
-        if (!data.videos || data.videos.length === 0) {
-          setError("No videos found for this email");
-        } else {
-          setStep("videos");
-          setCurrentVideoIndex(0);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load videos");
-      } finally {
-        setLoading(false);
+      // Then fetch all videos (will include any that just completed)
+      const response = await fetch(
+        createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch videos");
       }
+
+      const data = await response.json();
+      const userVideos = data.videos || [];
+
+      setVideos(userVideos);
+
+      if (userVideos.length === 0) {
+        setStep("videos");
+      } else {
+        setStep("videos");
+        setCurrentVideoIndex(0);
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to load videos. Please try again.",
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
