@@ -10,8 +10,9 @@ import {
   Loader,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { createApiUrl } from "@/config/api";
 
-type Step = "email" | "verification" | "videos";
+type Step = "email" | "videos";
 
 interface DatabaseVideo {
   id: number;
@@ -36,13 +37,20 @@ export default function MyVideos() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [videos, setVideos] = useState<DatabaseVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pollInterval, setPollInterval] = useState<NodeJS.Timeout | null>(null);
+
+  // Load saved email from localStorage on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("fashionai_email");
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+  }, []);
 
   // Poll for video status updates
   useEffect(() => {
