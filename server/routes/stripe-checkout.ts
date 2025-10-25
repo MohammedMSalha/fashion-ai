@@ -3,9 +3,15 @@ import Stripe from "stripe";
 
 export const createCheckoutSession: RequestHandler = async (req, res) => {
   try {
+    console.log("=== CHECKOUT SESSION START ===");
+    console.log("Method:", req.method);
+    console.log("Path:", req.path);
+    console.log("Headers:", req.headers);
+    console.log("Body:", req.body);
+
     const { amount, email, duration, quality, baseUrl } = req.body;
 
-    console.log("Checkout request:", { amount, email, duration, quality });
+    console.log("Parsed checkout request:", { amount, email, duration, quality });
 
     // Validate required fields
     if (!amount || !email) {
