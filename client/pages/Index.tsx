@@ -242,8 +242,16 @@ export default function Index() {
             </div>
           </div>
 
+          {/* Overlay to close menu when clicking outside */}
+          {showFabMenu && (
+            <div
+              className="fixed inset-0 z-30"
+              onClick={() => setShowFabMenu(false)}
+            />
+          )}
+
           {/* Floating Action Button Menu */}
-          <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40">
+          <div className="fixed bottom-4 left-4 md:bottom-6 md:right-6 md:left-auto z-40">
             <div
               className={`flex flex-col gap-2 md:gap-3 mb-4 transition-all duration-300 ${
                 showFabMenu ? "opacity-100 visible" : "opacity-0 invisible"
