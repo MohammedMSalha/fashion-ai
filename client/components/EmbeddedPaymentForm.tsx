@@ -91,7 +91,7 @@ export default function EmbeddedPaymentForm({
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full md:max-w-md md:mx-auto space-y-6">
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-6 border border-gray-700">
         <p className="text-gray-400 text-sm mb-1">Total Amount</p>
         <p className="text-3xl font-bold text-white">${amount.toFixed(2)}</p>
