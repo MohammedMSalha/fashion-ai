@@ -317,7 +317,10 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
   try {
     const { email } = req.params;
 
+    console.log("[GetVideosByEmail] Request for email:", email);
+
     if (!email) {
+      console.log("[GetVideosByEmail] No email provided");
       return res.status(400).json({
         success: false,
         error: "Email required",
@@ -327,11 +330,14 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.log("[GetVideosByEmail] Invalid email format:", email);
       return res.status(400).json({
         success: false,
         error: "Invalid email",
       });
     }
+
+    console.log("[GetVideosByEmail] Fetching videos from database...");
 
     // Get non-deleted videos for the email
     const result = await query(
@@ -344,15 +350,18 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
       [email],
     );
 
+    console.log("[GetVideosByEmail] Found", result.rows.length, "videos");
+
     return res.status(200).json({
       success: true,
       videos: result.rows,
     });
   } catch (error) {
-    console.error("Get videos error:", error);
+    console.error("[GetVideosByEmail] Error:", error instanceof Error ? error.message : error);
     return res.status(500).json({
       success: false,
       error: "Failed to retrieve videos",
+      debug: error instanceof Error ? error.message : String(error),
     });
   }
 };
