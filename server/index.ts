@@ -13,6 +13,7 @@ import { createCheckoutSession } from "./routes/stripe-checkout.js";
 import { handleStripeWebhook } from "./routes/stripe-webhook.js";
 import {
   saveVideo,
+  saveVideoConfig,
   getVideosByEmail,
   deleteVideo,
   getVideoStatus,
