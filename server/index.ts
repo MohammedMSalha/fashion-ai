@@ -18,6 +18,11 @@ import {
   getVideoStatus,
 } from "./routes/save-video.js";
 import { checkPendingVideos } from "./routes/check-pending-videos.js";
+import {
+  getSMTPStatusHandler,
+  sendCodeHandler,
+  verifyCodeHandler,
+} from "./routes/email-auth.js";
 import { initializeDatabase } from "./db.js";
 import { startCleanupJob } from "./jobs/cleanup-videos.js";
 import { startVideoStatusCheckJob } from "./jobs/check-video-status.js";
