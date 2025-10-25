@@ -63,32 +63,37 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         console.log("Payment succeeded:", paymentIntent.id);
 
+        const videoId = paymentIntent.metadata?.videoId;
         const email = paymentIntent.metadata?.email;
-        if (email) {
-          console.log(`Payment succeeded for email: ${email}`);
+
+        if (videoId) {
+          console.log(`Payment succeeded for video: ${videoId}`);
 
           try {
-            // Find the pending video record for this payment
+            // Get the video record with image data
             const videoResult = await query(
-              `SELECT id, resolution, duration, payment_intent_id FROM videos
-               WHERE email = $1 AND payment_status = 'payment_pending'
-               ORDER BY created_at DESC LIMIT 1`,
-              [email],
+              `SELECT id, image_base64, resolution, duration FROM videos
+               WHERE id = $1 AND status IN ('awaiting_payment', 'processing')`,
+              [parseInt(videoId)],
             );
 
             if (videoResult.rows.length > 0) {
-              const pendingVideo = videoResult.rows[0];
-              const resolution = pendingVideo.resolution as "720p" | "1080p";
-              const duration = pendingVideo.duration as 5 | 10;
+              const videoRecord = videoResult.rows[0];
+              const resolution = videoRecord.resolution as "720p" | "1080p";
+              const duration = videoRecord.duration as 5 | 10;
+              const imageBase64 = videoRecord.image_base64;
 
               console.log(
-                `Generating video for pending payment: ${pendingVideo.id}`,
+                `Generating video for paid record: ${videoRecord.id}`,
               );
 
-              // Get the image from metadata if available
-              const imageUrl = paymentIntent.metadata?.imageUrl;
-              if (imageUrl) {
+              if (imageBase64) {
                 try {
+                  // Convert base64 to data URL if not already
+                  const imageUrl = imageBase64.startsWith("data:")
+                    ? imageBase64
+                    : `data:image/jpeg;base64,${imageBase64}`;
+
                   // Generate video using the service function
                   const generateResult = await generateVideoAsync(
                     imageUrl,
@@ -102,16 +107,21 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                       `UPDATE videos
                        SET payment_intent_id = $1,
                            payment_status = 'succeeded',
-                           video_url = $2,
-                           request_id = $3,
-                           status = $4
-                       WHERE id = $5`,
+                           payment_amount = $2,
+                           payment_currency = 'usd',
+                           payment_email = $3,
+                           video_url = $4,
+                           request_id = $5,
+                           status = $6
+                       WHERE id = $7`,
                       [
                         paymentIntent.id,
+                        paymentIntent.amount,
+                        email || null,
                         generateResult.videoUrl || null,
                         generateResult.requestId || null,
                         "processing",
-                        pendingVideo.id,
+                        videoRecord.id,
                       ],
                     );
 
@@ -128,13 +138,19 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                       `UPDATE videos
                        SET payment_intent_id = $1,
                            payment_status = 'succeeded',
-                           status = 'failed',
-                           error_message = $2
-                       WHERE id = $3`,
+                           payment_amount = $2,
+                           payment_currency = 'usd',
+                           payment_email = $3,
+                           status = $4,
+                           error_message = $5
+                       WHERE id = $6`,
                       [
                         paymentIntent.id,
+                        paymentIntent.amount,
+                        email || null,
+                        "failed",
                         generateResult.error || "Generation failed",
-                        pendingVideo.id,
+                        videoRecord.id,
                       ],
                     );
                   }
@@ -148,30 +164,55 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     `UPDATE videos
                      SET payment_intent_id = $1,
                          payment_status = 'succeeded',
-                         status = 'failed',
-                         error_message = $2
-                     WHERE id = $3`,
+                         payment_amount = $2,
+                         payment_currency = 'usd',
+                         payment_email = $3,
+                         status = $4,
+                         error_message = $5
+                     WHERE id = $6`,
                     [
                       paymentIntent.id,
+                      paymentIntent.amount,
+                      email || null,
+                      "failed",
                       `Generation error: ${generateErr instanceof Error ? generateErr.message : "Unknown error"}`,
-                      pendingVideo.id,
+                      videoRecord.id,
                     ],
                   );
                 }
               } else {
-                // No image URL in metadata, just update payment status
+                console.warn("No image data for video record:", videoId);
                 await query(
                   `UPDATE videos
                    SET payment_intent_id = $1,
-                       payment_status = 'succeeded'
-                   WHERE id = $2`,
-                  [paymentIntent.id, pendingVideo.id],
+                       payment_status = 'succeeded',
+                       payment_amount = $2,
+                       payment_currency = 'usd',
+                       payment_email = $3,
+                       status = $4,
+                       error_message = $5
+                   WHERE id = $6`,
+                  [
+                    paymentIntent.id,
+                    paymentIntent.amount,
+                    email || null,
+                    "failed",
+                    "No image data stored",
+                    videoRecord.id,
+                  ],
                 );
               }
+            } else {
+              console.warn("Video record not found:", videoId);
             }
           } catch (dbErr) {
             console.error("Error updating database in webhook:", dbErr);
           }
+        } else if (email) {
+          console.warn(
+            "Payment succeeded but no videoId in metadata for email:",
+            email,
+          );
         }
         break;
       }
