@@ -5,6 +5,9 @@ interface PaymentIntentRequest {
   amount: number;
   email: string;
   imageUrl?: string;
+  videoId?: number;
+  duration?: "5s" | "10s";
+  quality?: "720p" | "1080p";
 }
 
 interface PaymentIntentResponse {
