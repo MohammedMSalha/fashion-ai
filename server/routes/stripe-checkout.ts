@@ -2,108 +2,80 @@ import { RequestHandler } from "express";
 import Stripe from "stripe";
 
 export const createCheckoutSession: RequestHandler = async (req, res) => {
+  // Set timeout to 10 seconds max
+  const timeout = setTimeout(() => {
+    console.error("Checkout request timeout!");
+    if (!res.headersSent) {
+      res.status(504).json({ success: false, error: "Request timeout" });
+    }
+  }, 10000);
+
   try {
-    console.log("=== CHECKOUT SESSION START ===");
-    console.log("Method:", req.method);
-    console.log("Path:", req.path);
-    console.log("Headers:", req.headers);
-    console.log("Body:", req.body);
+    console.log("[Checkout] Received request");
 
-    const { amount, email, duration, quality, baseUrl } = req.body;
+    const { amount, email } = req.body;
 
-    console.log("Parsed checkout request:", {
-      amount,
-      email,
-      duration,
-      quality,
-    });
-
-    // Validate required fields
+    // Quick validation
     if (!amount || !email) {
-      console.error("Missing fields:", { amount, email });
-      res.setHeader("Content-Type", "application/json");
+      clearTimeout(timeout);
       return res.status(400).json({
         success: false,
         error: "Missing amount or email",
       });
     }
 
-    // Check Stripe secret key
+    console.log("[Checkout] Validating Stripe key...");
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeKey) {
-      console.error("❌ STRIPE_SECRET_KEY not set in environment variables");
-      res.setHeader("Content-Type", "application/json");
+      clearTimeout(timeout);
+      console.error("[Checkout] STRIPE_SECRET_KEY not set");
       return res.status(500).json({
         success: false,
         error: "Payment service not configured",
       });
     }
 
-    console.log("✓ STRIPE_SECRET_KEY is set");
-
-    // Initialize Stripe
+    console.log("[Checkout] Creating Stripe client...");
     const stripe = new Stripe(stripeKey);
-    console.log("✓ Stripe client initialized");
 
-    // Build return URLs
-    const baseURL = baseUrl || `${req.protocol}://${req.get("host")}`;
-    const successUrl = `${baseURL}/generate?payment=success`;
-    const cancelUrl = `${baseURL}/generate?payment=cancelled`;
-
-    console.log("Creating session with URLs:", { successUrl, cancelUrl });
-
-    // Create checkout session
+    console.log("[Checkout] Creating checkout session...");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       customer_email: email,
-      success_url: successUrl,
-      cancel_url: cancelUrl,
+      success_url: `${req.protocol}://${req.get("host")}/generate?payment=success`,
+      cancel_url: `${req.protocol}://${req.get("host")}/generate?payment=cancelled`,
       line_items: [
         {
           price_data: {
             currency: "usd",
             product_data: {
-              name: `AI Fashion Video`,
-              description: `Duration: ${duration || "5s"}, Quality: ${quality || "1080p"}`,
+              name: "AI Fashion Video",
             },
             unit_amount: Math.round(amount),
           },
           quantity: 1,
         },
       ],
-      metadata: {
-        email,
-        duration: String(duration || "5s"),
-        quality: String(quality || "1080p"),
-      },
     });
 
-    console.log("✓ Session created:", session.id);
-    console.log("✓ Checkout URL:", session.url);
+    clearTimeout(timeout);
+    console.log("[Checkout] Success! Session:", session.id);
 
-    res.setHeader("Content-Type", "application/json");
-    return res.status(200).json({
+    res.json({
       success: true,
       sessionId: session.id,
       checkoutUrl: session.url,
     });
   } catch (error) {
-    console.error("❌ Stripe error:", error);
+    clearTimeout(timeout);
+    console.error("[Checkout] Error:", error instanceof Error ? error.message : error);
 
-    if (error instanceof Stripe.errors.StripeError) {
-      return res.status(error.statusCode || 500).json({
+    if (!res.headersSent) {
+      res.status(500).json({
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
-
-    res.status(500).json({
-      success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Failed to create checkout session",
-    });
   }
 };
