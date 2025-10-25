@@ -33,7 +33,9 @@ async function getQueryFunction() {
     if (errorStack) {
       console.error("[API] Stack:", errorStack.substring(0, 500));
     }
-    console.error("[API] Check fashion_DATABASE_URL in Vercel environment variables");
+    console.error(
+      "[API] Check fashion_DATABASE_URL in Vercel environment variables",
+    );
     return null; // Return null instead of throwing
   }
 }
@@ -103,8 +105,14 @@ export default async function handler(req: any, res: any) {
           const queryFn = await getQueryFunction();
           if (!queryFn) {
             console.error("[Save Config] Query function is null");
-            console.error("[Save Config] fashion_DATABASE_URL:", !!process.env.fashion_DATABASE_URL);
-            console.error("[Save Config] DATABASE_URL:", !!process.env.DATABASE_URL);
+            console.error(
+              "[Save Config] fashion_DATABASE_URL:",
+              !!process.env.fashion_DATABASE_URL,
+            );
+            console.error(
+              "[Save Config] DATABASE_URL:",
+              !!process.env.DATABASE_URL,
+            );
             throw new Error(
               "Database connection failed - check fashion_DATABASE_URL environment variable in Vercel",
             );
