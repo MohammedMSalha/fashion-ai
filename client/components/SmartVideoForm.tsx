@@ -358,6 +358,17 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   }
 
   // PAYMENT STEP
+  const handlePaymentSuccess = useCallback(() => {
+    console.log("Payment successful! Navigating...");
+    localStorage.setItem("fashionai_email", email);
+    setStep("upload");
+    onGenerate?.();
+  }, [email, onGenerate]);
+
+  const handlePaymentCancel = useCallback(() => {
+    setStep("review");
+  }, []);
+
   if (step === "payment") {
     return (
       <div className="w-full space-y-6">
@@ -369,15 +380,8 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           image={imagePreview}
           duration={duration}
           quality={quality}
-          onSuccess={() => {
-            console.log("Payment successful! Navigating...");
-            localStorage.setItem("fashionai_email", email);
-            // Reset form state
-            setStep("upload");
-            // Navigate to video generation
-            onGenerate?.();
-          }}
-          onCancel={() => setStep("review")}
+          onSuccess={handlePaymentSuccess}
+          onCancel={handlePaymentCancel}
         />
       </div>
     );
