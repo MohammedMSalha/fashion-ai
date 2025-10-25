@@ -300,7 +300,7 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
 
   if (loadingError) {
     return (
-      <div className="w-full md:max-w-md md:mx-auto bg-gray-900 p-6 rounded-lg border border-gray-800">
+      <div className="w-full bg-gray-900 p-6 rounded-lg border border-gray-800">
         <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/30 rounded-lg p-4">
           <AlertCircle className="w-5 h-5 text-red-400" />
           <div>
@@ -322,7 +322,7 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
   // Only render Elements when we have a clientSecret
   if (!clientSecret) {
     return (
-      <div className="w-full md:max-w-md md:mx-auto bg-gray-900 p-6 rounded-lg border border-gray-800">
+      <div className="w-full bg-gray-900 p-6 rounded-lg border border-gray-800">
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
           <span className="ml-3 text-gray-400">Loading payment method...</span>
