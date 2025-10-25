@@ -404,7 +404,7 @@ export const saveVideo: RequestHandler = async (req, res) => {
 
 export const getVideosByEmail: RequestHandler = async (req, res) => {
   try {
-    const { email } = req.params;
+    const { email } = req.body;
 
     console.log("[GetVideosByEmail] Request for email:", email);
 
@@ -418,7 +418,7 @@ export const getVideosByEmail: RequestHandler = async (req, res) => {
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) || email.length > 254) {
       console.log("[GetVideosByEmail] Invalid email format:", email);
       return res.status(400).json({
         success: false,
