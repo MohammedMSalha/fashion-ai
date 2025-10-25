@@ -14,7 +14,7 @@ import { createApiUrl } from "@/config/api";
 interface StripePaymentFormProps {
   amount: number;
   email: string;
-  image: string;
+  videoId: number;
   duration: "5s" | "10s";
   quality: "720p" | "1080p";
   onSuccess: () => void;
