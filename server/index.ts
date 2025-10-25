@@ -50,21 +50,30 @@ export async function createServer() {
 
   // Log all incoming requests (for debugging)
   app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
+    console.log(`[Express] ${req.method} ${req.path} ${req.url}`);
     next();
   });
 
-  // Stripe webhook handler (MUST be before JSON body parser)
-  app.post(
-    "/api/webhook/stripe",
-    express.raw({ type: "application/json" }),
-    (req: any, res: any, next: any) => {
-      // Store raw body for Stripe signature verification
-      req.rawBody = req.body;
-      next();
-    },
-    handleStripeWebhook,
-  );
+  // Stripe webhook handler - MUST be before any other middleware
+  // This needs to handle raw body for signature verification
+  app.post("/api/webhook/stripe", (req: any, res: any, next: any) => {
+    console.log("[Webhook] POST /api/webhook/stripe received");
+    console.log("[Webhook] Headers:", req.headers);
+
+    // The raw body should already be set by the serverless wrapper
+    if (!req.rawBody) {
+      console.log("[Webhook] Setting rawBody from req.body");
+      if (typeof req.body === "string") {
+        req.rawBody = req.body;
+      } else if (Buffer.isBuffer(req.body)) {
+        req.rawBody = req.body.toString("utf-8");
+      } else {
+        req.rawBody = JSON.stringify(req.body);
+      }
+    }
+
+    handleStripeWebhook(req, res, next);
+  });
 
   // Request size limits
   app.use(express.json({ limit: "5mb" }));
