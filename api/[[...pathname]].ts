@@ -8,7 +8,7 @@ async function getQueryFunction() {
     return cachedQuery;
   } catch (error) {
     console.error("[API] Failed to import database:", error);
-    throw error;
+    return null; // Return null instead of throwing
   }
 }
 
@@ -18,10 +18,6 @@ export default async function handler(req: any, res: any) {
     const method = req.method || "GET";
 
     console.log(`[API] ${method} ${pathname}`);
-    console.log(
-      "[API] Database URL set:",
-      !!process.env.DATABASE_URL || !!process.env.fashion_DATABASE_URL,
-    );
 
     // Health check
     if (pathname === "/api/health") {
@@ -42,8 +38,7 @@ export default async function handler(req: any, res: any) {
           res.end(
             JSON.stringify({
               success: false,
-              error:
-                "Missing required fields: email, imageBase64, duration, resolution",
+              error: "Missing required fields: email, imageBase64, duration, resolution",
             }),
           );
           return;
@@ -58,31 +53,47 @@ export default async function handler(req: any, res: any) {
           return;
         }
 
-        // Insert into database
-        const query = await getQueryFunction();
-        const result = await query(
-          `INSERT INTO videos (email, image_base64, duration, resolution, status)
-           VALUES ($1, $2, $3, $4, 'awaiting_payment')
-           RETURNING id, created_at, expires_at`,
-          [email, imageBase64, duration, resolution],
-        );
+        // Try to insert into database
+        try {
+          const queryFn = await getQueryFunction();
+          if (!queryFn) {
+            throw new Error("Database not available");
+          }
 
-        if (!result.rows[0]) {
-          throw new Error("Failed to create video record");
+          const result = await queryFn(
+            `INSERT INTO videos (email, image_base64, duration, resolution, status)
+             VALUES ($1, $2, $3, $4, 'awaiting_payment')
+             RETURNING id, created_at, expires_at`,
+            [email, imageBase64, duration, resolution],
+          );
+
+          if (!result.rows[0]) {
+            throw new Error("Failed to create video record");
+          }
+
+          const videoRecord = result.rows[0];
+
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.end(
+            JSON.stringify({
+              success: true,
+              videoId: videoRecord.id,
+              status: "awaiting_payment",
+              createdAt: videoRecord.created_at,
+            }),
+          );
+        } catch (dbError) {
+          console.error("[API] Save config database error:", dbError);
+          res.statusCode = 500;
+          res.setHeader("Content-Type", "application/json");
+          res.end(
+            JSON.stringify({
+              success: false,
+              error: "Database error: " + (dbError instanceof Error ? dbError.message : String(dbError)),
+            }),
+          );
         }
-
-        const videoRecord = result.rows[0];
-
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.end(
-          JSON.stringify({
-            success: true,
-            videoId: videoRecord.id,
-            status: "awaiting_payment",
-            createdAt: videoRecord.created_at,
-          }),
-        );
         return;
       } catch (error) {
         console.error("[API] Save config error:", error);
@@ -98,116 +109,18 @@ export default async function handler(req: any, res: any) {
       }
     }
 
-    // Stripe webhook endpoint
+    // Stripe webhook endpoint - ACKNOWLEDGE RECEIPT FIRST
     if (pathname === "/api/stripe-webhook" && method === "POST") {
-      try {
-        console.log("[Webhook] POST /api/stripe-webhook received");
+      // Always return 200 immediately (Stripe expects this)
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ received: true }));
 
-        // Preserve raw body for Stripe signature verification
-        let rawBody: string;
-        if (typeof req.body === "string") {
-          rawBody = req.body;
-        } else if (Buffer.isBuffer(req.body)) {
-          rawBody = req.body.toString("utf-8");
-        } else if (typeof req.body === "object") {
-          rawBody = JSON.stringify(req.body);
-        } else {
-          rawBody = "";
-        }
-
-        (req as any).rawBody = rawBody;
-        console.log("[Webhook] Raw body length:", rawBody.length);
-
-        // Parse the body
-        let event: any;
-        try {
-          event = JSON.parse(rawBody);
-        } catch (e) {
-          console.error("[Webhook] Failed to parse body");
-          res.statusCode = 400;
-          res.setHeader("Content-Type", "application/json");
-          res.end(JSON.stringify({ error: "Invalid JSON" }));
-          return;
-        }
-
-        console.log("[Webhook] Event type:", event.type);
-
-        // Handle payment_intent.succeeded event
-        if (event.type === "payment_intent.succeeded") {
-          const paymentIntent = event.data.object;
-          console.log("[Webhook] Processing payment_intent.succeeded");
-          console.log("[Webhook] Payment ID:", paymentIntent.id);
-          console.log("[Webhook] Amount:", paymentIntent.amount);
-          console.log("[Webhook] Metadata:", paymentIntent.metadata);
-
-          const videoId = paymentIntent.metadata?.videoId;
-          const email = paymentIntent.metadata?.email;
-
-          if (!videoId) {
-            console.error("[Webhook] Missing videoId in metadata");
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.end(JSON.stringify({ received: true }));
-            return;
-          }
-
-          // Update videos table with payment info
-          try {
-            console.log(
-              "[Webhook] About to update database for videoId:",
-              videoId,
-            );
-
-            const query = await getQueryFunction();
-            const updateResult = await query(
-              `UPDATE videos
-               SET payment_intent_id = $1,
-                   payment_status = $2,
-                   payment_amount = $3,
-                   payment_currency = $4,
-                   payment_email = $5,
-                   status = $6
-               WHERE id = $7
-               RETURNING id, email, image_base64, duration, resolution`,
-              [
-                paymentIntent.id,
-                "succeeded",
-                paymentIntent.amount,
-                paymentIntent.currency || "usd",
-                email || "",
-                "processing",
-                videoId,
-              ],
-            );
-
-            if (!updateResult.rows[0]) {
-              console.error("[Webhook] Video record not found:", videoId);
-              res.statusCode = 200;
-              res.setHeader("Content-Type", "application/json");
-              res.end(JSON.stringify({ received: true }));
-              return;
-            }
-
-            console.log("[Webhook] ✓ Updated video record:", videoId);
-          } catch (dbError) {
-            console.error("[Webhook] Database update error:", dbError);
-            // Don't throw - acknowledge receipt even if DB update fails
-          }
-        }
-
-        // Acknowledge receipt to Stripe (always return 200)
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify({ received: true }));
-        return;
-      } catch (error) {
-        console.error("[Webhook] Error processing webhook:", error);
-        // Return 200 to acknowledge - Stripe expects 200 even on processing errors
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify({ received: true, error: "processing_error" }));
-        return;
-      }
+      // Process webhook asynchronously in background (don't wait)
+      handleWebhookAsync(req).catch((error) => {
+        console.error("[Webhook] Async error:", error);
+      });
+      return;
     }
 
     // Default 404
@@ -224,5 +137,98 @@ export default async function handler(req: any, res: any) {
         message: error instanceof Error ? error.message : String(error),
       }),
     );
+  }
+}
+
+// Process webhook asynchronously
+async function handleWebhookAsync(req: any) {
+  try {
+    console.log("[Webhook] Processing webhook asynchronously");
+
+    // Preserve raw body for Stripe signature verification
+    let rawBody: string;
+    if (typeof req.body === "string") {
+      rawBody = req.body;
+    } else if (Buffer.isBuffer(req.body)) {
+      rawBody = req.body.toString("utf-8");
+    } else if (typeof req.body === "object") {
+      rawBody = JSON.stringify(req.body);
+    } else {
+      rawBody = "";
+    }
+
+    (req as any).rawBody = rawBody;
+    console.log("[Webhook] Raw body length:", rawBody.length);
+
+    // Parse the body
+    let event: any;
+    try {
+      event = JSON.parse(rawBody);
+    } catch (e) {
+      console.error("[Webhook] Failed to parse body");
+      return;
+    }
+
+    console.log("[Webhook] Event type:", event.type);
+
+    // Handle payment_intent.succeeded event
+    if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object;
+      console.log("[Webhook] Processing payment_intent.succeeded");
+      console.log("[Webhook] Payment ID:", paymentIntent.id);
+      console.log("[Webhook] Amount:", paymentIntent.amount);
+      console.log("[Webhook] Metadata:", paymentIntent.metadata);
+
+      const videoId = paymentIntent.metadata?.videoId;
+      const email = paymentIntent.metadata?.email;
+
+      if (!videoId) {
+        console.error("[Webhook] Missing videoId in metadata");
+        return;
+      }
+
+      // Update videos table with payment info
+      try {
+        console.log("[Webhook] About to update database for videoId:", videoId);
+        const queryFn = await getQueryFunction();
+
+        if (!queryFn) {
+          console.error("[Webhook] Database not available");
+          return;
+        }
+
+        const updateResult = await queryFn(
+          `UPDATE videos 
+           SET payment_intent_id = $1,
+               payment_status = $2,
+               payment_amount = $3,
+               payment_currency = $4,
+               payment_email = $5,
+               status = $6
+           WHERE id = $7
+           RETURNING id, email, image_base64, duration, resolution`,
+          [
+            paymentIntent.id,
+            "succeeded",
+            paymentIntent.amount,
+            paymentIntent.currency || "usd",
+            email || "",
+            "processing",
+            videoId,
+          ],
+        );
+
+        if (!updateResult.rows[0]) {
+          console.error("[Webhook] Video record not found:", videoId);
+          return;
+        }
+
+        console.log("[Webhook] ✓ Updated video record:", videoId);
+      } catch (dbError) {
+        console.error("[Webhook] Database update error:", dbError);
+      }
+    }
+  } catch (error) {
+    console.error("[Webhook] Error processing webhook:", error);
   }
 }
