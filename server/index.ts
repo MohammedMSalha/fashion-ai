@@ -76,6 +76,14 @@ export async function createServer() {
   app.use(express.json({ limit: "5mb" }));
   app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
+  // Disable caching for API endpoints
+  app.use("/api/", (req, res, next) => {
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    next();
+  });
+
   // Log all incoming requests (for debugging)
   app.use((req, res, next) => {
     console.log(`[Express] ${req.method} ${req.path} ${req.url}`, {
