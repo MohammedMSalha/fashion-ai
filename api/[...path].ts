@@ -1,114 +1,74 @@
+import { createServer } from "../server/index";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+
 let expressApp: any = null;
-let initPromise: Promise<any> | null = null;
 
-async function getExpressApp() {
+async function initializeApp() {
   if (expressApp) return expressApp;
-  if (initPromise) return initPromise;
-
-  initPromise = (async () => {
-    try {
-      console.log("[Serverless] Initializing Express app...");
-      console.log("[Serverless] __dirname:", typeof __dirname !== 'undefined' ? __dirname : 'not available');
-
-      // Try multiple import paths for compatibility with different Vercel environments
-      let serverModule: any;
-      const importPaths = [
-        "./server/index.ts",  // Try source first
-        "../server/index.ts", // Try relative to api/
-        "./server/index.js",  // Try compiled js
-        "../server/index.js", // Try compiled js relative
-      ];
-
-      for (const path of importPaths) {
-        try {
-          console.log(`[Serverless] Attempting import from: ${path}`);
-          serverModule = await import(path);
-          console.log(`[Serverless] Successfully imported from: ${path}`);
-          break;
-        } catch (importError) {
-          console.log(`[Serverless] Failed to import from ${path}`);
-        }
-      }
-
-      if (!serverModule) {
-        throw new Error("Failed to import server module from any path");
-      }
-
-      const createServer = (serverModule as any).createServer;
-
-      if (typeof createServer !== "function") {
-        throw new Error("Server module does not export createServer function");
-      }
-
-      expressApp = await createServer();
-      console.log("[Serverless] Express app initialized");
-      return expressApp;
-    } catch (error) {
-      console.error("[Serverless] Failed to initialize:", error);
-      console.error("[Serverless] Full error details:", {
-        name: error instanceof Error ? error.name : typeof error,
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      initPromise = null;
-      throw error;
-    }
-  })();
-
-  return initPromise;
+  
+  try {
+    console.log("[Serverless] Initializing Express app...");
+    expressApp = await createServer();
+    console.log("[Serverless] Express app initialized successfully");
+    return expressApp;
+  } catch (error) {
+    console.error("[Serverless] Failed to initialize Express app:", error);
+    throw error;
+  }
 }
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse,
+) {
   try {
-    const pathname = req.url.split("?")[0]; // Remove query params
+    const pathname = req.url?.split("?")[0] || "/";
     console.log(`[Serverless] ${req.method} ${pathname}`);
 
-    const app = await getExpressApp();
+    // Initialize Express app on first request
+    const app = await initializeApp();
 
     // For Stripe webhook, preserve the raw body
-    // Vercel might have already parsed it, so we reconstruct it
     if (pathname === "/api/webhook/stripe") {
       console.log("[Serverless] Webhook request detected");
-      console.log("[Serverless] req.body type:", typeof req.body);
-      console.log(
-        "[Serverless] req.body is Buffer:",
-        Buffer.isBuffer(req.body),
-      );
-
-      // Store raw body for Stripe signature verification
+      
+      // In Vercel, the body might already be parsed
+      // We need to reconstruct the raw body for Stripe signature verification
       if (typeof req.body === "string") {
         console.log("[Serverless] Body is string, using as-is");
-        req.rawBody = req.body;
+        (req as any).rawBody = req.body;
       } else if (Buffer.isBuffer(req.body)) {
-        console.log("[Serverless] Body is Buffer, converting to string");
-        req.rawBody = req.body.toString("utf-8");
+        console.log("[Serverless] Body is Buffer");
+        (req as any).rawBody = req.body.toString("utf-8");
       } else if (typeof req.body === "object") {
         console.log("[Serverless] Body is parsed object, stringifying");
-        req.rawBody = JSON.stringify(req.body);
+        (req as any).rawBody = JSON.stringify(req.body);
       } else {
-        console.log("[Serverless] Unknown body type, setting empty string");
-        req.rawBody = "";
+        console.log("[Serverless] Unknown body type");
+        (req as any).rawBody = "";
       }
-
-      console.log("[Serverless] rawBody length:", req.rawBody?.length || 0);
     }
 
-    // Pass through the request to Express
-    return new Promise((resolve) => {
-      const originalEnd = res.end;
-      res.end = function () {
-        originalEnd.apply(res, arguments);
-        resolve(undefined);
+    // Pass request to Express app
+    return new Promise<void>((resolve) => {
+      const originalEnd = res.end.bind(res);
+      
+      res.end = function (...args: any[]) {
+        originalEnd(...args);
+        resolve();
       };
 
       app(req, res);
     });
   } catch (error) {
     console.error("[Serverless] Error:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Server initialization failed",
-      details: (error as Error).message,
-    });
+    
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        error: "Server initialization failed",
+        details: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 }
