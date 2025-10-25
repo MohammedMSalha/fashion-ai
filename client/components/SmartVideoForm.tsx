@@ -222,7 +222,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                 variant="outline"
                 className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 cursor-pointer"
                 onClick={() => {
-                  const input = document.getElementById("image-input") as HTMLInputElement;
+                  const input = document.getElementById(
+                    "image-input",
+                  ) as HTMLInputElement;
                   input?.click();
                 }}
               >
