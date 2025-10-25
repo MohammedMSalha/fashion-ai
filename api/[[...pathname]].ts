@@ -1,31 +1,36 @@
-let expressApp: any = null;
+import serverless from "serverless-http";
 
-async function initializeApp() {
-  if (expressApp) {
-    return expressApp;
+console.log("[Vercel API] Module loading");
+
+let handler: any = null;
+
+async function initializeHandler() {
+  if (handler) {
+    return handler;
   }
 
-  console.log("[Vercel API] Initializing Express app...");
+  console.log("[Vercel API] Initializing handler...");
   try {
-    const { createServer } = await import("../server/index.js");
-    expressApp = await createServer();
-    console.log("[Vercel API] Express app initialized");
-    return expressApp;
+    const { createServer } = await import("../dist/server/index.mjs");
+    const app = await createServer();
+    console.log("[Vercel API] Express app created");
+
+    // Wrap Express app with serverless-http
+    handler = serverless(app);
+    console.log("[Vercel API] Handler initialized");
+    return handler;
   } catch (error) {
-    console.error("[Vercel API] Failed to initialize app:", error);
+    console.error("[Vercel API] Initialization error:", error);
     throw error;
   }
 }
 
-export default async function handler(req: any, res: any) {
+export default async function apiHandler(req: any, res: any) {
   try {
-    console.log("[Vercel API] Handling request:", req.method, req.url);
+    console.log("[Vercel API] Request:", req.method, req.url);
 
-    // Initialize app on first request
-    const app = await initializeApp();
-
-    // Call the Express app directly
-    return app(req, res);
+    const handlerFn = await initializeHandler();
+    return await handlerFn(req, res);
   } catch (error) {
     console.error("[Vercel API] Error:", error);
 
