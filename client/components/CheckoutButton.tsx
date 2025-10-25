@@ -32,7 +32,12 @@ export default function CheckoutButton({
     setError(null);
 
     try {
-      console.log("Creating checkout session...", { amount, email, duration, quality });
+      console.log("Creating checkout session...", {
+        amount,
+        email,
+        duration,
+        quality,
+      });
 
       const response = await fetch("/api/checkout-session", {
         method: "POST",
