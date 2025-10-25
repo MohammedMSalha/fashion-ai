@@ -31,11 +31,17 @@ function getStripeClient(): Stripe {
 
 export const createCheckoutSession: RequestHandler = async (req, res) => {
   try {
+    console.log("=== Checkout Session Request ===");
+    console.log("Body:", req.body);
+
     const { amount, email, duration, quality, baseUrl } =
       req.body as CheckoutSessionRequest;
 
+    console.log("Parsed:", { amount, email, duration, quality, baseUrl });
+
     // Validate required fields
     if (!amount || !email) {
+      console.error("Missing fields - amount:", amount, "email:", email);
       return res.status(400).json({
         success: false,
         error: "Missing required fields",
@@ -44,6 +50,7 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
 
     // Validate amount
     if (typeof amount !== "number" || !Number.isInteger(amount)) {
+      console.error("Invalid amount type/format:", typeof amount, amount);
       return res.status(400).json({
         success: false,
         error: "Invalid amount format",
@@ -51,6 +58,7 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
     }
 
     if (amount < 50 || amount > 99999) {
+      console.error("Amount out of range:", amount);
       return res.status(400).json({
         success: false,
         error: "Invalid amount",
@@ -59,19 +67,26 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
 
     // Validate email
     if (!validateEmail(email)) {
+      console.error("Invalid email:", email);
       return res.status(400).json({
         success: false,
         error: "Invalid email",
       });
     }
 
+    console.log("Validation passed, getting Stripe client...");
     const stripe = getStripeClient();
+    console.log("Stripe client initialized");
+
     const successUrl =
       baseUrl || `${req.protocol}://${req.get("host")}/generate`;
     const cancelUrl =
       baseUrl || `${req.protocol}://${req.get("host")}/generate`;
 
+    console.log("URLs:", { successUrl, cancelUrl });
+
     // Create checkout session
+    console.log("Creating Stripe checkout session...");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -98,16 +113,26 @@ export const createCheckoutSession: RequestHandler = async (req, res) => {
       },
     });
 
+    console.log("Session created successfully:", session.id);
+    console.log("Checkout URL:", session.url);
+
     return res.status(200).json({
       success: true,
       sessionId: session.id,
       checkoutUrl: session.url,
     });
   } catch (error) {
-    console.error("Checkout session error:", error);
+    console.error("=== Checkout Session ERROR ===");
+    console.error("Error type:", error instanceof Error ? error.constructor.name : typeof error);
+    console.error("Error message:", error instanceof Error ? error.message : String(error));
+    console.error("Full error:", error);
+
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+
     return res.status(500).json({
       success: false,
-      error: "Failed to create checkout session",
+      error: `Failed to create checkout session: ${errorMessage}`,
+      details: process.env.NODE_ENV === "development" ? String(error) : undefined,
     });
   }
 };
