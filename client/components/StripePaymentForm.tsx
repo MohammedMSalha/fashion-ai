@@ -40,7 +40,6 @@ const CardForm = ({
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const { toast } = useToast();
-  const [errorTimeout, setErrorTimeout] = useState<NodeJS.Timeout | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
   // Auto-dismiss error after 6 seconds
