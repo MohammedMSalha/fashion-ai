@@ -19,7 +19,10 @@ function getStripeClient(): Stripe {
   return new Stripe(stripeSecretKey);
 }
 
-function verifySignature(body: string | Buffer, signature: string): StripeEvent {
+function verifySignature(
+  body: string | Buffer,
+  signature: string,
+): StripeEvent {
   try {
     const stripe = getStripeClient();
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -86,7 +89,10 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
         "[Webhook] This usually means express.raw() middleware did not run",
       );
       console.error("[Webhook] req.body type:", typeof req.body);
-      console.error("[Webhook] req.body length:", JSON.stringify(req.body).length);
+      console.error(
+        "[Webhook] req.body length:",
+        JSON.stringify(req.body).length,
+      );
       return res.status(400).json({
         error:
           "No raw body for signature verification - webhook middleware misconfiguration",
@@ -105,7 +111,10 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
     } catch (sigErr) {
       console.error("[Webhook] ✗ Signature verification failed:", sigErr);
       console.error("[Webhook] Signature header:", signature);
-      console.error("[Webhook] Webhook secret env var set:", !!process.env.STRIPE_WEBHOOK_SECRET);
+      console.error(
+        "[Webhook] Webhook secret env var set:",
+        !!process.env.STRIPE_WEBHOOK_SECRET,
+      );
       return res.status(400).json({
         error:
           sigErr instanceof Error
