@@ -341,7 +341,11 @@ export default function Index() {
             {/* Main FAB Button */}
             <button
               onClick={() => setShowFabMenu(!showFabMenu)}
-              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white hover:bg-gray-100 text-black flex items-center justify-center shadow-lg transition-all hover:scale-110"
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 ${
+                showFabMenu
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-white hover:bg-gray-100 text-black"
+              }`}
               title="Menu"
             >
               <Sparkles className="w-5 h-5 md:w-6 md:h-6" />
