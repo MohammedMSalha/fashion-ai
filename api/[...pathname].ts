@@ -259,3 +259,9 @@ export default async function handler(req: any, res: any) {
     }
   }
 }
+
+// Export handler as both default and named export for compatibility
+export const GET = handler;
+export const POST = handler;
+export const DELETE = handler;
+export const OPTIONS = handler;
