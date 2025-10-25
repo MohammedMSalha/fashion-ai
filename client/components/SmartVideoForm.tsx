@@ -26,6 +26,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   const [quality, setQuality] = useState<"720p" | "1080p">("1080p");
   const [dragActive, setDragActive] = useState(false);
   const [step, setStep] = useState<"upload" | "review" | "payment">("upload");
+  const [videoId, setVideoId] = useState<number | null>(null);
+  const [savingConfig, setSavingConfig] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // Load saved email from localStorage
   useEffect(() => {
