@@ -252,19 +252,11 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             "[Webhook] ========== STEP 3: TRIGGER VIDEO GENERATION ==========",
           );
 
-          const protocol =
-            process.env.NODE_ENV === "production" ? "https" : "http";
-          const host =
-            process.env.VERCEL_URL ||
-            process.env.API_URL ||
-            process.env.RENDER_EXTERNAL_URL ||
-            `localhost:${process.env.PORT || 3000}`;
-          const imageUrl = `${protocol}://${host}/api/image/${videoRecord.id}`;
-
-          console.log("[Webhook] Image URL for fashion.ai:", imageUrl);
+          // Pass base64 image directly to fashion.ai
+          console.log("[Webhook] Using base64 image (length:", videoRecord.image_base64.length, "bytes)");
 
           const generateResult = await generateVideoAsync(
-            imageUrl,
+            videoRecord.image_base64,
             videoRecord.duration as 5 | 10,
             videoRecord.resolution as "720p" | "1080p",
           );
