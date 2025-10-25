@@ -100,7 +100,6 @@ const SAMPLE_VIDEOS: Video[] = [
 
 export default function Index() {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState<Page>(() => {
     // Check if we're on the /generate route
