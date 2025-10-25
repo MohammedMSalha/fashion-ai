@@ -136,7 +136,10 @@ export default async function handler(req: any, res: any) {
 
           // Update videos table with payment info
           try {
-            console.log("[Webhook] About to update database for videoId:", videoId);
+            console.log(
+              "[Webhook] About to update database for videoId:",
+              videoId,
+            );
 
             const updateResult = await query(
               `UPDATE videos
