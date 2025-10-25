@@ -8,6 +8,7 @@ import {
   Pause,
   Play,
   Loader,
+  Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createApiUrl } from "@/config/api";
