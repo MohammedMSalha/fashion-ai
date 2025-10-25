@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { createApiUrl } from "@/config/api";
 
-type Step = "email" | "videos";
+type Step = "email" | "verification" | "videos";
 
 interface DatabaseVideo {
   id: number;
