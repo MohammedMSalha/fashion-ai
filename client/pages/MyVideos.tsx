@@ -481,7 +481,7 @@ export default function MyVideos() {
                       ) {
                         try {
                           const response = await fetch(
-                            `/api/videos/${currentVideo.id}`,
+                            createApiUrl(`/api/videos/${currentVideo.id}`),
                             {
                               method: "DELETE",
                             },
@@ -494,7 +494,6 @@ export default function MyVideos() {
                             if (updatedVideos.length === 0) {
                               setStep("email");
                               setEmail("");
-                              setCode("");
                             } else {
                               setCurrentVideoIndex(0);
                             }
