@@ -254,7 +254,10 @@ export async function createServer() {
         res.sendFile(path.join(distPath, "index.html"));
       });
     } catch (error) {
-      console.warn("[Express] Could not set up static file serving:", error instanceof Error ? error.message : error);
+      console.warn(
+        "[Express] Could not set up static file serving:",
+        error instanceof Error ? error.message : error,
+      );
     }
   }
 
