@@ -417,7 +417,7 @@ export default function MyVideos() {
                       handleCodeSubmit();
                     }
                   }}
-                  maxLength="6"
+                  maxLength={6}
                   disabled={loading}
                   className="h-12 text-base bg-gray-900 border-gray-800 text-white text-center text-2xl tracking-widest"
                 />
