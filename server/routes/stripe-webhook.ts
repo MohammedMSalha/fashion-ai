@@ -89,16 +89,29 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
 
               if (imageBase64) {
                 try {
-                  // Convert base64 to data URL if not already
-                  const imageUrl = imageBase64.startsWith("data:")
-                    ? imageBase64
-                    : `data:image/jpeg;base64,${imageBase64}`;
+                  // Build image URL that fashion.ai can access
+                  // Format: https://domain/api/image/videoId
+                  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+                  const host =
+                    process.env.VERCEL_URL ||
+                    process.env.API_URL ||
+                    `localhost:${process.env.PORT || 3000}`;
+                  const imageUrl = `${protocol}://${host}/api/image/${videoRecord.id}`;
+
+                  console.log(
+                    `[Webhook] Generating video with image URL: ${imageUrl}`,
+                  );
 
                   // Generate video using the service function
                   const generateResult = await generateVideoAsync(
                     imageUrl,
                     duration,
                     resolution,
+                  );
+
+                  console.log(
+                    `[Webhook] Generation result:`,
+                    generateResult,
                   );
 
                   if (generateResult.success && generateResult.requestId) {
