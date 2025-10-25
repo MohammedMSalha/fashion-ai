@@ -39,11 +39,6 @@ interface Video {
   downloadUrl: string;
 }
 
-interface MousePosition {
-  x: number;
-  y: number;
-}
-
 const SAMPLE_VIDEOS: Video[] = [
   {
     id: "1",
