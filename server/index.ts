@@ -206,5 +206,17 @@ export async function createServer() {
     },
   );
 
+  // Error handling middleware - must be last
+  app.use((err: any, req: any, res: any, next: any) => {
+    console.error("[Error Handler]", err.message || err);
+
+    if (!res.headersSent) {
+      res.status(err.status || 500).json({
+        success: false,
+        error: err.message || "Internal server error",
+      });
+    }
+  });
+
   return app;
 }
