@@ -398,9 +398,7 @@ async function handler(req: any, res: any) {
             typeof req.body === "string" ? JSON.parse(req.body) : req.body;
           if (!bodyObj.type || !bodyObj.data) {
             console.error("[Webhook] Invalid webhook structure");
-            return res
-              .status(400)
-              .json({ error: "Invalid webhook structure" });
+            return res.status(400).json({ error: "Invalid webhook structure" });
           }
           event = bodyObj;
         }
