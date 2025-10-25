@@ -479,6 +479,10 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
     }
 
     // Acknowledge receipt of the event
+    console.log("\n[Webhook] ========== WEBHOOK COMPLETE ==========");
+    console.log("[Webhook] Event processed and stored in database");
+    console.log("[Webhook] Check Fly.io logs above for details");
+    console.log("[Webhook] =========================================\n");
     res.status(200).json({ received: true });
   } catch (error) {
     console.error("Webhook error:", error);
