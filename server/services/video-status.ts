@@ -65,9 +65,7 @@ export async function updateVideoStatusFromFashn(
       return;
     }
 
-    console.log(
-      `[UpdateStatus] Fashion.ai response status: ${status.status}`,
-    );
+    console.log(`[UpdateStatus] Fashion.ai response status: ${status.status}`);
     console.log(
       `[UpdateStatus] Fashion.ai response output:`,
       status.output ? `${status.output.length} item(s)` : "none",
