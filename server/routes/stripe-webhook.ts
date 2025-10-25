@@ -46,8 +46,14 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
   console.log("\n[Webhook] ========== WEBHOOK REQUEST RECEIVED ==========");
   console.log("[Webhook] Timestamp:", new Date().toISOString());
   console.log("[Webhook] Signature present:", !!signature);
-  console.log("[Webhook] STRIPE_WEBHOOK_SECRET set:", !!process.env.STRIPE_WEBHOOK_SECRET);
-  console.log("[Webhook] STRIPE_SECRET_KEY set:", !!process.env.STRIPE_SECRET_KEY);
+  console.log(
+    "[Webhook] STRIPE_WEBHOOK_SECRET set:",
+    !!process.env.STRIPE_WEBHOOK_SECRET,
+  );
+  console.log(
+    "[Webhook] STRIPE_SECRET_KEY set:",
+    !!process.env.STRIPE_SECRET_KEY,
+  );
 
   if (!signature) {
     console.error("[Webhook] ✗ Missing stripe-signature header");
@@ -262,7 +268,11 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             try {
               await query(
                 `UPDATE videos SET status = $1, error_message = $2 WHERE id = $3`,
-                ["failed", generateResult.error || "Generation failed", videoIdNum],
+                [
+                  "failed",
+                  generateResult.error || "Generation failed",
+                  videoIdNum,
+                ],
               );
               console.log("[Webhook] ✓ Status updated to failed");
             } catch (failErr) {
@@ -311,7 +321,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                 `UPDATE videos SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1`,
                 [videoId],
               );
-              console.log(`[Webhook] ✓ Video marked as deleted after refund: ${videoId}`);
+              console.log(
+                `[Webhook] ✓ Video marked as deleted after refund: ${videoId}`,
+              );
             }
           } catch (err) {
             console.error("[Webhook] Error handling refund in database:", err);
