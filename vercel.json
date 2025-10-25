@@ -1,22 +1,26 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/spa",
+  "installCommand": "pnpm install --no-frozen-lockfile",
   "env": {
     "NODE_ENV": "production"
   },
   "functions": {
     "api/[...path].ts": {
+      "runtime": "nodejs20.x",
       "maxDuration": 60
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "src": "^/api/(.*?)/?$",
+      "dest": "/api/[...path].ts",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "status": 200
     }
-  ]
+  ],
+  "public": true
 }
