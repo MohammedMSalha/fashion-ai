@@ -91,8 +91,10 @@ export default async function handler(req: any, res: any) {
           const queryFn = await getQueryFunction();
           if (!queryFn) {
             console.error("[Save Config] Query function is null");
+            console.error("[Save Config] fashion_DATABASE_URL:", !!process.env.fashion_DATABASE_URL);
+            console.error("[Save Config] DATABASE_URL:", !!process.env.DATABASE_URL);
             throw new Error(
-              "Database connection failed - check DATABASE_URL environment variable",
+              "Database connection failed - check fashion_DATABASE_URL environment variable in Vercel",
             );
           }
           console.log(
