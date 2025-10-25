@@ -1,10 +1,26 @@
 // Lazy import to avoid initialization errors
 let cachedQuery: any = null;
+let dbInitialized = false;
+
 async function getQueryFunction() {
   if (cachedQuery) return cachedQuery;
+
   try {
+    console.log("[API] Importing database module...");
+    console.log("[API] fashion_DATABASE_URL set:", !!process.env.fashion_DATABASE_URL);
+    console.log("[API] DATABASE_URL set:", !!process.env.DATABASE_URL);
+
     const dbModule = await import("../server/db");
     cachedQuery = dbModule.query;
+
+    // Initialize database on first use
+    if (!dbInitialized && dbModule.initializeDatabase) {
+      console.log("[API] Initializing database...");
+      await dbModule.initializeDatabase();
+      dbInitialized = true;
+      console.log("[API] Database initialized");
+    }
+
     return cachedQuery;
   } catch (error) {
     console.error("[API] Failed to import database:", error);
