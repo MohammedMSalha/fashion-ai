@@ -35,41 +35,57 @@ const CardForm = ({
   onSuccess,
   onCancel,
 }: StripePaymentFormProps) => {
+  const stripe = useStripe();
+  const elements = useElements();
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
-  const [cardError, setCardError] = useState<string | null>(null);
   const { toast } = useToast();
   const [errorTimeout, setErrorTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
   // Auto-dismiss error after 6 seconds
   useEffect(() => {
-    if (error || cardError) {
+    if (error) {
       if (errorTimeout) {
         clearTimeout(errorTimeout);
       }
       const timeout = setTimeout(() => {
         setError(null);
-        setCardError(null);
       }, 6000);
       setErrorTimeout(timeout);
       return () => clearTimeout(timeout);
     }
-  }, [error, cardError]);
+  }, [error]);
 
-  const validateCardElement = (cardElement: any): boolean => {
-    if (!cardElement) {
-      return false;
-    }
-    // Check if card element has been filled
-    // The CardElement doesn't expose direct validation, but we can check by attempting to use it
-    return true;
-  };
+  // Create payment intent on mount
+  useEffect(() => {
+    const createPaymentIntent = async () => {
+      try {
+        const response = await fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: Math.round(amount * 100),
+            email,
+            imageUrl: image,
+          }),
+        });
 
-  const handleSubmit = async (
-    event: React.FormEvent,
-    elements: any,
-    stripe: any,
-  ) => {
+        if (!response.ok) {
+          throw new Error("Failed to create payment intent");
+        }
+
+        const data = await response.json();
+        setClientSecret(data.clientSecret);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to initialize payment");
+      }
+    };
+
+    createPaymentIntent();
+  }, [amount, email, image]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!stripe || !elements) return;
 
