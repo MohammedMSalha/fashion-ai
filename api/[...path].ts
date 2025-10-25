@@ -8,8 +8,32 @@ async function getExpressApp() {
   initPromise = (async () => {
     try {
       console.log("[Serverless] Initializing Express app...");
-      // Import the server module - createServer is a named export
-      const serverModule = await import("../server/index.js");
+      console.log("[Serverless] __dirname:", typeof __dirname !== 'undefined' ? __dirname : 'not available');
+
+      // Try multiple import paths for compatibility with different Vercel environments
+      let serverModule: any;
+      const importPaths = [
+        "./server/index.ts",  // Try source first
+        "../server/index.ts", // Try relative to api/
+        "./server/index.js",  // Try compiled js
+        "../server/index.js", // Try compiled js relative
+      ];
+
+      for (const path of importPaths) {
+        try {
+          console.log(`[Serverless] Attempting import from: ${path}`);
+          serverModule = await import(path);
+          console.log(`[Serverless] Successfully imported from: ${path}`);
+          break;
+        } catch (importError) {
+          console.log(`[Serverless] Failed to import from ${path}`);
+        }
+      }
+
+      if (!serverModule) {
+        throw new Error("Failed to import server module from any path");
+      }
+
       const createServer = (serverModule as any).createServer;
 
       if (typeof createServer !== "function") {
