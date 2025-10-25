@@ -360,17 +360,20 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
                   quality,
                 });
 
-                const response = await fetch(createApiUrl("/api/checkout-session"), {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    amount: Math.round(price * 100),
-                    email,
-                    duration,
-                    quality,
-                    baseUrl: window.location.origin,
-                  }),
-                });
+                const response = await fetch(
+                  createApiUrl("/api/checkout-session"),
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      amount: Math.round(price * 100),
+                      email,
+                      duration,
+                      quality,
+                      baseUrl: window.location.origin,
+                    }),
+                  },
+                );
 
                 console.log("Checkout response status:", response.status);
 
