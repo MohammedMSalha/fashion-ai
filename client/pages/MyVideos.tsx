@@ -34,7 +34,11 @@ interface DatabaseVideo {
   payment_email?: string;
 }
 
-export default function MyVideos() {
+interface MyVideosProps {
+  onBack?: () => void;
+}
+
+export default function MyVideos({ onBack }: MyVideosProps) {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
