@@ -48,6 +48,12 @@ async function query(text: string, params: any[] = []) {
 
 export default async function handler(req: any, res: any) {
   try {
+    // Initialize status checking job on first request
+    if (!statusCheckJobStarted) {
+      statusCheckJobStarted = true;
+      startStatusCheckingJob();
+    }
+
     const pathname = req.url?.split("?")[0] || "/";
     const method = req.method || "GET";
 
