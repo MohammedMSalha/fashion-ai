@@ -12,14 +12,14 @@ Configure SMTP only if you want to require email verification for users accessin
 
 To enable email verification, add the following environment variables to your Vercel deployment:
 
-| Variable | Type | Required | Example | Description |
-|----------|------|----------|---------|-------------|
-| `SMTP_HOST` | String | Yes | `smtp.gmail.com` | SMTP server hostname |
-| `SMTP_PORT` | Number | Yes | `587` | SMTP server port (typically 587 for TLS or 465 for SSL) |
-| `SMTP_USER` | String | Yes | `your-email@gmail.com` | SMTP username or email address |
-| `SMTP_PASS` | String | Yes | `app-specific-password` | SMTP password (use app-specific password for Gmail) |
-| `SMTP_FROM` | String | Yes | `noreply@fashionai.com` | Sender email address (can be different from SMTP_USER) |
-| `SMTP_SECURE` | Boolean | No | `true` | Set to "true" for SSL (port 465), false/empty for TLS (port 587) |
+| Variable      | Type    | Required | Example                 | Description                                                      |
+| ------------- | ------- | -------- | ----------------------- | ---------------------------------------------------------------- |
+| `SMTP_HOST`   | String  | Yes      | `smtp.gmail.com`        | SMTP server hostname                                             |
+| `SMTP_PORT`   | Number  | Yes      | `587`                   | SMTP server port (typically 587 for TLS or 465 for SSL)          |
+| `SMTP_USER`   | String  | Yes      | `your-email@gmail.com`  | SMTP username or email address                                   |
+| `SMTP_PASS`   | String  | Yes      | `app-specific-password` | SMTP password (use app-specific password for Gmail)              |
+| `SMTP_FROM`   | String  | Yes      | `noreply@fashionai.com` | Sender email address (can be different from SMTP_USER)           |
+| `SMTP_SECURE` | Boolean | No       | `true`                  | Set to "true" for SSL (port 465), false/empty for TLS (port 587) |
 
 ## Setup Examples
 
@@ -77,12 +77,14 @@ SMTP_SECURE=false
 ## How It Works
 
 ### With SMTP Configured ✓
+
 - Users must verify their email with a 6-digit code
 - Code expires in 15 minutes
 - Maximum 5 failed attempts per code
 - Email is sent via SMTP provider
 
 ### Without SMTP Configured (Default)
+
 - Email verification is **skipped**
 - Users can directly access their videos
 - No email code is required
@@ -111,16 +113,19 @@ SMTP_SECURE=false
 ## Troubleshooting
 
 ### "SMTP_SECURE" Configuration
+
 - Use `SMTP_SECURE=false` for port 587 (TLS)
 - Use `SMTP_SECURE=true` for port 465 (SSL)
 - Leave empty or `false` for most providers
 
 ### Gmail App Password Issues
+
 - Must use an app-specific password, not your regular Gmail password
 - The password format is `xxxx xxxx xxxx xxxx` (16 characters with spaces)
 - Remove spaces when entering into Vercel
 
 ### Verification Code Not Received
+
 - Check email spam/junk folder
 - Verify `SMTP_FROM` is a valid sender identity in your email provider
 - Check Vercel function logs for SMTP errors
