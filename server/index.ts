@@ -15,6 +15,7 @@ import { handleStripeWebhook } from "./routes/stripe-webhook.js";
 import {
   saveVideo,
   saveVideoConfig,
+  listVideoConfigs,
   getVideosByEmail,
   deleteVideo,
   getVideoStatus,
@@ -157,13 +158,14 @@ export async function createServer() {
   app
     .route("/api/save-video-config")
     .post(videoLimiter, saveVideoConfig)
+    .get(videoLimiter, listVideoConfigs)
     .all((req, res) => {
       res
         .status(405)
-        .setHeader("Allow", "POST")
+        .setHeader("Allow", "GET, POST")
         .json({
           success: false,
-          error: `Method ${req.method} not allowed. Use POST.`,
+          error: `Method ${req.method} not allowed. Use GET or POST.`,
         });
     });
   app.post("/api/save-video", videoLimiter, saveVideo);

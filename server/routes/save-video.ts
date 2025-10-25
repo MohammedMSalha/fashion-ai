@@ -129,6 +129,95 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
   }
 };
 
+export const listVideoConfigs: RequestHandler = async (req, res) => {
+  try {
+    const emailParam = typeof req.query.email === "string" ? req.query.email : undefined;
+    const parsedLimit =
+      typeof req.query.limit === "string" ? parseInt(req.query.limit, 10) : undefined;
+    const includeImage = req.query.includeImage === "true";
+
+    if (emailParam) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailParam) || emailParam.length > 254) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid email format",
+        });
+      }
+    }
+
+    const hasValidLimit = Number.isFinite(parsedLimit ?? Number.NaN);
+    const limit = hasValidLimit
+      ? Math.min(Math.max((parsedLimit as number), 1), 50)
+      : 20;
+
+    const params: Array<string | number> = [];
+    let whereClause = "";
+
+    if (emailParam) {
+      params.push(emailParam);
+      whereClause = "WHERE email = $1";
+    }
+
+    const selectColumns = [
+      "id",
+      "email",
+      "duration",
+      "resolution",
+      "status",
+      "created_at",
+      "expires_at",
+    ];
+
+    if (includeImage) {
+      selectColumns.push("image_base64");
+    }
+
+    const result = await query(
+      `SELECT ${selectColumns.join(", ")}
+       FROM videos
+       ${whereClause}
+       ORDER BY created_at DESC
+       LIMIT $${params.length + 1}`,
+      [...params, limit],
+    );
+
+    const configs = result.rows.map((row: any) => {
+      const config: Record<string, unknown> = {
+        id: row.id,
+        email: row.email,
+        duration: row.duration,
+        resolution: row.resolution,
+        status: row.status,
+        createdAt: row.created_at,
+        expiresAt: row.expires_at,
+      };
+
+      if (includeImage && row.image_base64) {
+        config.imageBase64 = row.image_base64;
+      }
+
+      return config;
+    });
+
+    return res.status(200).json({
+      success: true,
+      configs,
+      limit,
+      email: emailParam,
+    });
+  } catch (error) {
+    console.error("[List Configs] Error fetching configs:", error);
+    return res.status(500).json({
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch video configurations",
+    });
+  }
+};
+
 export const saveVideo: RequestHandler = async (req, res) => {
   try {
     const {

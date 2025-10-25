@@ -427,11 +427,86 @@ export default async function handler(req: any, res: any) {
 
     // ============ SAVE VIDEO CONFIG ============
     if (pathname === "/api/save-video-config") {
+      if (req.method === "GET") {
+        const emailParam = url.searchParams.get("email") || undefined;
+        const limitParam = url.searchParams.get("limit");
+        const includeImage = url.searchParams.get("includeImage") === "true";
+
+        if (emailParam && !validateEmail(emailParam)) {
+          return res.status(400).json({
+            success: false,
+            error: "Invalid email",
+          });
+        }
+
+        const parsedLimit = limitParam ? parseInt(limitParam, 10) : undefined;
+        const hasValidLimit = Number.isFinite(parsedLimit ?? Number.NaN);
+        const limit = hasValidLimit
+          ? Math.min(Math.max((parsedLimit as number), 1), 50)
+          : 20;
+
+        const params: Array<string | number> = [];
+        let whereClause = "";
+
+        if (emailParam) {
+          params.push(emailParam);
+          whereClause = "WHERE email = $1";
+        }
+
+        const selectColumns = [
+          "id",
+          "email",
+          "duration",
+          "resolution",
+          "status",
+          "created_at",
+          "expires_at",
+        ];
+
+        if (includeImage) {
+          selectColumns.push("image_base64");
+        }
+
+        const result = await query(
+          `SELECT ${selectColumns.join(", ")}
+           FROM videos
+           ${whereClause}
+           ORDER BY created_at DESC
+           LIMIT $${params.length + 1}`,
+          [...params, limit],
+        );
+
+        const configs = result.rows.map((row: any) => {
+          const config: Record<string, unknown> = {
+            id: row.id,
+            email: row.email,
+            duration: row.duration,
+            resolution: row.resolution,
+            status: row.status,
+            createdAt: row.created_at,
+            expiresAt: row.expires_at,
+          };
+
+          if (includeImage && row.image_base64) {
+            config.imageBase64 = row.image_base64;
+          }
+
+          return config;
+        });
+
+        return res.status(200).json({
+          success: true,
+          configs,
+          limit,
+          email: emailParam,
+        });
+      }
+
       if (req.method !== "POST") {
-        res.setHeader("Allow", "POST");
+        res.setHeader("Allow", "GET, POST");
         return res.status(405).json({
           success: false,
-          error: `Method ${req.method} not allowed. Use POST.`,
+          error: `Method ${req.method} not allowed. Use GET or POST.`,
         });
       }
 
