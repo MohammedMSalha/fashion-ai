@@ -38,18 +38,15 @@ function expressPlugin(): Plugin {
     async configureServer(server) {
       const app = await createServer();
 
-      // Insert Express middleware at the beginning to intercept all requests
-      // This ensures /api routes are handled before Vite's own routing
-      return () => {
-        server.middlewares.use((req, res, next) => {
-          // If it's an API request, handle it with Express
-          if (req.url.startsWith("/api/")) {
-            return app(req, res, next);
-          }
-          // Otherwise continue to next middleware
-          next();
-        });
-      };
+      // Add middleware to intercept API requests before Vite's routing
+      server.middlewares.use((req, res, next) => {
+        // If it's an API request, handle it with Express
+        if (req.url.startsWith("/api/")) {
+          return app(req, res, next);
+        }
+        // Otherwise continue to next middleware
+        next();
+      });
     },
   };
 }
