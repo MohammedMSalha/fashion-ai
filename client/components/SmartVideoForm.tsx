@@ -382,21 +382,39 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           </p>
         </div>
 
+        {/* Error Message */}
+        {saveError && (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+            <p className="text-sm text-red-200">{saveError}</p>
+          </div>
+        )}
+
         {/* Buttons */}
         <div className="flex gap-3">
           <Button
             variant="outline"
             className="flex-1 bg-transparent border-gray-700 text-white hover:bg-gray-800 h-12"
             onClick={() => setStep("upload")}
+            disabled={savingConfig}
           >
             Back
           </Button>
           <Button
             className="flex-1 bg-white hover:bg-gray-100 text-black font-bold h-12 flex items-center justify-center gap-2"
-            onClick={() => setStep("payment")}
+            onClick={handleSaveAndContinue}
+            disabled={savingConfig}
           >
-            <Check className="w-4 h-4" />
-            Pay & Generate
+            {savingConfig ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
+                Saving...
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4" />
+                Pay & Generate
+              </>
+            )}
           </Button>
         </div>
       </div>
