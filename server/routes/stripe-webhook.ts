@@ -260,6 +260,19 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                         console.log(
                           `[Webhook] Video generation started for payment: ${paymentIntent.id}`,
                         );
+
+                        // Verify the update by reading back the record
+                        console.log(`[Webhook] Verifying database update...`);
+                        const verifyResult = await query(
+                          `SELECT id, payment_intent_id, payment_amount, payment_currency, payment_email, payment_status, status, request_id FROM videos WHERE id = $1`,
+                          [videoRecord.id],
+                        );
+
+                        if (verifyResult.rows[0]) {
+                          console.log(`[Webhook] ✓ Verification successful:`, JSON.stringify(verifyResult.rows[0]));
+                        } else {
+                          console.error(`[Webhook] ✗ Verification failed: record not found after update`);
+                        }
                       } else {
                         console.error(
                           `[Webhook] ✗ UPDATE executed but no rows returned for video: ${videoRecord.id}`,
