@@ -1,19 +1,38 @@
-export default async function handler(req: any, res: any) {
+import type { IncomingMessage, ServerResponse } from "http";
+
+export default async function handler(
+  req: IncomingMessage & { body?: any },
+  res: ServerResponse & { json?: any },
+) {
   try {
-    console.log("[Serverless] Request received:", req.method, req.url);
-    
-    // Test if function can be invoked
+    console.log("[API] Request:", req.method, req.url);
+
+    // Simple health check to verify function works
     if (req.url === "/api/health") {
-      return res.status(200).json({ status: "ok" });
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ status: "ok", time: new Date().toISOString() }));
+      return;
     }
 
-    // For now, return 404 for other endpoints
-    return res.status(404).json({ error: "Not found" });
+    // Default 404 for now
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "application/json");
+    res.end(
+      JSON.stringify({
+        success: false,
+        error: "Endpoint not found",
+      }),
+    );
   } catch (error) {
-    console.error("[Serverless] Error:", error);
-    return res.status(500).json({
-      error: "Server error",
-      details: error instanceof Error ? error.message : String(error),
-    });
+    console.error("[API] Error:", error);
+    res.statusCode = 500;
+    res.setHeader("Content-Type", "application/json");
+    res.end(
+      JSON.stringify({
+        success: false,
+        error: "Internal Server Error",
+      }),
+    );
   }
 }
