@@ -82,7 +82,9 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
     }
 
     try {
+      console.log("Getting Stripe client...");
       const stripe = getStripeClient();
+      console.log("Stripe client ready, creating payment intent...");
 
       // Create payment intent with Stripe
       const paymentIntent = await stripe.paymentIntents.create({
@@ -94,12 +96,14 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
         },
       });
 
+      console.log("Payment intent created:", paymentIntent.id);
       return res.status(200).json({
         success: true,
         clientSecret: paymentIntent.client_secret,
       });
     } catch (stripeError) {
       console.error("Stripe API error:", stripeError);
+      console.error("Error type:", stripeError instanceof Error ? stripeError.message : String(stripeError));
 
       if (stripeError instanceof Stripe.errors.StripeInvalidRequestError) {
         return res.status(400).json({
