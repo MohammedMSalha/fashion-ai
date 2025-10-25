@@ -12,6 +12,14 @@ async function start() {
     const __dirname = import.meta.dirname;
     const distPath = path.join(__dirname, "../spa");
 
+    // Disable caching for API endpoints
+    app.use("/api/", (req, res, next) => {
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
+      next();
+    });
+
     // Serve static files
     app.use(express.static(distPath));
 
