@@ -236,6 +236,7 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
         console.log("[Stripe] Creating payment intent...", {
           amount: Math.round(props.amount * 100),
           email: props.email,
+          videoId: props.videoId,
         });
 
         const controller = new AbortController();
@@ -250,7 +251,9 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
           body: JSON.stringify({
             amount: Math.round(props.amount * 100),
             email: props.email,
-            imageUrl: props.image,
+            videoId: props.videoId,
+            duration: props.duration,
+            quality: props.quality,
           }),
           signal: controller.signal,
         });
@@ -293,7 +296,7 @@ export default function StripePaymentForm(props: StripePaymentFormProps) {
     };
 
     createPaymentIntent();
-  }, [props.amount, props.email, props.image]);
+  }, [props.amount, props.email, props.videoId, props.duration, props.quality]);
 
   if (loadingError) {
     return (
