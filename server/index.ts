@@ -151,6 +151,24 @@ export async function createServer() {
   app.post("/api/auth/send-code", sendCodeHandler);
   app.post("/api/auth/verify-code", verifyCodeHandler);
 
+  // Manual trigger for video status checking (can be called by external cron service)
+  app.get("/api/check-video-status", async (_req, res) => {
+    try {
+      console.log("[ManualCheckEndpoint] Triggered video status check");
+      const { checkAndUpdateAllPendingVideos } = await import(
+        "./services/video-status.js"
+      );
+      await checkAndUpdateAllPendingVideos();
+      res.json({ success: true, message: "Video status check completed" });
+    } catch (error) {
+      console.error("[ManualCheckEndpoint] Error:", error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  });
+
   // 404 handler
   app.use((_req, res) => {
     res.status(404).json({
