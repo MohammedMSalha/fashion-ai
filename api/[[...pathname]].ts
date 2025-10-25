@@ -153,6 +153,7 @@ export default async function handler(req: any, res: any) {
               videoId,
             );
 
+            const query = await getQueryFunction();
             const updateResult = await query(
               `UPDATE videos
                SET payment_intent_id = $1,
