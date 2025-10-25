@@ -5,11 +5,19 @@ let cachedServer: any = null;
 let serverInitPromise: Promise<any> | null = null;
 
 async function getServer() {
-  if (cachedServer) return cachedServer;
-  if (serverInitPromise) return serverInitPromise;
+  if (cachedServer) {
+    console.log("[Handler] Using cached server");
+    return cachedServer;
+  }
+  if (serverInitPromise) {
+    console.log("[Handler] Waiting for server initialization");
+    return serverInitPromise;
+  }
 
+  console.log("[Handler] Starting server initialization");
   serverInitPromise = createServer();
   cachedServer = await serverInitPromise;
+  console.log("[Handler] Server initialized successfully");
   return cachedServer;
 }
 
@@ -18,15 +26,27 @@ export default async function handler(
   res: ServerResponse,
 ) {
   try {
+    console.log(
+      "[Handler] Incoming request:",
+      req.method,
+      req.url,
+      "Headers:",
+      Object.keys(req.headers),
+    );
+
     const app = await getServer();
 
-    console.log(`[Serverless] ${req.method} ${req.url}`);
+    console.log(
+      "[Handler] Express app ready, routing:",
+      req.method,
+      req.url,
+    );
 
     // Create a promise that resolves when the response is finished
     return new Promise<void>((resolve, reject) => {
       // Set a timeout to prevent hanging
       const timeout = setTimeout(() => {
-        console.error("[Serverless] Request timeout after 25 seconds");
+        console.error("[Handler] Request timeout after 25 seconds");
         if (!res.headersSent) {
           res.statusCode = 504;
           res.setHeader("Content-Type", "application/json");
@@ -38,21 +58,26 @@ export default async function handler(
       // Handle response finish
       res.on("finish", () => {
         clearTimeout(timeout);
+        console.log(
+          "[Handler] Response finished with status:",
+          res.statusCode,
+        );
         resolve();
       });
 
       res.on("error", (err) => {
         clearTimeout(timeout);
-        console.error("[Serverless] Response error:", err);
+        console.error("[Handler] Response error:", err);
         reject(err);
       });
 
       // Call Express app
       try {
+        console.log("[Handler] Calling Express app handler");
         app(req, res);
       } catch (err) {
         clearTimeout(timeout);
-        console.error("[Serverless] Express error:", err);
+        console.error("[Handler] Express error:", err);
         if (!res.headersSent) {
           res.statusCode = 500;
           res.setHeader("Content-Type", "application/json");
@@ -67,7 +92,7 @@ export default async function handler(
       }
     });
   } catch (error) {
-    console.error("[Serverless] Fatal error:", error);
+    console.error("[Handler] Fatal error:", error);
     res.statusCode = 500;
     res.setHeader("Content-Type", "application/json");
     res.end(
