@@ -47,7 +47,10 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
   const signature = req.headers["stripe-signature"] as string;
 
   console.log("\n[Webhook] ========== WEBHOOK REQUEST RECEIVED ==========");
+  console.log("[Webhook] Timestamp:", new Date().toISOString());
   console.log("[Webhook] Signature present:", !!signature);
+  console.log("[Webhook] STRIPE_WEBHOOK_SECRET set:", !!process.env.STRIPE_WEBHOOK_SECRET);
+  console.log("[Webhook] STRIPE_SECRET_KEY set:", !!process.env.STRIPE_SECRET_KEY);
 
   if (!signature) {
     console.error("[Webhook] ✗ Missing stripe-signature header");
