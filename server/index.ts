@@ -58,8 +58,8 @@ export async function createServer() {
   });
 
   // Stripe webhook handler - MUST be before any other middleware
-  // This needs to handle raw body for signature verification
-  app.post("/api/webhook/stripe", async (req: any, res: any, next: any) => {
+  // Use custom middleware to preserve raw body, then pass to webhook handler
+  const stripeWebhookMiddleware = (req: any, res: any, next: any) => {
     console.log("[Webhook] POST /api/webhook/stripe received");
     console.log("[Webhook] Headers:", req.headers);
 
@@ -75,9 +75,11 @@ export async function createServer() {
       }
     }
 
-    // Call the webhook handler
-    await handleStripeWebhook(req, res, next);
-  });
+    // Pass to the next middleware (which is the actual handler)
+    next();
+  };
+
+  app.post("/api/webhook/stripe", stripeWebhookMiddleware, handleStripeWebhook);
 
   // Request size limits
   app.use(express.json({ limit: "5mb" }));
