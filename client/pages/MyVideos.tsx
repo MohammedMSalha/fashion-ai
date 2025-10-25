@@ -369,6 +369,99 @@ export default function MyVideos() {
         </section>
       )}
 
+      {/* Code Verification Step - Only shown if SMTP is enabled */}
+      {smtpEnabled && step === "verification" && (
+        <section className="min-h-screen bg-black flex items-center justify-center py-12">
+          <div className="w-full max-w-md px-4">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-900 mb-6 border border-gray-800">
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-2">
+                Verify Email
+              </h2>
+              <p className="text-gray-400 text-lg">
+                Enter the code sent to {email}
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Verification Code
+                </label>
+                <Input
+                  type="text"
+                  placeholder="123456"
+                  value={code}
+                  onChange={(e) =>
+                    setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && code.length === 6 && !loading) {
+                      handleCodeSubmit();
+                    }
+                  }}
+                  maxLength="6"
+                  disabled={loading}
+                  className="h-12 text-base bg-gray-900 border-gray-800 text-white text-center text-2xl tracking-widest"
+                />
+              </div>
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-sm text-red-200">
+                  {error}
+                </div>
+              )}
+
+              <Button
+                disabled={code.length !== 6 || loading}
+                onClick={handleCodeSubmit}
+                className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 text-base disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <Loader className="w-4 h-4 mr-2 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  "Verify Code"
+                )}
+              </Button>
+
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setStep("email");
+                  setCode("");
+                  setError(null);
+                }}
+                disabled={loading}
+                className="w-full text-gray-400 hover:text-white hover:bg-gray-900"
+              >
+                Back
+              </Button>
+
+              <p className="text-xs text-gray-500 text-center">
+                Check your spam folder if you don't see the email
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Videos Step - TikTok Style */}
       {step === "videos" && (
         <section className="min-h-screen bg-black flex items-center justify-center py-12 overflow-hidden">
