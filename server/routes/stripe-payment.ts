@@ -105,6 +105,9 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
         metadata: {
           email,
           imageUrl: imageUrl || "",
+          videoId: videoId ? String(videoId) : "",
+          duration: duration || "",
+          quality: quality || "",
         },
       });
 
