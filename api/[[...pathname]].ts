@@ -212,7 +212,10 @@ export default async function handler(req: any, res: any) {
         res.end(
           JSON.stringify({
             success: false,
-            error: error instanceof Error ? error.message : "Payment intent creation failed",
+            error:
+              error instanceof Error
+                ? error.message
+                : "Payment intent creation failed",
           }),
         );
         return;
