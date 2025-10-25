@@ -1,4 +1,4 @@
-import { query } from "../server/db.js";
+import { Pool } from "pg";
 
 export default async function handler(req: any, res: any) {
   // Set CORS headers
