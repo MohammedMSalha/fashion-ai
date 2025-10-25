@@ -9,7 +9,7 @@ async function getExpressApp() {
     try {
       console.log("[Serverless] Initializing Express app...");
       // Import the server module - createServer is a named export
-      const serverModule = await import("../server/index.js");
+      const serverModule = await import("../server/index.ts");
       const createServer = (serverModule as any).createServer;
 
       if (typeof createServer !== "function") {
@@ -21,6 +21,11 @@ async function getExpressApp() {
       return expressApp;
     } catch (error) {
       console.error("[Serverless] Failed to initialize:", error);
+      console.error("[Serverless] Full error details:", {
+        name: error instanceof Error ? error.name : typeof error,
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
       initPromise = null;
       throw error;
     }
