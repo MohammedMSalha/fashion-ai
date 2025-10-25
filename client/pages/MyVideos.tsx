@@ -95,15 +95,12 @@ export default function MyVideos({ onBack }: MyVideosProps) {
         // Poll every 5 seconds for processing videos
         const interval = setInterval(async () => {
           try {
-            const response = await fetch(
-              createApiUrl("/api/videos"),
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
-                signal: AbortSignal.timeout(5000),
-              },
-            );
+            const response = await fetch(createApiUrl("/api/videos"), {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+              signal: AbortSignal.timeout(5000),
+            });
             if (response.ok) {
               const data = await response.json();
               setVideos(data.videos || []);
@@ -155,26 +152,20 @@ export default function MyVideos({ onBack }: MyVideosProps) {
       // SMTP not enabled, directly load videos
       try {
         // Check for any pending videos and update their status in the background
-        await fetch(
-          createApiUrl("/api/check-pending"),
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-            signal: AbortSignal.timeout(5000),
-          },
-        ).catch(() => null);
+        await fetch(createApiUrl("/api/check-pending"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+          signal: AbortSignal.timeout(5000),
+        }).catch(() => null);
 
         // Then fetch all videos (will include any that just completed)
-        const response = await fetch(
-          createApiUrl("/api/videos"),
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-            signal: AbortSignal.timeout(10000),
-          },
-        );
+        const response = await fetch(createApiUrl("/api/videos"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+          signal: AbortSignal.timeout(10000),
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch videos");
@@ -224,25 +215,19 @@ export default function MyVideos({ onBack }: MyVideosProps) {
       }
 
       // Code verified, now fetch videos
-      await fetch(
-        createApiUrl("/api/check-pending"),
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-          signal: AbortSignal.timeout(5000),
-        },
-      ).catch(() => null);
+      await fetch(createApiUrl("/api/check-pending"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+        signal: AbortSignal.timeout(5000),
+      }).catch(() => null);
 
-      const response = await fetch(
-        createApiUrl("/api/videos"),
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-          signal: AbortSignal.timeout(10000),
-        },
-      );
+      const response = await fetch(createApiUrl("/api/videos"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+        signal: AbortSignal.timeout(10000),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch videos");
@@ -678,13 +663,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                             className="w-full bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2 h-12"
                             onClick={() => {
                               if (currentVideo.video_url) {
-                            const a = document.createElement("a");
-                            a.href = currentVideo.video_url;
-                            a.download = `video-${currentVideo.id}.mp4`;
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                          }
+                                const a = document.createElement("a");
+                                a.href = currentVideo.video_url;
+                                a.download = `video-${currentVideo.id}.mp4`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                              }
                             }}
                           >
                             <Download className="w-4 h-4" />

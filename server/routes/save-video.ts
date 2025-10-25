@@ -131,9 +131,12 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
 
 export const listVideoConfigs: RequestHandler = async (req, res) => {
   try {
-    const emailParam = typeof req.query.email === "string" ? req.query.email : undefined;
+    const emailParam =
+      typeof req.query.email === "string" ? req.query.email : undefined;
     const parsedLimit =
-      typeof req.query.limit === "string" ? parseInt(req.query.limit, 10) : undefined;
+      typeof req.query.limit === "string"
+        ? parseInt(req.query.limit, 10)
+        : undefined;
     const includeImage = req.query.includeImage === "true";
 
     if (emailParam) {
@@ -148,7 +151,7 @@ export const listVideoConfigs: RequestHandler = async (req, res) => {
 
     const hasValidLimit = Number.isFinite(parsedLimit ?? Number.NaN);
     const limit = hasValidLimit
-      ? Math.min(Math.max((parsedLimit as number), 1), 50)
+      ? Math.min(Math.max(parsedLimit as number, 1), 50)
       : 20;
 
     const params: Array<string | number> = [];
