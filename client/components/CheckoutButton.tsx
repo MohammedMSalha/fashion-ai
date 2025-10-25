@@ -32,6 +32,8 @@ export default function CheckoutButton({
     setError(null);
 
     try {
+      console.log("Creating checkout session...", { amount, email, duration, quality });
+
       const response = await fetch("/api/checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,20 +46,27 @@ export default function CheckoutButton({
         }),
       });
 
+      console.log("Checkout response status:", response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create checkout session");
+        const errorMsg = errorData.error || `HTTP ${response.status}`;
+        console.error("Checkout error:", errorMsg);
+        throw new Error(errorMsg);
       }
 
       const data = await response.json();
+      console.log("Checkout session created:", data);
 
       if (data.checkoutUrl) {
+        console.log("Redirecting to:", data.checkoutUrl);
         // Redirect to Stripe Checkout
         window.location.href = data.checkoutUrl;
       } else {
-        throw new Error("No checkout URL returned");
+        throw new Error("No checkout URL returned from server");
       }
     } catch (err) {
+      console.error("Checkout error:", err);
       const errorMsg =
         err instanceof Error ? err.message : "Failed to start checkout";
       setError(errorMsg);
