@@ -132,13 +132,13 @@ export default function Index() {
     if (code) setMyVideosStep("videos");
   };
 
-  const handleGenerateClick = () => {
+  const handleGenerateClick = useCallback(() => {
     setCurrentPage("in-progress");
     // Simulate generation process
     setTimeout(() => {
       setCurrentPage("video-preview");
     }, 3000);
-  };
+  }, []);
 
   const handleNextVideo = () => {
     setCurrentVideoIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
