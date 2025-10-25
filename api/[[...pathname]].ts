@@ -253,6 +253,229 @@ export default async function handler(req: any, res: any) {
   }
 }
 
+// Generate video by calling Fashn AI API
+async function generateVideoWithFashnAI(
+  imageUrl: string,
+  duration: 5 | 10,
+  resolution: "720p" | "1080p",
+): Promise<{ success: boolean; requestId?: string; error?: string }> {
+  try {
+    const apiKey = process.env.FASHN_AI_API_KEY;
+    if (!apiKey) {
+      console.error("[GenerateVideo] FASHN_AI_API_KEY not configured");
+      return {
+        success: false,
+        error: "FASHN_AI_API_KEY not configured",
+      };
+    }
+
+    console.log("[GenerateVideo] Starting video generation");
+    console.log("[GenerateVideo] Image URL:", imageUrl);
+    console.log(
+      "[GenerateVideo] Duration:",
+      duration,
+      "Resolution:",
+      resolution,
+    );
+
+    const payload = {
+      model_name: "image-to-video",
+      inputs: {
+        image: imageUrl,
+        duration,
+        resolution,
+      },
+    };
+
+    console.log(
+      "[GenerateVideo] Sending request to https://api.fashn.ai/v1/run",
+    );
+    console.log("[GenerateVideo] Payload:", JSON.stringify(payload));
+
+    const response = await fetch("https://api.fashn.ai/v1/run", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    console.log("[GenerateVideo] Response status:", response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(
+        "[GenerateVideo] Fashn API error:",
+        response.status,
+        errorText,
+      );
+      return {
+        success: false,
+        error: `Fashn API error: ${response.status} - ${errorText}`,
+      };
+    }
+
+    const data = await response.json();
+    console.log("[GenerateVideo] Response data:", JSON.stringify(data));
+
+    const requestId = data.id || data.request_id;
+
+    if (!requestId) {
+      console.error("[GenerateVideo] No request ID in response");
+      return {
+        success: false,
+        error: "No request ID received from Fashn API",
+      };
+    }
+
+    console.log("[GenerateVideo] ✓ Success! Request ID:", requestId);
+
+    return {
+      success: true,
+      requestId,
+    };
+  } catch (error) {
+    const errorMsg =
+      error instanceof Error
+        ? error.message
+        : "Unknown error during video generation";
+    console.error("[GenerateVideo] ✗ Error:", errorMsg);
+    return {
+      success: false,
+      error: errorMsg,
+    };
+  }
+}
+
+// Check Fashn AI video generation status
+async function checkVideoStatus(
+  requestId: string,
+): Promise<{
+  status: "submitted" | "processing" | "completed" | "failed" | "unknown";
+  videoUrl?: string;
+  error?: string;
+}> {
+  try {
+    const apiKey = process.env.FASHN_AI_API_KEY;
+    if (!apiKey) {
+      console.error("[CheckStatus] FASHN_AI_API_KEY not configured");
+      return {
+        status: "unknown",
+        error: "FASHN_AI_API_KEY not configured",
+      };
+    }
+
+    console.log("[CheckStatus] Checking status for request:", requestId);
+
+    const response = await fetch(
+      `https://api.fashn.ai/v1/requests/${requestId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      console.error(
+        "[CheckStatus] Fashn API error:",
+        response.status,
+        await response.text(),
+      );
+      return {
+        status: "unknown",
+        error: `API error: ${response.status}`,
+      };
+    }
+
+    const data = await response.json();
+    console.log("[CheckStatus] Status response:", JSON.stringify(data));
+
+    return {
+      status: data.status || "unknown",
+      videoUrl: data.result?.video_url || data.video_url,
+      error: data.error,
+    };
+  } catch (error) {
+    const errorMsg =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("[CheckStatus] Error:", errorMsg);
+    return {
+      status: "unknown",
+      error: errorMsg,
+    };
+  }
+}
+
+// Start status checking for a video
+function startStatusCheckingJob() {
+  const checkInterval = 30000; // 30 seconds as requested
+
+  const checkFn = async () => {
+    try {
+      console.log(
+        "[StatusJob] Checking pending videos (every 30 seconds)...",
+      );
+
+      // Get all videos that are processing
+      const result = await query(
+        `SELECT id, request_id FROM videos WHERE status = 'processing' AND request_id IS NOT NULL`,
+      );
+
+      for (const row of result.rows) {
+        try {
+          const statusResult = await checkVideoStatus(row.request_id);
+
+          if (statusResult.status === "completed" && statusResult.videoUrl) {
+            console.log(
+              `[StatusJob] Video ${row.id} completed! Updating database...`,
+            );
+            await query(
+              `UPDATE videos
+               SET status = 'completed',
+                   video_url = $1,
+                   completed_at = CURRENT_TIMESTAMP
+               WHERE id = $2`,
+              [statusResult.videoUrl, row.id],
+            );
+          } else if (statusResult.status === "failed") {
+            console.log(
+              `[StatusJob] Video ${row.id} failed. Updating database...`,
+            );
+            await query(
+              `UPDATE videos
+               SET status = 'failed',
+                   error_message = $1
+               WHERE id = $2`,
+              [statusResult.error || "Generation failed", row.id],
+            );
+          } else if (
+            statusResult.status === "processing" ||
+            statusResult.status === "submitted"
+          ) {
+            console.log(`[StatusJob] Video ${row.id} still processing...`);
+          }
+        } catch (err) {
+          console.error(`[StatusJob] Error checking video ${row.id}:`, err);
+        }
+      }
+    } catch (error) {
+      console.error("[StatusJob] Error in status checking job:", error);
+    }
+  };
+
+  // Check immediately on startup
+  checkFn().catch((err) => {
+    console.error("[StatusJob] Initial check error:", err);
+  });
+
+  // Then check every 30 seconds
+  setInterval(checkFn, checkInterval);
+  console.log("[StatusJob] Started status checking job (every 30 seconds)");
+}
+
 // Process webhook asynchronously
 async function handleWebhookAsync(req: any) {
   try {
@@ -300,39 +523,119 @@ async function handleWebhookAsync(req: any) {
         return;
       }
 
-      // Update videos table with payment info
+      // Get video record first
       try {
-        console.log("[Webhook] Updating database for videoId:", videoId);
+        console.log("[Webhook] Fetching video record for videoId:", videoId);
 
-        const updateResult = await query(
-          `UPDATE videos 
-           SET payment_intent_id = $1,
-               payment_status = $2,
-               payment_amount = $3,
-               payment_currency = $4,
-               payment_email = $5,
-               status = $6
-           WHERE id = $7
-           RETURNING id, email, image_base64, duration, resolution`,
-          [
-            paymentIntent.id,
-            "succeeded",
-            paymentIntent.amount,
-            paymentIntent.currency || "usd",
-            email || "",
-            "processing",
-            videoId,
-          ],
+        const videoResult = await query(
+          `SELECT id, image_base64, duration, resolution FROM videos WHERE id = $1`,
+          [videoId],
         );
 
-        if (!updateResult.rows[0]) {
+        if (!videoResult.rows[0]) {
           console.error("[Webhook] Video record not found:", videoId);
           return;
         }
 
-        console.log("[Webhook] ✓ Updated video record:", videoId);
+        const videoRecord = videoResult.rows[0];
+        console.log("[Webhook] ✓ Video record found");
+
+        if (!videoRecord.image_base64) {
+          console.error("[Webhook] No image data for video:", videoId);
+          return;
+        }
+
+        // Trigger video generation
+        console.log("[Webhook] Triggering video generation...");
+
+        const protocol =
+          process.env.NODE_ENV === "production" ? "https" : "http";
+        const host =
+          process.env.VERCEL_URL ||
+          process.env.API_URL ||
+          `localhost:${process.env.PORT || 3000}`;
+        const imageUrl = `${protocol}://${host}/api/image/${videoRecord.id}`;
+
+        console.log("[Webhook] Image URL:", imageUrl);
+
+        // Call Fashn AI API to generate video
+        const generateResult = await generateVideoWithFashnAI(
+          imageUrl,
+          videoRecord.duration as 5 | 10,
+          videoRecord.resolution as "720p" | "1080p",
+        );
+
+        console.log("[Webhook] Generation result:", generateResult);
+
+        if (generateResult.success && generateResult.requestId) {
+          console.log(
+            "[Webhook] ✓ Video generation started! Request ID:",
+            generateResult.requestId,
+          );
+
+          // Update database with payment info and request ID
+          const updateResult = await query(
+            `UPDATE videos
+             SET payment_intent_id = $1,
+                 payment_status = $2,
+                 payment_amount = $3,
+                 payment_currency = $4,
+                 payment_email = $5,
+                 request_id = $6,
+                 status = $7
+             WHERE id = $8
+             RETURNING id, status, request_id, payment_intent_id`,
+            [
+              paymentIntent.id,
+              "succeeded",
+              paymentIntent.amount,
+              paymentIntent.currency || "usd",
+              email || "",
+              generateResult.requestId,
+              "processing",
+              videoId,
+            ],
+          );
+
+          if (updateResult.rows[0]) {
+            console.log(
+              "[Webhook] ✓ Database updated successfully:",
+              updateResult.rows[0],
+            );
+          } else {
+            console.error("[Webhook] Failed to update database for video");
+          }
+        } else {
+          console.error(
+            "[Webhook] ✗ Video generation failed:",
+            generateResult.error,
+          );
+
+          // Update database with payment info but mark as failed
+          await query(
+            `UPDATE videos
+             SET payment_intent_id = $1,
+                 payment_status = $2,
+                 payment_amount = $3,
+                 payment_currency = $4,
+                 payment_email = $5,
+                 status = $6,
+                 error_message = $7
+             WHERE id = $8`,
+            [
+              paymentIntent.id,
+              "succeeded",
+              paymentIntent.amount,
+              paymentIntent.currency || "usd",
+              email || "",
+              "failed",
+              generateResult.error || "Video generation failed",
+              videoId,
+            ],
+          );
+        }
       } catch (dbError) {
-        console.error("[Webhook] Database update error:", dbError);
+        console.error("[Webhook] Database error:", dbError);
       }
     }
   } catch (error) {
