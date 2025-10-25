@@ -145,11 +145,13 @@ export default function MyVideos() {
         // Check for any pending videos and update their status in the background
         await fetch(
           createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
+          { signal: AbortSignal.timeout(5000) }
         ).catch(() => null);
 
         // Then fetch all videos (will include any that just completed)
         const response = await fetch(
           createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
+          { signal: AbortSignal.timeout(10000) } // 10 second timeout
         );
 
         if (!response.ok) {
