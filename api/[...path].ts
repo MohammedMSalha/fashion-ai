@@ -1,56 +1,19 @@
-import serverless from "serverless-http";
-import { createServer } from "../server/index";
-
-let handler: any = null;
-
-async function initializeHandler() {
-  if (handler) return handler;
-
+export default async function handler(req: any, res: any) {
   try {
-    console.log("[Serverless] Creating Express app...");
-    const app = await createServer();
-    console.log("[Serverless] ✓ App created, wrapping with serverless-http");
-    handler = serverless(app);
-    console.log("[Serverless] ✓ Handler ready");
-    return handler;
-  } catch (error) {
-    console.error("[Serverless] ✗ Failed to initialize:", error);
-    throw error;
-  }
-}
-
-export default async function vercelHandler(req: any, res: any) {
-  try {
-    const pathname = req.url?.split("?")[0] || "/";
-    console.log(`[Serverless] ${req.method} ${pathname}`);
-
-    const handler = await initializeHandler();
-
-    // Preserve raw body for Stripe webhook
-    if (pathname === "/api/webhook/stripe") {
-      console.log("[Serverless] Webhook request - preserving raw body");
-
-      if (typeof req.body === "string") {
-        req.rawBody = req.body;
-      } else if (Buffer.isBuffer(req.body)) {
-        req.rawBody = req.body.toString("utf-8");
-      } else if (typeof req.body === "object") {
-        req.rawBody = JSON.stringify(req.body);
-      } else {
-        req.rawBody = "";
-      }
+    console.log("[Serverless] Request received:", req.method, req.url);
+    
+    // Test if function can be invoked
+    if (req.url === "/api/health") {
+      return res.status(200).json({ status: "ok" });
     }
 
-    return handler(req, res);
+    // For now, return 404 for other endpoints
+    return res.status(404).json({ error: "Not found" });
   } catch (error) {
     console.error("[Serverless] Error:", error);
-
-    if (!res.headersSent) {
-      res.status(500).json({
-        success: false,
-        error: "Server initialization failed",
-        details: error instanceof Error ? error.message : String(error),
-      });
-    }
+    return res.status(500).json({
+      error: "Server error",
+      details: error instanceof Error ? error.message : String(error),
+    });
   }
 }
