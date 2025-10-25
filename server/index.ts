@@ -9,6 +9,7 @@ import {
   createPaymentIntent,
   confirmPayment,
 } from "./routes/stripe-payment.js";
+import { createCheckoutSession } from "./routes/stripe-checkout.js";
 import { handleStripeWebhook } from "./routes/stripe-webhook.js";
 import {
   saveVideo,
