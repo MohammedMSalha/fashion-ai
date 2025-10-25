@@ -58,7 +58,9 @@ export default function MyVideos() {
 
         if (response.ok) {
           const data = await response.json();
-          setSmtpEnabled(data.enabled === true || data.requiresVerification === true);
+          setSmtpEnabled(
+            data.enabled === true || data.requiresVerification === true,
+          );
         } else {
           // If endpoint returns error, assume SMTP is not configured
           setSmtpEnabled(false);
@@ -91,7 +93,7 @@ export default function MyVideos() {
           try {
             const response = await fetch(
               createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
-              { signal: AbortSignal.timeout(5000) } // 5 second timeout
+              { signal: AbortSignal.timeout(5000) }, // 5 second timeout
             );
             if (response.ok) {
               const data = await response.json();
@@ -146,13 +148,13 @@ export default function MyVideos() {
         // Check for any pending videos and update their status in the background
         await fetch(
           createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
-          { signal: AbortSignal.timeout(5000) }
+          { signal: AbortSignal.timeout(5000) },
         ).catch(() => null);
 
         // Then fetch all videos (will include any that just completed)
         const response = await fetch(
           createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
-          { signal: AbortSignal.timeout(10000) } // 10 second timeout
+          { signal: AbortSignal.timeout(10000) }, // 10 second timeout
         );
 
         if (!response.ok) {
@@ -205,12 +207,12 @@ export default function MyVideos() {
       // Code verified, now fetch videos
       await fetch(
         createApiUrl(`/api/check-pending/${encodeURIComponent(email)}`),
-        { signal: AbortSignal.timeout(5000) }
+        { signal: AbortSignal.timeout(5000) },
       ).catch(() => null);
 
       const response = await fetch(
         createApiUrl(`/api/videos/${encodeURIComponent(email)}`),
-        { signal: AbortSignal.timeout(10000) } // 10 second timeout
+        { signal: AbortSignal.timeout(10000) }, // 10 second timeout
       );
 
       if (!response.ok) {
