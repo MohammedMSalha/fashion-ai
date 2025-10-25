@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
-  CardElement,
   Elements,
-  ElementsConsumer,
+  PaymentElement,
+  useStripe,
+  useElements,
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowLeft, X } from "lucide-react";
