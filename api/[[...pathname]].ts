@@ -1,42 +1,44 @@
-// Lazy import to avoid initialization errors
-let cachedQuery: any = null;
-let dbInitialized = false;
+import { Pool } from "pg";
 
-async function getQueryFunction() {
-  if (cachedQuery) return cachedQuery;
+// Database pool - shared across requests
+let pool: Pool | null = null;
 
+function getPool(): Pool {
+  if (pool) return pool;
+
+  const connectionString =
+    process.env.fashion_DATABASE_URL || process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error(
+      "Database URL not set. Configure fashion_DATABASE_URL in Vercel environment variables.",
+    );
+  }
+
+  console.log("[API] Creating database pool...");
+  pool = new Pool({
+    connectionString,
+    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+    max: 5,
+    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 5000,
+  });
+
+  pool.on("error", (err) => {
+    console.error("[Pool] Unexpected error on idle client:", err);
+  });
+
+  return pool;
+}
+
+async function query(text: string, params: any[] = []) {
+  const pool = getPool();
+  const client = await pool.connect();
   try {
-    console.log("[API] Importing database module...");
-    console.log(
-      "[API] fashion_DATABASE_URL set:",
-      !!process.env.fashion_DATABASE_URL,
-    );
-    console.log("[API] DATABASE_URL set:", !!process.env.DATABASE_URL);
-
-    const dbModule = await import("../server/db");
-    cachedQuery = dbModule.query;
-
-    // Initialize database on first use
-    if (!dbInitialized && dbModule.initializeDatabase) {
-      console.log("[API] Initializing database...");
-      await dbModule.initializeDatabase();
-      dbInitialized = true;
-      console.log("[API] Database initialized");
-    }
-
-    return cachedQuery;
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : "";
-    console.error("[API] Failed to import/initialize database");
-    console.error("[API] Error:", errorMsg);
-    if (errorStack) {
-      console.error("[API] Stack:", errorStack.substring(0, 500));
-    }
-    console.error(
-      "[API] Check fashion_DATABASE_URL in Vercel environment variables",
-    );
-    return null; // Return null instead of throwing
+    const result = await client.query(text, params);
+    return result;
+  } finally {
+    client.release();
   }
 }
 
@@ -46,23 +48,6 @@ export default async function handler(req: any, res: any) {
     const method = req.method || "GET";
 
     console.log(`[API] ${method} ${pathname}`);
-
-    // Check environment variables on first call
-    if (method === "POST" && pathname === "/api/save-video-config") {
-      const fashionDbUrl = process.env.fashion_DATABASE_URL;
-      const dbUrl = process.env.DATABASE_URL;
-      console.log("[API] Database URL status:");
-      if (fashionDbUrl) {
-        console.log("[API]   fashion_DATABASE_URL: SET (postgresql://...)");
-      } else {
-        console.log("[API]   fashion_DATABASE_URL: NOT SET ⚠️");
-      }
-      if (dbUrl) {
-        console.log("[API]   DATABASE_URL: SET (postgresql://...)");
-      } else {
-        console.log("[API]   DATABASE_URL: NOT SET");
-      }
-    }
 
     // Health check
     if (pathname === "/api/health") {
@@ -77,14 +62,19 @@ export default async function handler(req: any, res: any) {
       try {
         const { email, imageBase64, duration, resolution } = req.body || {};
 
+        console.log("[Save Config] Request received");
+        console.log("[Save Config] Email:", email);
+        console.log("[Save Config] Duration:", duration);
+        console.log("[Save Config] Resolution:", resolution);
+        console.log("[Save Config] Image length:", imageBase64?.length);
+
         if (!email || !imageBase64 || !duration || !resolution) {
           res.statusCode = 400;
           res.setHeader("Content-Type", "application/json");
           res.end(
             JSON.stringify({
               success: false,
-              error:
-                "Missing required fields: email, imageBase64, duration, resolution",
+              error: "Missing required fields: email, imageBase64, duration, resolution",
             }),
           );
           return;
@@ -99,87 +89,58 @@ export default async function handler(req: any, res: any) {
           return;
         }
 
-        // Try to insert into database
-        try {
-          console.log("[Save Config] Getting query function...");
-          const queryFn = await getQueryFunction();
-          if (!queryFn) {
-            console.error("[Save Config] Query function is null");
-            console.error(
-              "[Save Config] fashion_DATABASE_URL:",
-              !!process.env.fashion_DATABASE_URL,
-            );
-            console.error(
-              "[Save Config] DATABASE_URL:",
-              !!process.env.DATABASE_URL,
-            );
-            throw new Error(
-              "Database connection failed - check fashion_DATABASE_URL environment variable in Vercel",
-            );
-          }
-          console.log(
-            "[Save Config] Query function available, inserting video...",
-          );
+        console.log("[Save Config] Inserting into database...");
 
-          const result = await queryFn(
-            `INSERT INTO videos (email, image_base64, duration, resolution, status)
-             VALUES ($1, $2, $3, $4, 'awaiting_payment')
-             RETURNING id, created_at, expires_at`,
-            [email, imageBase64, duration, resolution],
-          );
+        const result = await query(
+          `INSERT INTO videos (email, image_base64, duration, resolution, status)
+           VALUES ($1, $2, $3, $4, 'awaiting_payment')
+           RETURNING id, created_at, expires_at`,
+          [email, imageBase64, duration, resolution],
+        );
 
-          if (!result.rows[0]) {
-            throw new Error("Failed to create video record");
-          }
-
-          const videoRecord = result.rows[0];
-
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.end(
-            JSON.stringify({
-              success: true,
-              videoId: videoRecord.id,
-              status: "awaiting_payment",
-              createdAt: videoRecord.created_at,
-            }),
-          );
-        } catch (dbError) {
-          console.error("[API] Save config database error:", dbError);
-          res.statusCode = 500;
-          res.setHeader("Content-Type", "application/json");
-          res.end(
-            JSON.stringify({
-              success: false,
-              error:
-                "Database error: " +
-                (dbError instanceof Error ? dbError.message : String(dbError)),
-            }),
-          );
+        if (!result.rows[0]) {
+          throw new Error("Failed to create video record");
         }
+
+        const videoRecord = result.rows[0];
+        console.log("[Save Config] ✓ Video created:", videoRecord.id);
+
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.end(
+          JSON.stringify({
+            success: true,
+            videoId: videoRecord.id,
+            status: "awaiting_payment",
+            createdAt: videoRecord.created_at,
+          }),
+        );
         return;
       } catch (error) {
-        console.error("[API] Save config error:", error);
+        console.error("[Save Config] Error:", error);
         res.statusCode = 500;
         res.setHeader("Content-Type", "application/json");
         res.end(
           JSON.stringify({
             success: false,
-            error: "Failed to save video configuration",
+            error:
+              error instanceof Error
+                ? error.message
+                : "Failed to save video configuration",
           }),
         );
         return;
       }
     }
 
-    // Stripe webhook endpoint - ACKNOWLEDGE RECEIPT FIRST
+    // Stripe webhook endpoint
     if (pathname === "/api/stripe-webhook" && method === "POST") {
-      // Always return 200 immediately (Stripe expects this)
+      // Always return 200 immediately (Stripe requirement)
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify({ received: true }));
 
-      // Process webhook asynchronously in background (don't wait)
+      // Process webhook asynchronously
       handleWebhookAsync(req).catch((error) => {
         console.error("[Webhook] Async error:", error);
       });
@@ -252,25 +213,9 @@ async function handleWebhookAsync(req: any) {
 
       // Update videos table with payment info
       try {
-        console.log("[Webhook] About to update database for videoId:", videoId);
-        console.log("[Webhook] Getting query function...");
-        const queryFn = await getQueryFunction();
+        console.log("[Webhook] Updating database for videoId:", videoId);
 
-        if (!queryFn) {
-          console.error(
-            "[Webhook] Query function is null - database not available",
-          );
-          console.error(
-            "[Webhook] fashion_DATABASE_URL:",
-            !!process.env.fashion_DATABASE_URL,
-          );
-          console.error("[Webhook] DATABASE_URL:", !!process.env.DATABASE_URL);
-          return;
-        }
-
-        console.log("[Webhook] Query function available, updating database...");
-
-        const updateResult = await queryFn(
+        const updateResult = await query(
           `UPDATE videos 
            SET payment_intent_id = $1,
                payment_status = $2,
