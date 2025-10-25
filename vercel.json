@@ -2,10 +2,14 @@
   "buildCommand": "npm run build",
   "installCommand": "pnpm install --no-frozen-lockfile",
   "outputDirectory": "dist/spa",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/((?!api).)*",
-      "destination": "/index.html"
+      "src": "/api/.*",
+      "dest": "/api/[[...pathname]]"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
