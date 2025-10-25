@@ -83,12 +83,14 @@ async function initializeTables() {
       CREATE TABLE IF NOT EXISTS videos (
         id SERIAL PRIMARY KEY,
         email VARCHAR(254) NOT NULL,
+        image_data BYTEA,
+        image_base64 TEXT,
         video_url TEXT,
         video_id VARCHAR(255),
         request_id VARCHAR(255),
         duration INTEGER NOT NULL,
         resolution VARCHAR(10) NOT NULL,
-        status VARCHAR(20) DEFAULT 'processing',
+        status VARCHAR(20) DEFAULT 'awaiting_payment',
         error_message TEXT,
         payment_intent_id VARCHAR(255),
         payment_amount INTEGER,
@@ -112,6 +114,8 @@ async function initializeTables() {
       "payment_status VARCHAR(20)",
       "payment_method_type VARCHAR(50)",
       "payment_email VARCHAR(254)",
+      "image_data BYTEA",
+      "image_base64 TEXT",
     ];
 
     for (const column of columnsToAdd) {
