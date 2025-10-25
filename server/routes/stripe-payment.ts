@@ -86,8 +86,12 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       const stripe = getStripeClient();
       console.log("Stripe client ready, creating payment intent...");
 
-      // Create payment intent with Stripe
-      const paymentIntent = await stripe.paymentIntents.create({
+      // Create payment intent with timeout
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Stripe API timeout (>10s)")), 10000)
+      );
+
+      const paymentIntentPromise = stripe.paymentIntents.create({
         amount,
         currency: "usd",
         metadata: {
@@ -96,10 +100,15 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
         },
       });
 
-      console.log("Payment intent created:", paymentIntent.id);
+      const paymentIntent = await Promise.race([
+        paymentIntentPromise,
+        timeoutPromise,
+      ]);
+
+      console.log("Payment intent created:", (paymentIntent as any).id);
       return res.status(200).json({
         success: true,
-        clientSecret: paymentIntent.client_secret,
+        clientSecret: (paymentIntent as any).client_secret,
       });
     } catch (stripeError) {
       console.error("Stripe API error:", stripeError);
