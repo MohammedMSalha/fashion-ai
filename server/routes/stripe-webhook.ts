@@ -86,6 +86,11 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
         const videoId = paymentIntent.metadata?.videoId;
         const email = paymentIntent.metadata?.email;
 
+        console.log("[Webhook] Extracted from metadata:");
+        console.log("[Webhook]   - videoId:", videoId, `(type: ${typeof videoId})`);
+        console.log("[Webhook]   - email:", email);
+        console.log("[Webhook]   - All metadata keys:", Object.keys(paymentIntent.metadata || {}));
+
         if (videoId) {
           console.log(`[Webhook] Processing payment for video: ${videoId}`);
 
