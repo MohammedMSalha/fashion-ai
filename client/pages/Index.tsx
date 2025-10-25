@@ -99,7 +99,14 @@ const SAMPLE_VIDEOS: Video[] = [
 export default function Index() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState<Page>("home");
+  const location = useLocation();
+  const [currentPage, setCurrentPage] = useState<Page>(() => {
+    // Check if we're on the /generate route
+    if (location.pathname === "/generate") {
+      return "generate";
+    }
+    return "home";
+  });
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [generatedVideo] = useState<Video>(SAMPLE_VIDEOS[0]);
   const [showFabMenu, setShowFabMenu] = useState(false);
