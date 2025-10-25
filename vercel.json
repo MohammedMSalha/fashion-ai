@@ -12,11 +12,7 @@
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
     },
     {
-      "src": "/(.+)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/",
+      "src": "^/(?!api).*",
       "dest": "/index.html"
     }
   ]
