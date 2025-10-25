@@ -131,15 +131,17 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
       console.log("[SmartVideoForm] Response status:", response.status);
 
       if (!response.ok) {
+        const rawError = await response.text();
         let errorMsg = "Failed to save configuration";
+
         try {
-          const errorData = await response.json();
+          const errorData = JSON.parse(rawError);
           errorMsg = errorData.error || errorMsg;
           console.error("[SmartVideoForm] Server error:", errorData);
         } catch {
-          const text = await response.text();
-          console.error("[SmartVideoForm] Response text:", text);
+          console.error("[SmartVideoForm] Response text:", rawError);
         }
+
         throw new Error(errorMsg);
       }
 
