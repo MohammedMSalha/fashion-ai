@@ -13,7 +13,10 @@ async function createServerInstance() {
     const { createServer } = await import("../server/index.js");
     return await createServer();
   } catch (e) {
-    console.warn("[VercelAPI] Could not import full server, creating minimal handler:", e);
+    console.warn(
+      "[VercelAPI] Could not import full server, creating minimal handler:",
+      e,
+    );
 
     // Fallback: create a minimal Express app that returns an error
     const app = express();
