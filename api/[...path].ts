@@ -180,13 +180,18 @@ async function createApp(): Promise<express.Express> {
   return app;
 }
 
-async function getExpressApp(): Promise<express.Express> {
-  if (expressApp) return expressApp;
-  if (initPromise) return initPromise;
+async function getServerlessHandler(): Promise<any> {
+  if (serverlessHandler) return serverlessHandler;
+  if (initPromise) {
+    expressApp = await initPromise;
+  } else {
+    initPromise = createApp();
+    expressApp = await initPromise;
+  }
 
-  initPromise = createApp();
-  expressApp = await initPromise;
-  return expressApp;
+  // Wrap Express app with serverless-http
+  serverlessHandler = serverless(expressApp);
+  return serverlessHandler;
 }
 
 export default async function handler(req: any, res: any) {
