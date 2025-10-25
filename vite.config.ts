@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => ({
     "import.meta.env.STRIPE_PUBLISHABLE_KEY": JSON.stringify(
       process.env.STRIPE_PUBLISHABLE_KEY,
     ),
+    "import.meta.env.API_URL": JSON.stringify(process.env.API_URL || ""),
   },
   root: ".",
   server: {
