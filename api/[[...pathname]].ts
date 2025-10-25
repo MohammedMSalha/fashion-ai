@@ -47,14 +47,19 @@ export default async function handler(req: any, res: any) {
 
     // Check environment variables on first call
     if (method === "POST" && pathname === "/api/save-video-config") {
-      const hasFashionDbUrl = !!process.env.fashion_DATABASE_URL;
-      const hasDbUrl = !!process.env.DATABASE_URL;
+      const fashionDbUrl = process.env.fashion_DATABASE_URL;
+      const dbUrl = process.env.DATABASE_URL;
       console.log("[API] Database URL status:");
-      console.log(
-        "[API]   fashion_DATABASE_URL:",
-        hasFashionDbUrl ? "SET" : "NOT SET",
-      );
-      console.log("[API]   DATABASE_URL:", hasDbUrl ? "SET" : "NOT SET");
+      if (fashionDbUrl) {
+        console.log("[API]   fashion_DATABASE_URL: SET (postgresql://...)");
+      } else {
+        console.log("[API]   fashion_DATABASE_URL: NOT SET ⚠️");
+      }
+      if (dbUrl) {
+        console.log("[API]   DATABASE_URL: SET (postgresql://...)");
+      } else {
+        console.log("[API]   DATABASE_URL: NOT SET");
+      }
     }
 
     // Health check
