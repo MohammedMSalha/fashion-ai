@@ -142,7 +142,8 @@ export async function updateVideoStatusFromFashn(
     } else {
       // All other statuses are treated as failures
       const errorMessage =
-        status.error?.message || `Generation failed with status: ${status.status}`;
+        status.error?.message ||
+        `Generation failed with status: ${status.status}`;
       console.log(`[UpdateStatus] Video ${videoId} failed: ${errorMessage}`);
 
       const updateResult = await query(
