@@ -426,7 +426,15 @@ export default async function handler(req: any, res: any) {
     }
 
     // ============ SAVE VIDEO CONFIG ============
-    if (pathname === "/api/save-video-config" && req.method === "POST") {
+    if (pathname === "/api/save-video-config") {
+      if (req.method !== "POST") {
+        res.setHeader("Allow", "POST");
+        return res.status(405).json({
+          success: false,
+          error: `Method ${req.method} not allowed. Use POST.`,
+        });
+      }
+
       const body = await parseRequestBody(req);
       const { email, imageBase64, duration, resolution } = body;
 

@@ -154,7 +154,18 @@ export async function createServer() {
   app.post("/api/checkout-session", paymentLimiter, createCheckoutSession);
 
   // Video storage endpoints
-  app.post("/api/save-video-config", videoLimiter, saveVideoConfig);
+  app
+    .route("/api/save-video-config")
+    .post(videoLimiter, saveVideoConfig)
+    .all((req, res) => {
+      res
+        .status(405)
+        .setHeader("Allow", "POST")
+        .json({
+          success: false,
+          error: `Method ${req.method} not allowed. Use POST.`,
+        });
+    });
   app.post("/api/save-video", videoLimiter, saveVideo);
   app.get("/api/videos/:email", getVideosByEmail);
   app.get("/api/video-status/:videoId", getVideoStatus);
