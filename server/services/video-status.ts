@@ -2,12 +2,11 @@ import { query } from "../db.js";
 
 interface FashnStatusResponse {
   id: string;
-  request_id: string;
   status: "submitted" | "processing" | "completed" | "failed";
-  result?: {
-    video_url?: string;
-  };
-  error?: string;
+  output?: string[];
+  error?: {
+    message?: string;
+  } | null;
 }
 
 export async function checkVideoGenerationStatus(
@@ -16,29 +15,37 @@ export async function checkVideoGenerationStatus(
   try {
     const apiKey = process.env.FASHN_AI_API_KEY;
     if (!apiKey) {
-      console.error("FASHN_AI_API_KEY not configured");
+      console.error("[CheckStatus] FASHN_AI_API_KEY not configured");
       return null;
     }
 
+    console.log(`[CheckStatus] Checking status for request: ${requestId}`);
+
     const response = await fetch(
-      `https://api.fashn.ai/v1/requests/${requestId}`,
+      `https://api.fashn.ai/v1/status/${requestId}`,
       {
         method: "GET",
         headers: {
           Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
         },
       },
     );
 
+    console.log(`[CheckStatus] Response status: ${response.status}`);
+
     if (!response.ok) {
-      console.error(`Failed to check video status: ${response.status}`);
+      console.error(
+        `[CheckStatus] Failed to check video status: ${response.status}`,
+      );
       return null;
     }
 
     const data = await response.json();
+    console.log(`[CheckStatus] Response data:`, JSON.stringify(data));
     return data as FashnStatusResponse;
   } catch (error) {
-    console.error("Error checking video status:", error);
+    console.error("[CheckStatus] Error checking video status:", error);
     return null;
   }
 }
