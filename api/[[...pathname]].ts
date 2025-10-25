@@ -22,10 +22,7 @@ async function getHandler() {
   }
 }
 
-export default async function vercelHandler(
-  req: any,
-  res: any,
-) {
+export default async function vercelHandler(req: any, res: any) {
   try {
     const pathname = req.url?.split("?")[0] || "/";
     console.log(`[Serverless] ${req.method} ${pathname}`);
