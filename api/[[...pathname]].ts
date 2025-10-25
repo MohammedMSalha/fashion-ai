@@ -1,11 +1,11 @@
 // Lazy import to avoid initialization errors
-let queryFn: any = null;
+let cachedQuery: any = null;
 async function getQueryFunction() {
-  if (queryFn) return queryFn;
+  if (cachedQuery) return cachedQuery;
   try {
-    const { query } = await import("../server/db");
-    queryFn = query;
-    return queryFn;
+    const dbModule = await import("../server/db");
+    cachedQuery = dbModule.query;
+    return cachedQuery;
   } catch (error) {
     console.error("[API] Failed to import database:", error);
     throw error;
