@@ -42,7 +42,10 @@ export async function checkVideoGenerationStatus(
     }
 
     const data = await response.json();
-    console.log(`[CheckStatus] Response data:`, JSON.stringify(data));
+    console.log(`[CheckStatus] Response data:`, JSON.stringify(data, null, 2));
+    console.log(`[CheckStatus] Status field: "${data.status}"`);
+    console.log(`[CheckStatus] Output array:`, data.output);
+    console.log(`[CheckStatus] Error field:`, data.error);
     return data as FashnStatusResponse;
   } catch (error) {
     console.error("[CheckStatus] Error checking video status:", error);
