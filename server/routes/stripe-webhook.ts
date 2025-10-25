@@ -227,8 +227,11 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                   );
                 }
               } else {
-                console.warn("No image data for video record:", videoId);
-                await query(
+                console.error(
+                  "[Webhook] ✗ No image data for video record:",
+                  videoId,
+                );
+                const noImageResult = await query(
                   `UPDATE videos
                    SET payment_intent_id = $1,
                        payment_status = 'succeeded',
@@ -237,7 +240,8 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                        payment_email = $3,
                        status = $4,
                        error_message = $5
-                   WHERE id = $6`,
+                   WHERE id = $6
+                   RETURNING id, payment_intent_id, status, error_message`,
                   [
                     paymentIntent.id,
                     paymentIntent.amount,
@@ -247,12 +251,21 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     videoRecord.id,
                   ],
                 );
+                console.log(
+                  "[Webhook] Database updated (no image data):",
+                  noImageResult.rows[0],
+                );
               }
             } else {
-              console.warn("Video record not found:", videoId);
+              console.error(
+                `[Webhook] ✗ Video record not found for ID: ${videoId}`,
+              );
             }
           } catch (dbErr) {
-            console.error("Error updating database in webhook:", dbErr);
+            console.error(
+              "[Webhook] ✗ Database error:",
+              dbErr instanceof Error ? dbErr.message : dbErr,
+            );
           }
         } else if (email) {
           console.warn(
