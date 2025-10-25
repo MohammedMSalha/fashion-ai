@@ -40,7 +40,8 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
       console.error("[Save Config] Missing required fields");
       return res.status(400).json({
         success: false,
-        error: "Missing required fields: email, imageBase64, duration, resolution",
+        error:
+          "Missing required fields: email, imageBase64, duration, resolution",
       });
     }
 
@@ -73,7 +74,10 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
 
     // Check if image_base64 is a string and has content
     if (typeof imageBase64 !== "string" || imageBase64.length < 100) {
-      console.error("[Save Config] Invalid image data (too short):", imageBase64?.substring(0, 50));
+      console.error(
+        "[Save Config] Invalid image data (too short):",
+        imageBase64?.substring(0, 50),
+      );
       return res.status(400).json({
         success: false,
         error: "Invalid image data (image too small or corrupted)",
@@ -117,7 +121,10 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
     console.error("[Save Config] Database error:", error);
     return res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : "Failed to save video configuration",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to save video configuration",
     });
   }
 };
