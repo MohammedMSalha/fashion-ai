@@ -12,11 +12,7 @@ interface EmbeddedPaymentFormProps {
   onCancel: () => void;
 }
 
-declare global {
-  interface Window {
-    Stripe: any;
-  }
-}
+// Stripe will be loaded via script tag, no need to declare
 
 export default function EmbeddedPaymentForm({
   amount,
