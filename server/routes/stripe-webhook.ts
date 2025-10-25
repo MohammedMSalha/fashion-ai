@@ -193,11 +193,15 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                   }
                 } catch (generateErr) {
                   console.error(
-                    "Error generating video in webhook:",
+                    "[Webhook] ✗ Error generating video:",
                     generateErr,
                   );
                   // Update status to mark failure
-                  await query(
+                  const errMsg =
+                    generateErr instanceof Error
+                      ? generateErr.message
+                      : "Unknown error";
+                  const catchResult = await query(
                     `UPDATE videos
                      SET payment_intent_id = $1,
                          payment_status = 'succeeded',
@@ -206,15 +210,20 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                          payment_email = $3,
                          status = $4,
                          error_message = $5
-                     WHERE id = $6`,
+                     WHERE id = $6
+                     RETURNING id, payment_intent_id, status, error_message`,
                     [
                       paymentIntent.id,
                       paymentIntent.amount,
                       email || null,
                       "failed",
-                      `Generation error: ${generateErr instanceof Error ? generateErr.message : "Unknown error"}`,
+                      `Generation error: ${errMsg}`,
                       videoRecord.id,
                     ],
+                  );
+                  console.log(
+                    "[Webhook] Database updated after generation error:",
+                    catchResult.rows[0],
                   );
                 }
               } else {
