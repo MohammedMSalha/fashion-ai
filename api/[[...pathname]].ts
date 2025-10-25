@@ -18,7 +18,7 @@ export default async function handler(
   res: ServerResponse,
 ) {
   try {
-    const app = getServer();
+    const app = await getServer();
 
     // Preserve raw body for Stripe webhook signature verification
     if (req.url?.includes("/api/stripe-webhook") && req.method === "POST") {
