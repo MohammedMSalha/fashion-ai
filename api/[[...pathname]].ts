@@ -2,10 +2,14 @@ import { createServer } from "../server/index.js";
 import { IncomingMessage, ServerResponse } from "http";
 
 let cachedServer: any = null;
+let serverInitPromise: Promise<any> | null = null;
 
-function getServer() {
+async function getServer() {
   if (cachedServer) return cachedServer;
-  cachedServer = createServer();
+  if (serverInitPromise) return serverInitPromise;
+
+  serverInitPromise = createServer();
+  cachedServer = await serverInitPromise;
   return cachedServer;
 }
 
