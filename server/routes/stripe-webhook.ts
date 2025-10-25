@@ -62,8 +62,25 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
 
   try {
     // Get raw body for signature verification
-    const rawBody = (req as any).rawBody || JSON.stringify(req.body);
+    const rawBody = (req as any).rawBody;
+
+    if (!rawBody) {
+      console.error(
+        "[Webhook] ✗ No raw body available for signature verification",
+      );
+      console.error(
+        "[Webhook] This usually means express.raw() middleware did not run",
+      );
+      console.error("[Webhook] req.body type:", typeof req.body);
+      console.error("[Webhook] req.body length:", JSON.stringify(req.body).length);
+      return res.status(400).json({
+        error:
+          "No raw body for signature verification - webhook middleware misconfiguration",
+      });
+    }
+
     console.log("[Webhook] Raw body length:", rawBody.length);
+    console.log("[Webhook] Raw body preview:", rawBody.substring(0, 100));
 
     // Verify and parse the event
     let event;
@@ -73,6 +90,8 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
       console.log("[Webhook] Event type:", event.type);
     } catch (sigErr) {
       console.error("[Webhook] ✗ Signature verification failed:", sigErr);
+      console.error("[Webhook] Signature header:", signature);
+      console.error("[Webhook] Webhook secret env var set:", !!process.env.STRIPE_WEBHOOK_SECRET);
       return res.status(400).json({
         error:
           sigErr instanceof Error
