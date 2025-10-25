@@ -163,19 +163,22 @@ function CardForm({
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 60000);
 
-        const generateResponse = await fetch("/api/generate-video", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const generateResponse = await fetch(
+          createApiUrl("/api/generate-video"),
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              image,
+              duration: parseInt(duration),
+              resolution: quality,
+              email,
+            }),
+            signal: controller.signal,
           },
-          body: JSON.stringify({
-            image,
-            duration: parseInt(duration),
-            resolution: quality,
-            email,
-          }),
-          signal: controller.signal,
-        });
+        );
 
         clearTimeout(timeout);
 
@@ -201,7 +204,7 @@ function CardForm({
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 30000);
 
-          const saveResponse = await fetch("/api/save-video", {
+          const saveResponse = await fetch(createApiUrl("/api/save-video"), {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
