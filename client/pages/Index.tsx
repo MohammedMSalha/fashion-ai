@@ -219,7 +219,7 @@ export default function Index() {
             >
               <button
                 onClick={() => {
-                  navigate("/my-videos");
+                  setCurrentPage("my-videos");
                   setShowFabMenu(false);
                 }}
                 className="flex items-center gap-3 bg-white hover:bg-gray-100 text-black px-2 md:px-4 py-2 md:py-3 rounded-full font-semibold transition-all"
