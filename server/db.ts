@@ -7,9 +7,11 @@ const pool = new Pool({
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
       : false,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  max: 5, // Reduced for serverless (cold starts)
+  min: 0, // No idle connections
+  idleTimeoutMillis: 10000, // Shorter idle timeout
+  connectionTimeoutMillis: 3000,
+  statementTimeoutMillis: 5000,
 });
 
 let initialized = false;
