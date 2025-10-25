@@ -69,7 +69,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
       console.error("[Webhook] ✗ Signature verification failed:", sigErr);
       return res.status(400).json({
         error:
-          sigErr instanceof Error ? sigErr.message : "Signature verification failed",
+          sigErr instanceof Error
+            ? sigErr.message
+            : "Signature verification failed",
       });
     }
 
@@ -87,9 +89,16 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
         const email = paymentIntent.metadata?.email;
 
         console.log("[Webhook] Extracted from metadata:");
-        console.log("[Webhook]   - videoId:", videoId, `(type: ${typeof videoId})`);
+        console.log(
+          "[Webhook]   - videoId:",
+          videoId,
+          `(type: ${typeof videoId})`,
+        );
         console.log("[Webhook]   - email:", email);
-        console.log("[Webhook]   - All metadata keys:", Object.keys(paymentIntent.metadata || {}));
+        console.log(
+          "[Webhook]   - All metadata keys:",
+          Object.keys(paymentIntent.metadata || {}),
+        );
 
         if (videoId) {
           console.log(`[Webhook] Processing payment for video: ${videoId}`);
@@ -107,18 +116,25 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
               [videoIdNum],
             );
 
-            console.log(`[Webhook] Query result: ${videoResult.rows.length} rows found`);
+            console.log(
+              `[Webhook] Query result: ${videoResult.rows.length} rows found`,
+            );
 
             if (videoResult.rows.length > 0) {
               const videoRecord = videoResult.rows[0];
               console.log("[Webhook] Video record found:");
               console.log("[Webhook]   - id:", videoRecord.id);
               console.log("[Webhook]   - status:", videoRecord.status);
-              console.log("[Webhook]   - has image:", !!videoRecord.image_base64);
+              console.log(
+                "[Webhook]   - has image:",
+                !!videoRecord.image_base64,
+              );
               console.log("[Webhook]   - duration:", videoRecord.duration);
               console.log("[Webhook]   - resolution:", videoRecord.resolution);
 
-              if (!["awaiting_payment", "processing"].includes(videoRecord.status)) {
+              if (
+                !["awaiting_payment", "processing"].includes(videoRecord.status)
+              ) {
                 console.warn(
                   `[Webhook] ⚠ Video status is '${videoRecord.status}', not awaiting_payment or processing`,
                 );
@@ -162,14 +178,28 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     );
 
                     // Update the database with generated video info
-                    console.log("[Webhook] Updating database with payment and generation info...");
+                    console.log(
+                      "[Webhook] Updating database with payment and generation info...",
+                    );
                     console.log("[Webhook] UPDATE params:");
-                    console.log("[Webhook]   - payment_intent_id:", paymentIntent.id);
-                    console.log("[Webhook]   - payment_amount:", paymentIntent.amount);
+                    console.log(
+                      "[Webhook]   - payment_intent_id:",
+                      paymentIntent.id,
+                    );
+                    console.log(
+                      "[Webhook]   - payment_amount:",
+                      paymentIntent.amount,
+                    );
                     console.log("[Webhook]   - payment_currency: usd");
                     console.log("[Webhook]   - payment_email:", email);
-                    console.log("[Webhook]   - request_id:", generateResult.requestId);
-                    console.log("[Webhook]   - video_url:", generateResult.videoUrl);
+                    console.log(
+                      "[Webhook]   - request_id:",
+                      generateResult.requestId,
+                    );
+                    console.log(
+                      "[Webhook]   - video_url:",
+                      generateResult.videoUrl,
+                    );
                     console.log("[Webhook]   - status: processing");
                     console.log("[Webhook]   - WHERE id:", videoRecord.id);
 
