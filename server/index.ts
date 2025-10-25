@@ -102,6 +102,7 @@ export async function createServer() {
   // Payment endpoints (with stricter rate limiting)
   app.post("/api/create-payment-intent", paymentLimiter, createPaymentIntent);
   app.post("/api/confirm-payment", paymentLimiter, confirmPayment);
+  app.post("/api/checkout-session", paymentLimiter, createCheckoutSession);
 
   // Video storage endpoints
   app.post("/api/save-video", videoLimiter, saveVideo);
