@@ -123,7 +123,6 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                   `[Webhook] ⚠ Video status is '${videoRecord.status}', not awaiting_payment or processing`,
                 );
               }
-              const videoRecord = videoResult.rows[0];
               const resolution = videoRecord.resolution as "720p" | "1080p";
               const duration = videoRecord.duration as 5 | 10;
               const imageBase64 = videoRecord.image_base64;
