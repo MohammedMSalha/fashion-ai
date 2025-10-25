@@ -56,6 +56,7 @@ export async function updateVideoStatusFromFashn(
   try {
     const status = await checkVideoGenerationStatus(requestId);
     if (!status) {
+      console.log(`[UpdateStatus] No status response for request: ${requestId}`);
       return;
     }
 
@@ -66,40 +67,53 @@ export async function updateVideoStatusFromFashn(
     );
 
     if (videoResult.rows.length === 0) {
+      console.log(`[UpdateStatus] No video record found for request: ${requestId}`);
       return;
     }
 
     const videoId = videoResult.rows[0].id;
+    console.log(`[UpdateStatus] Found video ${videoId} for request ${requestId}`);
 
     // Update based on status
-    if (status.status === "completed" && status.result?.video_url) {
+    if (status.status === "completed" && status.output && status.output.length > 0) {
+      const videoUrl = status.output[0];
+      console.log(`[UpdateStatus] Video ${videoId} completed! URL: ${videoUrl}`);
+
       await query(
-        `UPDATE videos 
-         SET status = 'completed', 
+        `UPDATE videos
+         SET status = 'completed',
              video_url = $1,
              completed_at = CURRENT_TIMESTAMP
-         WHERE id = $2`,
-        [status.result.video_url, videoId],
+         WHERE id = $2
+         RETURNING id, status, video_url`,
+        [videoUrl, videoId],
       );
-      console.log(`Video ${videoId} completed successfully`);
+
+      console.log(`[UpdateStatus] ✓ Video ${videoId} marked as completed with URL`);
     } else if (status.status === "failed") {
+      const errorMessage =
+        status.error?.message || "Generation failed without error details";
+      console.log(`[UpdateStatus] Video ${videoId} failed: ${errorMessage}`);
+
       await query(
-        `UPDATE videos 
-         SET status = 'failed', 
+        `UPDATE videos
+         SET status = 'failed',
              error_message = $1
-         WHERE id = $2`,
-        [status.error || "Generation failed", videoId],
+         WHERE id = $2
+         RETURNING id, status, error_message`,
+        [errorMessage, videoId],
       );
-      console.log(`Video ${videoId} failed: ${status.error}`);
+
+      console.log(`[UpdateStatus] ✓ Video ${videoId} marked as failed`);
     } else if (
       status.status === "processing" ||
       status.status === "submitted"
     ) {
       // Still processing, no update needed
-      console.log(`Video ${videoId} still processing`);
+      console.log(`[UpdateStatus] Video ${videoId} still ${status.status}`);
     }
   } catch (error) {
-    console.error("Error updating video status:", error);
+    console.error("[UpdateStatus] Error updating video status:", error);
   }
 }
 
