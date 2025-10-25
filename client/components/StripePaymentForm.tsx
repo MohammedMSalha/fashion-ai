@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -26,7 +26,7 @@ const stripePublishableKey =
 
 const stripePromise = loadStripe(stripePublishableKey);
 
-const CardForm = memo(function CardForm({
+function CardForm({
   amount,
   email,
   image,
@@ -54,7 +54,7 @@ const CardForm = memo(function CardForm({
 
   // Create payment intent on mount (only once)
   useEffect(() => {
-    if (clientSecret) return; // Don't recreate if already set
+    if (clientSecret) return;
 
     const createPaymentIntent = async () => {
       try {
@@ -80,7 +80,6 @@ const CardForm = memo(function CardForm({
             const errorData = await response.json();
             errorMsg = errorData.error || errorMsg;
           } catch {
-            // If response body is already read or invalid JSON, use status code
             errorMsg = `Server error (${response.status})`;
           }
           throw new Error(errorMsg);
@@ -310,11 +309,9 @@ const CardForm = memo(function CardForm({
       </p>
     </form>
   );
-});
+}
 
-const StripePaymentFormComponent = memo(function StripePaymentForm(
-  props: StripePaymentFormProps,
-) {
+export default function StripePaymentForm(props: StripePaymentFormProps) {
   return (
     <Elements
       stripe={stripePromise}
@@ -333,6 +330,4 @@ const StripePaymentFormComponent = memo(function StripePaymentForm(
       <CardForm {...props} />
     </Elements>
   );
-});
-
-export default StripePaymentFormComponent;
+}
