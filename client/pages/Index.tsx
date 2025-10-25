@@ -466,6 +466,26 @@ export default function Index() {
         </section>
       )}
 
+      {/* MY VIDEOS PAGE */}
+      {currentPage === "my-videos" && (
+        <section className="fixed inset-0 bg-black flex flex-col">
+          <div className="bg-black border-b border-gray-800 p-3 flex-shrink-0">
+            <div className="flex items-center justify-between">
+              <h1 className="text-base font-bold text-white">My Videos</h1>
+              <button
+                onClick={() => setCurrentPage("home")}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <MyVideos />
+          </div>
+        </section>
+      )}
+
       {/* CONTACT PAGE */}
       {currentPage === "contact" && (
         <section className="relative w-full h-full flex items-center justify-center">
