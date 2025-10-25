@@ -16,12 +16,18 @@ async function start() {
     app.use(express.static(distPath));
 
     // Handle React Router - serve index.html for all non-API routes
-    app.get("*", (req, res) => {
+    app.all("*", (req, res) => {
       // Don't serve index.html for API routes
       if (req.path.startsWith("/api/") || req.path.startsWith("/health")) {
-        return res.status(404).json({ error: "API endpoint not found" });
+        console.warn(`[API] 404: ${req.method} ${req.path} - endpoint not found`);
+        return res.status(404).json({
+          error: "API endpoint not found",
+          path: req.path,
+          method: req.method
+        });
       }
 
+      // Serve index.html for all other routes (React Router will handle them)
       res.sendFile(path.join(distPath, "index.html"));
     });
 
