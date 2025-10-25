@@ -85,6 +85,25 @@ async function parseRequestBody(req: any): Promise<any> {
 }
 
 export default async function handler(req: any, res: any) {
+  // Capture raw body for Stripe webhook
+  if (req.url?.includes("/api/stripe-webhook")) {
+    const chunks: any[] = [];
+    let rawBodyBuffer: Buffer;
+
+    // If body is already parsed (Vercel), reconstruct it
+    if (typeof req.body === "object") {
+      rawBodyBuffer = Buffer.from(JSON.stringify(req.body));
+    } else if (typeof req.body === "string") {
+      rawBodyBuffer = Buffer.from(req.body);
+    } else if (Buffer.isBuffer(req.body)) {
+      rawBodyBuffer = req.body;
+    } else {
+      rawBodyBuffer = Buffer.from("");
+    }
+
+    req.rawBody = rawBodyBuffer.toString("utf-8");
+  }
+
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
