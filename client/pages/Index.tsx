@@ -473,7 +473,7 @@ export default function Index() {
       {/* MY VIDEOS PAGE */}
       {currentPage === "my-videos" && (
         <section className="fixed inset-0 bg-black">
-          <MyVideos />
+          <MyVideos onBack={() => setCurrentPage("home")} />
         </section>
       )}
 
