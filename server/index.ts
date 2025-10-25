@@ -67,7 +67,10 @@ export async function createServer() {
     console.log("[Webhook] POST /api/stripe-webhook received");
     console.log("[Webhook] Headers:", req.headers);
     console.log("[Webhook] Body type:", typeof req.body);
-    console.log("[Webhook] Body:", typeof req.body === "object" ? JSON.stringify(req.body) : req.body);
+    console.log(
+      "[Webhook] Body:",
+      typeof req.body === "object" ? JSON.stringify(req.body) : req.body,
+    );
 
     // The raw body should already be set by the serverless wrapper
     if (!req.rawBody) {

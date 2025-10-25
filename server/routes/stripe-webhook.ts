@@ -259,7 +259,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     } catch (updateErr) {
                       console.error(
                         `[Webhook] ✗ UPDATE query failed:`,
-                        updateErr instanceof Error ? updateErr.message : updateErr,
+                        updateErr instanceof Error
+                          ? updateErr.message
+                          : updateErr,
                       );
                       throw updateErr;
                     }
@@ -297,14 +299,18 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                     } catch (failUpdateErr) {
                       console.error(
                         "[Webhook] ✗ Failed to update database with error:",
-                        failUpdateErr instanceof Error ? failUpdateErr.message : failUpdateErr,
+                        failUpdateErr instanceof Error
+                          ? failUpdateErr.message
+                          : failUpdateErr,
                       );
                     }
                   }
                 } catch (generateErr) {
                   console.error(
                     "[Webhook] ✗ Error generating video:",
-                    generateErr instanceof Error ? generateErr.message : generateErr,
+                    generateErr instanceof Error
+                      ? generateErr.message
+                      : generateErr,
                   );
                   // Update status to mark failure
                   const errMsg =
@@ -376,7 +382,9 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
                 } catch (noImageErr) {
                   console.error(
                     "[Webhook] ✗ Failed to update database (no image):",
-                    noImageErr instanceof Error ? noImageErr.message : noImageErr,
+                    noImageErr instanceof Error
+                      ? noImageErr.message
+                      : noImageErr,
                   );
                 }
               }
