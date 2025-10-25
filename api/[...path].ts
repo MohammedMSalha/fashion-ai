@@ -36,6 +36,20 @@ export default async function handler(req: any, res: any) {
 
     const app = await getExpressApp();
 
+    // For Stripe webhook, preserve the raw body
+    if (pathname === "/api/webhook/stripe") {
+      console.log("[Serverless] Webhook request detected, preserving raw body");
+      // Store raw body for Stripe signature verification
+      if (typeof req.body === "string") {
+        req.rawBody = req.body;
+      } else if (Buffer.isBuffer(req.body)) {
+        req.rawBody = req.body.toString("utf-8");
+      } else {
+        // If body is already parsed, stringify it
+        req.rawBody = JSON.stringify(req.body);
+      }
+    }
+
     // Pass through the request to Express
     return new Promise((resolve) => {
       const originalEnd = res.end;
