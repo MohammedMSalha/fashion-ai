@@ -261,12 +261,7 @@ const CardForm = ({
           <p className="text-sm text-red-200 flex-1">{error}</p>
           <button
             type="button"
-            onClick={() => {
-              setError(null);
-              if (errorTimeout) {
-                clearTimeout(errorTimeout);
-              }
-            }}
+            onClick={() => setError(null)}
             className="text-red-400 hover:text-red-300 flex-shrink-0"
           >
             <X className="w-4 h-4" />
