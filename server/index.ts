@@ -56,7 +56,7 @@ export async function createServer() {
 
   // Stripe webhook handler (MUST be before JSON body parser)
   app.post(
-    "/api/webhook",
+    "/api/webhook/stripe",
     express.raw({ type: "application/json" }),
     (req: any, res: any, next: any) => {
       // Store raw body for Stripe signature verification
