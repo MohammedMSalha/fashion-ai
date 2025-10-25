@@ -40,6 +40,12 @@ export async function createServer() {
     }),
   );
 
+  // Log all incoming requests (for debugging)
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+  });
+
   // Stripe webhook handler (MUST be before JSON body parser)
   app.post(
     "/api/webhook",
