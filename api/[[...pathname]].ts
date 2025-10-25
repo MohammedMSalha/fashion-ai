@@ -26,7 +26,14 @@ async function getQueryFunction() {
 
     return cachedQuery;
   } catch (error) {
-    console.error("[API] Failed to import database:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : "";
+    console.error("[API] Failed to import/initialize database");
+    console.error("[API] Error:", errorMsg);
+    if (errorStack) {
+      console.error("[API] Stack:", errorStack.substring(0, 500));
+    }
+    console.error("[API] Check fashion_DATABASE_URL in Vercel environment variables");
     return null; // Return null instead of throwing
   }
 }
