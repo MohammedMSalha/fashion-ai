@@ -499,15 +499,29 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
     console.log("[GetVideoStatus] Query result rows:", result.rows.length);
 
     if (result.rows.length === 0) {
-      console.log("[GetVideoStatus] Video not found for id:", videoIdNum);
-      // Still return 200 with a waiting state so client keeps polling
+      console.log(
+        "[GetVideoStatus] Video not found for id:",
+        videoIdNum,
+        "- Record may not have been created or may have expired",
+      );
+      // Return 200 with helpful information for debugging
       return res.status(200).json({
-        success: true,
-        video: {
-          id: videoIdNum,
-          status: "awaiting_creation",
-          _phase: "waiting_for_payment",
-          _note: "Video record will be created when payment is processed",
+        success: false,
+        video: null,
+        error: "Video record not found",
+        _debug: {
+          videoId: videoIdNum,
+          possibleReasons: [
+            "saveVideoConfig endpoint was not called",
+            "saveVideoConfig failed to create record",
+            "Video expired (48 hour TTL)",
+            "Database cleanup job deleted the record",
+          ],
+          nextSteps: [
+            "1. Start over: upload image and click Pay & Generate",
+            "2. Check browser console for any save errors",
+            "3. Check Network tab - was POST /api/save-video-config called?",
+          ],
         },
       });
     }
