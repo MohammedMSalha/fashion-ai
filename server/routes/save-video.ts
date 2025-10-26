@@ -306,8 +306,7 @@ export const saveVideo: RequestHandler = async (req, res) => {
         result = await query(
           `UPDATE videos SET
             video_url = $1,
-            video_id = $2,
-            request_id = $3,
+            request_id = $2,
             duration = $4,
             resolution = $5,
             status = $6,
