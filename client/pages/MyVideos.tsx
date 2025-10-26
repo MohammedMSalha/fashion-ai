@@ -359,9 +359,9 @@ export default function MyVideos({ onBack }: MyVideosProps) {
           </div>
         ) : (
           // TikTok-style Video Feed
-          <div className="w-full h-full bg-black overflow-hidden flex items-center justify-center">
+          <div className="w-full h-full bg-black overflow-hidden flex items-center justify-center px-4 sm:px-0">
             {/* Main Video Area - TikTok 9:16 aspect ratio */}
-            <div className="relative w-full max-w-md aspect-[9/16]">
+            <div className="relative w-full max-w-md aspect-[9/16] rounded-lg overflow-hidden">
               {currentVideo.status === "processing" ? (
                 // Loading State
                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
@@ -410,7 +410,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                 <>
                   <video
                     src={currentVideo.video_url || ""}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover pointer-events-none"
                     autoPlay={isPlaying}
                     loop
                     muted
