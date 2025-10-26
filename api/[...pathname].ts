@@ -42,16 +42,18 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    console.log("[Vercel Serverless]", req.method, req.url);
+    const path = req.url?.split("?")[0] || req.url || "unknown";
+    console.log(`[Serverless] ${req.method} ${path}`);
 
     const handler = await getHandler();
+    console.log("[Serverless] Forwarding to Express app");
     await handler(req, res);
   } catch (error) {
-    console.error("[Vercel Serverless] Error:", error);
+    console.error("[Serverless] Fatal error:", error instanceof Error ? error.message : error);
     if (!res.headersSent) {
       res.status(500).json({
         success: false,
-        error: error instanceof Error ? error.message : "Internal error",
+        error: error instanceof Error ? error.message : "Internal server error",
       });
     }
   }
