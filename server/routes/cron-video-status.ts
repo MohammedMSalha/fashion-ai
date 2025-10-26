@@ -18,9 +18,7 @@ export const cronCheckVideoStatus: RequestHandler = async (req, res) => {
 
       const providedSecret = authHeader.substring(7);
       if (providedSecret !== cronSecret) {
-        console.warn(
-          "[CronCheckVideoStatus] ⚠ Invalid cron secret provided",
-        );
+        console.warn("[CronCheckVideoStatus] ⚠ Invalid cron secret provided");
         return res.status(401).json({ error: "Unauthorized" });
       }
     } else {
