@@ -151,6 +151,21 @@ export default function Index() {
 
             if (data.video?.status === "completed") {
               console.log("[Loading] ✓ Video generation complete!");
+
+              // Transform database video to Video interface format
+              const dbVideo = data.video;
+              const videoData: Video = {
+                id: String(dbVideo.id),
+                thumbnail: dbVideo.video_url || SAMPLE_VIDEOS[0].thumbnail,
+                title: `AI Fashion Video ${dbVideo.id}`,
+                duration: `${dbVideo.duration}s`,
+                quality: dbVideo.resolution || "1080p",
+                createdAt: new Date(dbVideo.created_at).toISOString().split('T')[0],
+                downloadUrl: dbVideo.video_url || SAMPLE_VIDEOS[0].downloadUrl,
+              };
+
+              console.log("[Loading] Setting video data:", videoData);
+              setGeneratedVideo(videoData);
               setCurrentPage("video-preview");
               sessionStorage.removeItem("fashionai_videoId");
               break;
