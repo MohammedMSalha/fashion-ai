@@ -57,11 +57,13 @@ export async function cleanupExpiredVideos() {
   try {
     console.log("[ManualCleanup] Running manual video cleanup...");
 
-    // First, check which videos will be deleted
+    // First, check which videos will be deleted (with timezone handling)
     const checkResult = await query(
-      `SELECT id, email, status, created_at, expires_at
+      `SELECT id, email, status, created_at, expires_at, deleted_at,
+              CURRENT_TIMESTAMP as now,
+              (expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC') as is_expired
        FROM videos
-       WHERE expires_at <= CURRENT_TIMESTAMP
+       WHERE expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
        AND deleted_at IS NULL`,
     );
 
@@ -73,7 +75,10 @@ export async function cleanupExpiredVideos() {
       );
       checkResult.rows.forEach((row: any) => {
         console.log(
-          `[ManualCleanup] - Video ID: ${row.id}, Email: ${row.email}, Status: ${row.status}, Expired: ${row.expires_at}`,
+          `[ManualCleanup] - Video ID: ${row.id}, Email: ${row.email}, Status: ${row.status}`,
+        );
+        console.log(
+          `[ManualCleanup]   Expires: ${row.expires_at}, Current: ${row.now}, Is Expired: ${row.is_expired}`,
         );
       });
     }
@@ -82,9 +87,9 @@ export async function cleanupExpiredVideos() {
     const result = await query(
       `UPDATE videos
        SET deleted_at = CURRENT_TIMESTAMP
-       WHERE expires_at <= CURRENT_TIMESTAMP
+       WHERE expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
        AND deleted_at IS NULL
-       RETURNING id, email, status`,
+       RETURNING id, email, status, expires_at`,
     );
 
     console.log(
