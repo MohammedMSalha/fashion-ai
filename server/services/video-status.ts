@@ -249,7 +249,9 @@ export async function checkAndUpdateAllPendingVideos(): Promise<void> {
               `[CheckAllPending] ✗ Video ${row.id} failed: ${data.video.error_message}`,
             );
           } else {
-            console.log(`[CheckAllPending] Video ${row.id} still processing...`);
+            console.log(
+              `[CheckAllPending] Video ${row.id} still processing...`,
+            );
           }
         }
       } catch (error) {
