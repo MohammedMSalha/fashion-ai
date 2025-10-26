@@ -500,9 +500,15 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
 
     if (result.rows.length === 0) {
       console.log("[GetVideoStatus] Video not found for id:", videoIdNum);
-      return res.status(404).json({
-        success: false,
-        error: "Video not found",
+      // Still return 200 with a waiting state so client keeps polling
+      return res.status(200).json({
+        success: true,
+        video: {
+          id: videoIdNum,
+          status: "awaiting_creation",
+          _phase: "waiting_for_payment",
+          _note: "Video record will be created when payment is processed",
+        },
       });
     }
 
