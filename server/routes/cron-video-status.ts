@@ -29,14 +29,18 @@ export const cronCheckVideoStatus: RequestHandler = async (req, res) => {
       );
     }
 
+    const startTime = Date.now();
     console.log(
-      `[CronCheckVideoStatus] Cron job triggered at ${new Date().toISOString()}`,
+      `[CronCheckVideoStatus] ✓✓✓ CRON JOB TRIGGERED at ${new Date().toISOString()}`,
     );
 
     // Run the video status check
     await checkAndUpdateAllPendingVideos();
 
-    console.log("[CronCheckVideoStatus] ✓ Check completed successfully");
+    const duration = Date.now() - startTime;
+    console.log(
+      `[CronCheckVideoStatus] ✓✓✓ Check completed successfully in ${duration}ms`,
+    );
 
     return res.status(200).json({
       success: true,
