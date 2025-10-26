@@ -492,98 +492,106 @@ export default function Index() {
               <div className="absolute inset-0 rounded-full border-4 border-gray-700 animate-spin border-t-white"></div>
             </div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-2">Generating Video</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Generating Video
+              </h2>
               <p className="text-gray-400">Creating your AI fashion video...</p>
-              <p className="text-sm text-gray-500 mt-4">This may take 30-60 seconds</p>
+              <p className="text-sm text-gray-500 mt-4">
+                This may take 30-60 seconds
+              </p>
             </div>
           </div>
         </section>
       )}
 
       {/* VIDEO PREVIEW PAGE - TikTok Style */}
-      {currentPage === "video-preview" && generatedVideo && generatedVideo.downloadUrl && (
-        <section className="relative w-full h-full bg-black flex items-center justify-center">
-          {/* Back Button */}
-          <button
-            onClick={goHome}
-            className="absolute top-4 left-4 z-20 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+      {currentPage === "video-preview" &&
+        generatedVideo &&
+        generatedVideo.downloadUrl && (
+          <section className="relative w-full h-full bg-black flex items-center justify-center">
+            {/* Back Button */}
+            <button
+              onClick={goHome}
+              className="absolute top-4 left-4 z-20 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
 
-          {/* Video Container */}
-          <div className="relative w-full h-full md:w-[500px] md:h-full bg-black flex items-center justify-center">
-            {/* Generated Video */}
-            <div className="relative w-full h-full">
-              <video
-                src={generatedVideo.thumbnail}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-cover"
-              />
+            {/* Video Container */}
+            <div className="relative w-full h-full md:w-[500px] md:h-full bg-black flex items-center justify-center">
+              {/* Generated Video */}
+              <div className="relative w-full h-full">
+                <video
+                  src={generatedVideo.thumbnail}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
 
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
 
-              {/* 48-hour Expiry Alert */}
-              {showExpiryAlert && (
-                <div className="absolute top-8 left-0 right-0 px-6 z-20">
-                  <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-4 flex gap-3 items-start">
-                    <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                    <div className="text-sm text-white flex-1">
-                      <p className="font-semibold">Video expires in 48 hours</p>
-                      <p className="text-xs text-gray-300">
-                        Download now to save permanently
-                      </p>
+                {/* 48-hour Expiry Alert */}
+                {showExpiryAlert && (
+                  <div className="absolute top-8 left-0 right-0 px-6 z-20">
+                    <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-4 flex gap-3 items-start">
+                      <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
+                      <div className="text-sm text-white flex-1">
+                        <p className="font-semibold">
+                          Video expires in 48 hours
+                        </p>
+                        <p className="text-xs text-gray-300">
+                          Download now to save permanently
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setShowExpiryAlert(false)}
+                        className="text-gray-400 hover:text-white transition flex-shrink-0"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => setShowExpiryAlert(false)}
-                      className="text-gray-400 hover:text-white transition flex-shrink-0"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
+                  </div>
+                )}
+
+                {/* Video Info */}
+                <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
+                  <p className="text-2xl font-bold mb-3">
+                    {generatedVideo.title}
+                  </p>
+                  <div className="flex gap-2">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                      {generatedVideo.duration}
+                    </span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
+                      {generatedVideo.quality}
+                    </span>
                   </div>
                 </div>
-              )}
 
-              {/* Video Info */}
-              <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
-                <p className="text-2xl font-bold mb-3">
-                  {generatedVideo.title}
-                </p>
-                <div className="flex gap-2">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                    {generatedVideo.duration}
-                  </span>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                    {generatedVideo.quality}
-                  </span>
+                {/* Download Button */}
+                <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
+                  <Button
+                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 flex items-center justify-center gap-2"
+                    onClick={() => window.open(generatedVideo.downloadUrl)}
+                  >
+                    <Download className="w-5 h-5" />
+                    Download Video
+                  </Button>
                 </div>
-              </div>
 
-              {/* Download Button */}
-              <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
-                <Button
-                  className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 flex items-center justify-center gap-2"
-                  onClick={() => window.open(generatedVideo.downloadUrl)}
-                >
-                  <Download className="w-5 h-5" />
-                  Download Video
-                </Button>
-              </div>
-
-              {/* Progress Bar Overlay */}
-              <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 z-20">
-                <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full w-full bg-white animate-pulse" />
+                {/* Progress Bar Overlay */}
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 z-20">
+                  <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                    <div className="h-full w-full bg-white animate-pulse" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
 
       {/* MY VIDEOS PAGE */}
       {currentPage === "my-videos" && (

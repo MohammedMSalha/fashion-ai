@@ -706,7 +706,6 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                     )}
                   </div>
                 )}
-
               </div>
             </div>
           )}
