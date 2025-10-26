@@ -99,6 +99,15 @@ export async function createServer() {
   app.use(express.json({ limit: "5mb" }));
   app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
+  // Email authentication endpoints - BEFORE rate limiting
+  console.log("[Express] Registering auth endpoints (before rate limiting)");
+  app.get("/api/auth/smtp-status", getSMTPStatusHandler);
+  app.post("/api/auth/send-code", sendCodeHandler);
+  app.post("/api/auth/verify-code", verifyCodeHandler);
+  console.log(
+    "[Express] Auth endpoints registered: /api/auth/smtp-status, /api/auth/send-code, /api/auth/verify-code",
+  );
+
   // Disable caching for API endpoints
   app.use("/api/", (req, res, next) => {
     res.setHeader(
