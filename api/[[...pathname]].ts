@@ -46,7 +46,9 @@ export default async function handler(req: any, res: any) {
     // Quick health check
     if (path === "/api/health") {
       console.log("[Serverless] Health check");
-      res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+      res
+        .status(200)
+        .json({ status: "ok", timestamp: new Date().toISOString() });
       return;
     }
 
@@ -56,7 +58,10 @@ export default async function handler(req: any, res: any) {
 
     // Call Express app directly
     // Vercel's req/res are already Node.js compatible
-    console.log("[Serverless] Forwarding to Express:", { method: req.method, path });
+    console.log("[Serverless] Forwarding to Express:", {
+      method: req.method,
+      path,
+    });
     app(req, res);
   } catch (error) {
     console.error(
