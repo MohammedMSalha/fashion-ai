@@ -1,38 +1,19 @@
 import { createServer } from "../server/index.js";
 
-let cachedApp: any = null;
-
-async function getApp() {
-  if (!cachedApp) {
-    try {
-      console.log("[Serverless] Initializing Express app...");
-      cachedApp = await createServer();
-      console.log("[Serverless] Express app created and cached");
-    } catch (error) {
-      console.error(
-        "[Serverless] Failed to initialize Express app:",
-        error instanceof Error ? error.message : error,
-      );
-      throw error;
-    }
-  }
-  return cachedApp;
-}
-
 export default async function handler(req: any, res: any) {
   try {
-    // Set CORS headers for all responses
-    res.setHeader("Access-Control-Allow-Credentials", "true");
+    console.log(`[API] ${req.method} ${req.url}`);
+    
+    // Set CORS headers
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
       "Access-Control-Allow-Methods",
-      "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+      "GET, POST, PUT, DELETE, OPTIONS"
     );
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Stripe-Signature",
+      "Content-Type, Authorization, Stripe-Signature"
     );
-    res.setHeader("Cache-Control", "no-store");
 
     // Handle OPTIONS
     if (req.method === "OPTIONS") {
@@ -40,38 +21,18 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    const path = req.url?.split("?")[0] || req.url || "unknown";
-    console.log(`[Serverless] ${req.method} ${path}`);
-
-    // Quick health check
-    if (path === "/api/health") {
-      console.log("[Serverless] Health check");
-      res
-        .status(200)
-        .json({ status: "ok", timestamp: new Date().toISOString() });
-      return;
-    }
-
-    // Get the Express app
-    console.log("[Serverless] Loading Express app...");
-    const app = await getApp();
-
-    // Call Express app directly
-    // Vercel's req/res are already Node.js compatible
-    console.log("[Serverless] Forwarding to Express:", {
-      method: req.method,
-      path,
-    });
-    app(req, res);
+    // Create and invoke Express app
+    console.log("[API] Creating Express server...");
+    const app = await createServer();
+    console.log("[API] Express server created, invoking...");
+    
+    // Call Express app - Vercel req/res are Node.js compatible
+    return app(req, res);
   } catch (error) {
-    console.error(
-      "[Serverless] Fatal error:",
-      error instanceof Error ? error.message : error,
-    );
+    console.error("[API] Error:", error);
     if (!res.headersSent) {
       res.status(500).json({
-        success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
