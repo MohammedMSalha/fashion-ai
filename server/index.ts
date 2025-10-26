@@ -203,7 +203,9 @@ export async function createServer() {
   app.get("/api/auth/smtp-status", getSMTPStatusHandler);
   app.post("/api/auth/send-code", sendCodeHandler);
   app.post("/api/auth/verify-code", verifyCodeHandler);
-  console.log("[Express] Auth endpoints registered: /api/auth/smtp-status, /api/auth/send-code, /api/auth/verify-code");
+  console.log(
+    "[Express] Auth endpoints registered: /api/auth/smtp-status, /api/auth/send-code, /api/auth/verify-code",
+  );
 
   // Manual trigger for video status checking (can be called by external cron service)
   app.get("/api/check-video-status", async (_req, res) => {
@@ -268,6 +270,8 @@ export async function createServer() {
     }
   }
 
-  console.log("[Express] Server created successfully with all routes registered");
+  console.log(
+    "[Express] Server created successfully with all routes registered",
+  );
   return app;
 }

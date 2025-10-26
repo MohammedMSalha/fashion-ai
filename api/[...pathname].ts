@@ -14,7 +14,10 @@ async function getHandler() {
       console.log("[Serverless] Serverless handler created");
       cachedApp = app;
     } catch (error) {
-      console.error("[Serverless] Failed to initialize Express app:", error instanceof Error ? error.message : error);
+      console.error(
+        "[Serverless] Failed to initialize Express app:",
+        error instanceof Error ? error.message : error,
+      );
       throw error;
     }
   }
@@ -49,7 +52,10 @@ export default async function handler(req: any, res: any) {
     console.log("[Serverless] Forwarding to Express app");
     await handler(req, res);
   } catch (error) {
-    console.error("[Serverless] Fatal error:", error instanceof Error ? error.message : error);
+    console.error(
+      "[Serverless] Fatal error:",
+      error instanceof Error ? error.message : error,
+    );
     if (!res.headersSent) {
       res.status(500).json({
         success: false,
