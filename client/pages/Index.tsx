@@ -44,58 +44,48 @@ interface Video {
 const SAMPLE_VIDEOS: Video[] = [
   {
     id: "1",
-    thumbnail:
-      "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
+    thumbnail: "/videos/monkey1.mp4",
     title: "Playful Monkey",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-15",
-    downloadUrl:
-      "https://v3b.fal.media/files/b/monkey/Tq_jLJRXgc3pSvDD9_QZG_output.mp4",
+    downloadUrl: "/videos/monkey1.mp4",
   },
   {
     id: "2",
-    thumbnail:
-      "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
+    thumbnail: "/videos/tiger.mp4",
     title: "Majestic Tiger",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-10",
-    downloadUrl:
-      "https://v3b.fal.media/files/b/tiger/BL9b7CdNcL7jQBxr7SizO_output.mp4",
+    downloadUrl: "/videos/tiger.mp4",
   },
   {
     id: "3",
-    thumbnail:
-      "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
+    thumbnail: "/videos/zebra.mp4",
     title: "Striped Zebra",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-08",
-    downloadUrl:
-      "https://v3b.fal.media/files/b/zebra/oLCzAuqNNVnXpYAdAgG13_output.mp4",
+    downloadUrl: "/videos/zebra.mp4",
   },
   {
     id: "4",
-    thumbnail:
-      "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
+    thumbnail: "/videos/monkey2.mp4",
     title: "Wild Monkey Moves",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-05",
-    downloadUrl:
-      "https://v3b.fal.media/files/b/monkey/fWLLLHfUNEF0E4y2gy08g_output.mp4",
+    downloadUrl: "/videos/monkey2.mp4",
   },
   {
     id: "5",
-    thumbnail:
-      "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
+    thumbnail: "/videos/elephant.mp4",
     title: "Gentle Elephant",
     duration: "10s",
     quality: "1080p",
     createdAt: "2024-01-01",
-    downloadUrl:
-      "https://v3b.fal.media/files/b/elephant/CTgfFs2p1d1t58f8FFPKp_output.mp4",
+    downloadUrl: "/videos/elephant.mp4",
   },
 ];
 
