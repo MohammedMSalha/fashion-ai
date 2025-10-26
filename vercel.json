@@ -15,7 +15,7 @@
     },
     {
       "path": "/api/cron/cleanup-videos",
-      "schedule": "0 * * * *"
+      "schedule": "*/10 * * * *"
     }
   ]
 }
