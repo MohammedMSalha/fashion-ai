@@ -3,7 +3,7 @@ import { query } from "../db.js";
 
 export function startCleanupJob() {
   // Run cleanup job every 10 minutes
-  // Delete videos where expires_at <= now(), regardless of status
+  // Hard delete videos where expires_at has passed, regardless of status
   cron.schedule("*/10 * * * *", async () => {
     try {
       console.log("[CleanupJob] Running video cleanup job...");
@@ -13,8 +13,7 @@ export function startCleanupJob() {
         `SELECT id, email, status, created_at, expires_at,
                 CURRENT_TIMESTAMP as now
          FROM videos
-         WHERE expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
-         AND deleted_at IS NULL`,
+         WHERE expires_at < CURRENT_TIMESTAMP`,
       );
 
       const videosToDelete = checkResult.rows.length;
@@ -33,12 +32,10 @@ export function startCleanupJob() {
         });
       }
 
-      // Delete all expired videos regardless of status
+      // Hard delete all expired videos regardless of status
       const result = await query(
-        `UPDATE videos
-         SET deleted_at = CURRENT_TIMESTAMP
-         WHERE expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
-         AND deleted_at IS NULL`,
+        `DELETE FROM videos
+         WHERE expires_at < CURRENT_TIMESTAMP`,
       );
 
       console.log(
