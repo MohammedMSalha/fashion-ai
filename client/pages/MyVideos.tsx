@@ -208,6 +208,8 @@ export default function MyVideos({ onBack }: MyVideosProps) {
               setCode("");
               setVideos([]);
               setCurrentVideoIndex(0);
+            } else if (onBack) {
+              onBack();
             } else {
               navigate("/");
             }
