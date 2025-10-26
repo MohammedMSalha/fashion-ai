@@ -213,6 +213,11 @@ export async function createServer() {
     res.json({ status: "ok", message: "Express is running" });
   });
 
+  // Test route with parameter to verify parameter matching
+  app.get("/api/test-param/:id", (req, res) => {
+    res.json({ status: "ok", message: "Param route works", id: req.params.id });
+  });
+
   app.post("/api/videos", videoLimiter, getVideosByEmail);
   app.get("/api/video-status/:videoId", getVideoStatus);
   app.post("/api/video-status/:videoId", getVideoStatus);
