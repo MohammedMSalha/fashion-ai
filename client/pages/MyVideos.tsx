@@ -543,14 +543,28 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
                     <Button
                       className="w-full bg-white hover:bg-gray-100 text-black font-bold h-12 flex items-center justify-center gap-2 rounded-lg transition-all shadow-lg"
-                      onClick={() => {
+                      onClick={async () => {
                         if (currentVideo.video_url) {
-                          const a = document.createElement("a");
-                          a.href = currentVideo.video_url;
-                          a.download = `fashion-video-${currentVideo.id}.mp4`;
-                          document.body.appendChild(a);
-                          a.click();
-                          document.body.removeChild(a);
+                          try {
+                            const response = await fetch(currentVideo.video_url);
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `fashion-video-${currentVideo.id}.mp4`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                          } catch (error) {
+                            console.error("Download failed:", error);
+                            const a = document.createElement("a");
+                            a.href = currentVideo.video_url;
+                            a.download = `fashion-video-${currentVideo.id}.mp4`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                          }
                         }
                       }}
                     >

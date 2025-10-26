@@ -589,14 +589,28 @@ export default function Index() {
                 <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
                   <Button
                     className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 flex items-center justify-center gap-2"
-                    onClick={() => {
+                    onClick={async () => {
                       if (generatedVideo.downloadUrl) {
-                        const a = document.createElement("a");
-                        a.href = generatedVideo.downloadUrl;
-                        a.download = `fashion-video-${generatedVideo.id}.mp4`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
+                        try {
+                          const response = await fetch(generatedVideo.downloadUrl);
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `fashion-video-${generatedVideo.id}.mp4`;
+                          document.body.appendChild(a);
+                          a.click();
+                          window.URL.revokeObjectURL(url);
+                          document.body.removeChild(a);
+                        } catch (error) {
+                          console.error("Download failed:", error);
+                          const a = document.createElement("a");
+                          a.href = generatedVideo.downloadUrl;
+                          a.download = `fashion-video-${generatedVideo.id}.mp4`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                        }
                       }
                     }}
                   >
