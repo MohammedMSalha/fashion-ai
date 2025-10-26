@@ -125,7 +125,7 @@ export default function VideoSlider() {
             loop
             playsInline
             autoPlay
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover pointer-events-none select-none"
           />
 
           {/* Overlay Gradient */}
