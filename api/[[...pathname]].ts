@@ -16,8 +16,16 @@ export default async function handler(req: any, res: any) {
     const method = req.method || "GET";
     const url = req.url || "/";
     const path = req.path || url.split("?")[0];
+    const pathname = req.pathname;
+    const originalUrl = req.originalUrl;
 
-    console.log(`[API] ${method} ${url}`);
+    console.log(`[API] ========== REQUEST RECEIVED ==========`);
+    console.log(`[API] Method: ${method}`);
+    console.log(`[API] req.url: ${url}`);
+    console.log(`[API] req.path: ${req.path}`);
+    console.log(`[API] req.pathname: ${pathname}`);
+    console.log(`[API] req.originalUrl: ${originalUrl}`);
+    console.log(`[API] req.headers.host: ${req.headers.host}`);
     console.log(`[API] Parsed path: ${path}`);
 
     // Set CORS headers
