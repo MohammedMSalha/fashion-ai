@@ -86,7 +86,6 @@ async function initializeTables() {
         image_data BYTEA,
         image_base64 TEXT,
         video_url TEXT,
-        video_id VARCHAR(255),
         request_id VARCHAR(255),
         duration INTEGER NOT NULL,
         resolution VARCHAR(10) NOT NULL,
