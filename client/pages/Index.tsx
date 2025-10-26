@@ -243,10 +243,7 @@ export default function Index() {
 
   const handleGenerateClick = useCallback(() => {
     setCurrentPage("in-progress");
-    // Simulate generation process
-    setTimeout(() => {
-      setCurrentPage("video-preview");
-    }, 3000);
+    // Polling will handle the transition to video-preview when ready
   }, []);
 
   const handleNextVideo = () => {
