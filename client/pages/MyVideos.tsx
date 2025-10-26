@@ -441,10 +441,10 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                             filteredVideos.length,
                         )
                       }
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-600 backdrop-blur-sm p-3 rounded-full transition-all z-20"
+                      className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 backdrop-blur-sm p-2 sm:p-3 rounded-full transition-all z-20 active:scale-95"
                     >
                       <svg
-                        className="w-6 h-6 text-white"
+                        className="w-5 h-5 sm:w-6 sm:h-6 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -467,10 +467,10 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                           (prev) => (prev + 1) % filteredVideos.length,
                         )
                       }
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-600 backdrop-blur-sm p-3 rounded-full transition-all z-20"
+                      className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 backdrop-blur-sm p-2 sm:p-3 rounded-full transition-all z-20 active:scale-95"
                     >
                       <svg
-                        className="w-6 h-6 text-white"
+                        className="w-5 h-5 sm:w-6 sm:h-6 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
