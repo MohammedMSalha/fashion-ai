@@ -24,11 +24,11 @@ export default async function handler(req: any, res: any) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
       "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+      "GET, POST, PUT, DELETE, OPTIONS, PATCH",
     );
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, Stripe-Signature, X-Requested-With"
+      "Content-Type, Authorization, Stripe-Signature, X-Requested-With",
     );
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 
@@ -59,7 +59,10 @@ export default async function handler(req: any, res: any) {
 
     return result;
   } catch (error) {
-    console.error("[API] Fatal error:", error instanceof Error ? error.message : error);
+    console.error(
+      "[API] Fatal error:",
+      error instanceof Error ? error.message : error,
+    );
     if (error instanceof Error) {
       console.error("[API] Stack trace:", error.stack);
     }
