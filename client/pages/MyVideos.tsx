@@ -198,7 +198,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
   const filteredVideos = videos.filter(
     (v) =>
       (v.status === "processing" && v.request_id) ||
-      (v.status === "completed" && v.video_url)
+      (v.status === "completed" && v.video_url),
   );
 
   const currentVideo = filteredVideos[currentVideoIndex];
@@ -342,7 +342,9 @@ export default function MyVideos({ onBack }: MyVideosProps) {
               <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto">
                 <Play className="w-8 h-8 text-gray-400" />
               </div>
-              <h2 className="text-2xl font-bold text-white">No Active Videos</h2>
+              <h2 className="text-2xl font-bold text-white">
+                No Active Videos
+              </h2>
               <p className="text-gray-400">
                 No videos are currently generating or ready. Start by creating
                 your first AI fashion video!
@@ -434,7 +436,9 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                     <button
                       onClick={() =>
                         setCurrentVideoIndex(
-                          (prev) => (prev - 1 + filteredVideos.length) % filteredVideos.length,
+                          (prev) =>
+                            (prev - 1 + filteredVideos.length) %
+                            filteredVideos.length,
                         )
                       }
                       className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-3 rounded-full transition-all z-20"
