@@ -486,13 +486,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   )}
 
                   {/* Video Info - Bottom Left */}
-                  <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10 space-y-3">
+                  <div className="absolute bottom-24 sm:bottom-28 left-0 right-0 px-4 sm:px-6 text-white z-10 space-y-2 sm:space-y-3">
                     <div className="flex gap-3">
                       <div className="flex-1">
                         <p className="text-xs text-gray-300 uppercase tracking-wider font-semibold mb-1">
                           Created
                         </p>
-                        <p className="text-sm font-medium">
+                        <p className="text-xs sm:text-sm font-medium">
                           {new Date(currentVideo.created_at).toLocaleDateString(
                             "en-US",
                             {
@@ -507,7 +507,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                         <p className="text-xs text-gray-300 uppercase tracking-wider font-semibold mb-1">
                           Expires
                         </p>
-                        <p className="text-sm font-medium">
+                        <p className="text-xs sm:text-sm font-medium">
                           {new Date(currentVideo.expires_at).toLocaleDateString(
                             "en-US",
                             {
@@ -521,10 +521,10 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                     </div>
 
                     <div className="flex gap-2">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-black/40 backdrop-blur-sm text-gray-200 border border-gray-600">
+                      <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-black/40 backdrop-blur-sm text-gray-200 border border-gray-600">
                         {currentVideo.duration}s
                       </span>
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-black/40 backdrop-blur-sm text-gray-200 border border-gray-600">
+                      <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-black/40 backdrop-blur-sm text-gray-200 border border-gray-600">
                         {currentVideo.resolution}
                       </span>
                     </div>
@@ -532,17 +532,17 @@ export default function MyVideos({ onBack }: MyVideosProps) {
 
                   {/* Video Counter - Top */}
                   {filteredVideos.length > 1 && (
-                    <div className="absolute top-6 left-1/2 transform -translate-x-1/2 text-white z-20">
-                      <p className="text-sm font-medium bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <div className="absolute top-4 sm:top-6 left-1/2 transform -translate-x-1/2 text-white z-20">
+                      <p className="text-xs sm:text-sm font-medium bg-black/40 backdrop-blur-sm px-3 sm:px-4 py-1 sm:py-2 rounded-full">
                         {currentVideoIndex + 1} / {filteredVideos.length}
                       </p>
                     </div>
                   )}
 
                   {/* Download Button - Bottom Center */}
-                  <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
+                  <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 px-4 sm:px-6 z-20">
                     <Button
-                      className="w-full bg-white hover:bg-gray-100 text-black font-bold h-12 flex items-center justify-center gap-2 rounded-lg transition-all shadow-lg"
+                      className="w-full bg-white hover:bg-gray-100 text-black font-bold h-11 sm:h-12 text-sm sm:text-base flex items-center justify-center gap-2 rounded-lg transition-all shadow-lg active:scale-95"
                       onClick={async () => {
                         if (currentVideo.video_url) {
                           try {
