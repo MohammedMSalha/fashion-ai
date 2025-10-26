@@ -13,7 +13,7 @@ export function startCleanupJob() {
         `SELECT id, email, status, created_at, expires_at,
                 CURRENT_TIMESTAMP as now
          FROM videos
-         WHERE expires_at < CURRENT_TIMESTAMP`,
+         WHERE expires_at <= CURRENT_TIMESTAMP`,
       );
 
       const videosToDelete = checkResult.rows.length;
@@ -36,7 +36,7 @@ export function startCleanupJob() {
       const result = await query(
         `UPDATE videos
          SET deleted_at = CURRENT_TIMESTAMP
-         WHERE expires_at < CURRENT_TIMESTAMP
+         WHERE expires_at <= CURRENT_TIMESTAMP
          AND deleted_at IS NULL`,
       );
 
@@ -61,7 +61,7 @@ export async function cleanupExpiredVideos() {
       `SELECT id, email, status, created_at, expires_at,
               CURRENT_TIMESTAMP as now
        FROM videos
-       WHERE expires_at < CURRENT_TIMESTAMP`,
+       WHERE expires_at <= CURRENT_TIMESTAMP`,
     );
 
     const videosToDelete = checkResult.rows.length;
@@ -84,7 +84,7 @@ export async function cleanupExpiredVideos() {
     const result = await query(
       `UPDATE videos
        SET deleted_at = CURRENT_TIMESTAMP
-       WHERE expires_at < CURRENT_TIMESTAMP
+       WHERE expires_at <= CURRENT_TIMESTAMP
        AND deleted_at IS NULL
        RETURNING id, email, status, expires_at`,
     );
