@@ -143,7 +143,7 @@ export default function Index() {
         while (attempts < maxAttempts) {
           try {
             const response = await fetch(
-              createApiUrl(`/api/video-status/${videoId}`)
+              createApiUrl(`/api/video-status/${videoId}`),
             );
             const data = await response.json();
 
