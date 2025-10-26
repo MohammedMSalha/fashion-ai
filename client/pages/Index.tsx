@@ -484,7 +484,7 @@ export default function Index() {
       )}
 
       {/* VIDEO PREVIEW PAGE - TikTok Style */}
-      {currentPage === "video-preview" && generatedVideo.downloadUrl && !generatedVideo.downloadUrl.includes("fal.media/files/b") && (
+      {currentPage === "video-preview" && generatedVideo && generatedVideo.downloadUrl && (
         <section className="relative w-full h-full bg-black flex items-center justify-center">
           {/* Back Button */}
           <button
