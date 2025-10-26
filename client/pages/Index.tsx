@@ -483,6 +483,22 @@ export default function Index() {
         </section>
       )}
 
+      {/* WAITING FOR VIDEO TO BE GENERATED - Show loading screen */}
+      {currentPage === "video-preview" && !generatedVideo && (
+        <section className="relative w-full h-full bg-gradient-to-b from-black via-gray-900 to-black flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative w-20 h-20">
+              <div className="absolute inset-0 rounded-full border-4 border-gray-700 animate-spin border-t-white"></div>
+            </div>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-white mb-2">Generating Video</h2>
+              <p className="text-gray-400">Creating your AI fashion video...</p>
+              <p className="text-sm text-gray-500 mt-4">This may take 30-60 seconds</p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* VIDEO PREVIEW PAGE - TikTok Style */}
       {currentPage === "video-preview" && generatedVideo && generatedVideo.downloadUrl && (
         <section className="relative w-full h-full bg-black flex items-center justify-center">
