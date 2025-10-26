@@ -160,7 +160,9 @@ export default function Index() {
                 title: `AI Fashion Video ${dbVideo.id}`,
                 duration: `${dbVideo.duration}s`,
                 quality: dbVideo.resolution || "1080p",
-                createdAt: new Date(dbVideo.created_at).toISOString().split('T')[0],
+                createdAt: new Date(dbVideo.created_at)
+                  .toISOString()
+                  .split("T")[0],
                 downloadUrl: dbVideo.video_url || SAMPLE_VIDEOS[0].downloadUrl,
               };
 
