@@ -136,21 +136,34 @@ export default function Index() {
             createApiUrl(`/api/video-status/${videoId}`),
           );
 
+          // 404 is OK - video record being created, keep polling
+          if (response.status === 404) {
+            console.log(
+              "[Loading] Video record not found yet (404) - waiting for webhook to process...",
+            );
+            await new Promise((resolve) => setTimeout(resolve, 10000));
+            attempts++;
+            continue;
+          }
+
           if (!response.ok) {
             console.error(
               `[Loading] API error: ${response.status} ${response.statusText}`,
             );
-            toast({
-              title: "Status Check Failed",
-              description: `API returned ${response.status}. Retrying...`,
-              variant: "destructive",
-            });
+            // Continue polling on other errors too
             await new Promise((resolve) => setTimeout(resolve, 10000));
             attempts++;
             continue;
           }
 
           const data = await response.json();
+
+          if (!data.video) {
+            console.log("[Loading] No video data in response, continuing to poll...");
+            await new Promise((resolve) => setTimeout(resolve, 10000));
+            attempts++;
+            continue;
+          }
 
           console.log("[Loading] Video status:", data.video?.status);
           console.log("[Loading] Full response:", data);
