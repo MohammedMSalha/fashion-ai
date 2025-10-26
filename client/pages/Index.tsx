@@ -6,6 +6,7 @@ import VideoSlider from "@/components/VideoSlider";
 import SmartVideoForm from "@/components/SmartVideoForm";
 import MyVideos from "./MyVideos";
 import { useToast } from "@/hooks/use-toast";
+import { createApiUrl } from "@/config/api";
 import {
   Sparkles,
   X,
