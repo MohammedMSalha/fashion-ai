@@ -43,18 +43,26 @@ export async function createServer() {
     console.error("[Express] Database init failed:", error);
   }
 
-  try {
-    startCleanupJob();
-    console.log("[Express] Cleanup job started");
-  } catch (error) {
-    console.error("[Express] Cleanup job failed:", error);
-  }
+  // On Vercel, background jobs don't work reliably in serverless
+  // Vercel Crons will trigger endpoints instead
+  if (!process.env.VERCEL) {
+    try {
+      startCleanupJob();
+      console.log("[Express] Cleanup job started");
+    } catch (error) {
+      console.error("[Express] Cleanup job failed:", error);
+    }
 
-  try {
-    startVideoStatusCheckJob();
-    console.log("[Express] Video status job started");
-  } catch (error) {
-    console.error("[Express] Video status job failed:", error);
+    try {
+      startVideoStatusCheckJob();
+      console.log("[Express] Video status job started");
+    } catch (error) {
+      console.error("[Express] Video status job failed:", error);
+    }
+  } else {
+    console.log(
+      "[Express] Vercel serverless detected - background jobs disabled (use Vercel Crons instead)",
+    );
   }
 
   const app = express();
