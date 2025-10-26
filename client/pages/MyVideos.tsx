@@ -357,9 +357,9 @@ export default function MyVideos({ onBack }: MyVideosProps) {
           </div>
         ) : (
           // TikTok-style Video Feed
-          <div className="w-full h-full flex items-center justify-center bg-black overflow-hidden">
+          <div className="w-full h-full bg-black overflow-hidden flex items-center justify-center">
             {/* Main Video Area */}
-            <div className="relative w-full max-w-lg h-full flex-1 md:flex-none md:aspect-video md:h-auto md:max-h-full">
+            <div className="relative w-full h-full">
               {currentVideo.status === "processing" ? (
                 // Loading State
                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
