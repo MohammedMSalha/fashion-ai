@@ -51,18 +51,40 @@ export function startCleanupJob() {
 // Manual cleanup function (can be called on demand)
 export async function cleanupExpiredVideos() {
   try {
-    console.log("Running manual video cleanup...");
+    console.log("[ManualCleanup] Running manual video cleanup...");
 
+    // First, check which videos will be deleted
+    const checkResult = await query(
+      `SELECT id, email, status, created_at, expires_at
+       FROM videos
+       WHERE expires_at <= CURRENT_TIMESTAMP
+       AND deleted_at IS NULL`,
+    );
+
+    const videosToDelete = checkResult.rows.length;
+
+    if (videosToDelete > 0) {
+      console.log(
+        `[ManualCleanup] Found ${videosToDelete} expired video(s) to delete:`,
+      );
+      checkResult.rows.forEach((row: any) => {
+        console.log(
+          `[ManualCleanup] - Video ID: ${row.id}, Email: ${row.email}, Status: ${row.status}, Expired: ${row.expires_at}`,
+        );
+      });
+    }
+
+    // Delete all expired videos regardless of status
     const result = await query(
-      `UPDATE videos 
+      `UPDATE videos
        SET deleted_at = CURRENT_TIMESTAMP
-       WHERE expires_at <= CURRENT_TIMESTAMP 
+       WHERE expires_at <= CURRENT_TIMESTAMP
        AND deleted_at IS NULL
-       RETURNING id, email`,
+       RETURNING id, email, status`,
     );
 
     console.log(
-      `Manual cleanup completed. Deleted ${result.rowCount} expired videos.`,
+      `[ManualCleanup] ✓ Cleanup completed. Deleted ${result.rowCount} expired video(s).`,
     );
 
     return {
@@ -70,7 +92,7 @@ export async function cleanupExpiredVideos() {
       deletedCount: result.rowCount,
     };
   } catch (error) {
-    console.error("Manual cleanup error:", error);
+    console.error("[ManualCleanup] ✗ Error:", error);
     throw error;
   }
 }
