@@ -194,7 +194,14 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     }
   };
 
-  const currentVideo = videos[currentVideoIndex];
+  // Filter videos to show only those being generated or already generated
+  const filteredVideos = videos.filter(
+    (v) =>
+      (v.status === "processing" && v.request_id) ||
+      (v.status === "completed" && v.video_url)
+  );
+
+  const currentVideo = filteredVideos[currentVideoIndex];
 
   return (
     <div className="w-screen h-screen bg-black flex flex-col overflow-hidden">
