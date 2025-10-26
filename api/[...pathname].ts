@@ -9,7 +9,10 @@ async function getApp() {
       cachedApp = await createServer();
       console.log("[Serverless] Express app created and cached");
     } catch (error) {
-      console.error("[Serverless] Failed to initialize Express app:", error instanceof Error ? error.message : error);
+      console.error(
+        "[Serverless] Failed to initialize Express app:",
+        error instanceof Error ? error.message : error,
+      );
       throw error;
     }
   }
@@ -42,13 +45,16 @@ export default async function handler(req: any, res: any) {
 
     // Get the Express app
     const app = await getApp();
-    
+
     // Call Express app directly
     // Vercel's req/res are already Node.js compatible
     console.log("[Serverless] Forwarding to Express");
     app(req, res);
   } catch (error) {
-    console.error("[Serverless] Fatal error:", error instanceof Error ? error.message : error);
+    console.error(
+      "[Serverless] Fatal error:",
+      error instanceof Error ? error.message : error,
+    );
     if (!res.headersSent) {
       res.status(500).json({
         success: false,
