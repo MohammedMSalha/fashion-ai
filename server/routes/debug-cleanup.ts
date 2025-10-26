@@ -20,7 +20,7 @@ export const debugCleanup: RequestHandler = async (req, res) => {
       `SELECT id, email, status, created_at, expires_at,
               CURRENT_TIMESTAMP as server_time
        FROM videos
-       WHERE expires_at < CURRENT_TIMESTAMP`,
+       WHERE expires_at <= CURRENT_TIMESTAMP`,
     );
 
     console.log("[DebugCleanup] Videos to be deleted:");
