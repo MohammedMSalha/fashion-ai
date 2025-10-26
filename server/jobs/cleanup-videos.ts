@@ -3,7 +3,7 @@ import { query } from "../db.js";
 
 export function startCleanupJob() {
   // Run cleanup job every 10 minutes
-  // Hard delete videos where expires_at has passed, regardless of status
+  // Soft delete videos where expires_at has passed, regardless of status
   cron.schedule("*/10 * * * *", async () => {
     try {
       console.log("[CleanupJob] Running video cleanup job...");
