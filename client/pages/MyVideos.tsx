@@ -335,7 +335,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
               </div>
             </div>
           </div>
-        ) : videos.length === 0 ? (
+        ) : filteredVideos.length === 0 ? (
           // No Videos Screen
           <div className="w-full h-full flex flex-col items-center justify-center px-6 py-12">
             <div className="text-center space-y-4 max-w-md">
@@ -430,11 +430,11 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   </button>
 
                   {/* Left Navigation */}
-                  {videos.length > 1 && (
+                  {filteredVideos.length > 1 && (
                     <button
                       onClick={() =>
                         setCurrentVideoIndex(
-                          (prev) => (prev - 1 + videos.length) % videos.length,
+                          (prev) => (prev - 1 + filteredVideos.length) % filteredVideos.length,
                         )
                       }
                       className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-3 rounded-full transition-all z-20"
@@ -456,11 +456,11 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   )}
 
                   {/* Right Navigation */}
-                  {videos.length > 1 && (
+                  {filteredVideos.length > 1 && (
                     <button
                       onClick={() =>
                         setCurrentVideoIndex(
-                          (prev) => (prev + 1) % videos.length,
+                          (prev) => (prev + 1) % filteredVideos.length,
                         )
                       }
                       className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-3 rounded-full transition-all z-20"
@@ -527,10 +527,10 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   </div>
 
                   {/* Video Counter - Top */}
-                  {videos.length > 1 && (
+                  {filteredVideos.length > 1 && (
                     <div className="absolute top-6 left-1/2 transform -translate-x-1/2 text-white z-20">
                       <p className="text-sm font-medium bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full">
-                        {currentVideoIndex + 1} / {videos.length}
+                        {currentVideoIndex + 1} / {filteredVideos.length}
                       </p>
                     </div>
                   )}
