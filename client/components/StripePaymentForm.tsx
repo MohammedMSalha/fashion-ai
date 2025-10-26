@@ -69,8 +69,11 @@ function CardForm({
     setProcessing(true);
     setError(null);
 
+    // Store videoId in sessionStorage for loading screen polling
+    sessionStorage.setItem("fashionai_videoId", String(videoId));
+
     try {
-      console.log("Submitting payment element...");
+      console.log("Submitting payment element...", { videoId });
 
       // Step 1: Submit the payment element first (validates form)
       const { error: submitError } = await elements.submit();
