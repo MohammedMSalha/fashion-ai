@@ -159,7 +159,9 @@ export default function Index() {
           const data = await response.json();
 
           if (!data.video) {
-            console.log("[Loading] No video data in response, continuing to poll...");
+            console.log(
+              "[Loading] No video data in response, continuing to poll...",
+            );
             await new Promise((resolve) => setTimeout(resolve, 10000));
             attempts++;
             continue;

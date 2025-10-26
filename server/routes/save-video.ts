@@ -510,7 +510,10 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
     console.log("[GetVideoStatus] Video found:", video.id);
     console.log("[GetVideoStatus] Current status:", video.status);
     console.log("[GetVideoStatus] Request ID:", video.request_id);
-    console.log("[GetVideoStatus] Video URL:", video.video_url ? "set" : "not set");
+    console.log(
+      "[GetVideoStatus] Video URL:",
+      video.video_url ? "set" : "not set",
+    );
 
     // PHASE 1: No request_id yet - generation not started
     if (!video.request_id) {
@@ -530,7 +533,10 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
     // PHASE 2: Request ID exists - check fashion.ai API for actual status
     if (video.video_url) {
       // Already completed
-      console.log("[GetVideoStatus] Video already completed with URL:", video.video_url);
+      console.log(
+        "[GetVideoStatus] Video already completed with URL:",
+        video.video_url,
+      );
       return res.status(200).json({
         success: true,
         video: {
@@ -572,13 +578,13 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
         },
       );
 
-      console.log("[GetVideoStatus] Fashion.ai response status:", response.status);
+      console.log(
+        "[GetVideoStatus] Fashion.ai response status:",
+        response.status,
+      );
 
       if (!response.ok) {
-        console.warn(
-          "[GetVideoStatus] Fashion.ai API error:",
-          response.status,
-        );
+        console.warn("[GetVideoStatus] Fashion.ai API error:", response.status);
         return res.status(200).json({
           success: true,
           video: {
@@ -594,7 +600,8 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
 
       // Check if video is completed
       if (
-        (fashnData.status === "completed" || fashnData.status === "succeeded") &&
+        (fashnData.status === "completed" ||
+          fashnData.status === "succeeded") &&
         fashnData.output &&
         fashnData.output.length > 0
       ) {
