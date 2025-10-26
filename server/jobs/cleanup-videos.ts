@@ -2,9 +2,9 @@ import cron from "node-cron";
 import { query } from "../db.js";
 
 export function startCleanupJob() {
-  // Run cleanup job every hour
+  // Run cleanup job every 10 minutes
   // Delete videos where expires_at <= now() and deleted_at is null
-  cron.schedule("0 * * * *", async () => {
+  cron.schedule("*/10 * * * *", async () => {
     try {
       console.log("Running video cleanup job...");
 
