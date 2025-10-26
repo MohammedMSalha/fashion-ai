@@ -755,7 +755,7 @@ export default function Index() {
                 <li>Fast processing and instant delivery</li>
                 <li>Multiple quality and duration options</li>
                 <li>Privacy-focused platform</li>
-                <li>Affordable pricing (under $1 per video)</li>
+                <li>Affordable pricing ($0.60-$1.20 per video)</li>
               </ul>
             </div>
           </div>
