@@ -159,7 +159,7 @@ export default function Index() {
                 description: `API returned ${response.status}. Retrying...`,
                 variant: "destructive",
               });
-              await new Promise((resolve) => setTimeout(resolve, 5000));
+              await new Promise((resolve) => setTimeout(resolve, 10000));
               attempts++;
               continue;
             }
@@ -190,7 +190,7 @@ export default function Index() {
                   variant: "destructive",
                 });
                 // Keep polling - video might not be fully saved yet
-                await new Promise((resolve) => setTimeout(resolve, 5000));
+                await new Promise((resolve) => setTimeout(resolve, 10000));
                 continue;
               }
 
@@ -227,12 +227,12 @@ export default function Index() {
             }
 
             // Still processing, wait and try again
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-            attempts++;
+            await new Promise((resolve) => setTimeout(resolve, 10000));
+            attempts++
           } catch (error) {
             console.error("[Loading] Error checking video status:", error);
             // Continue polling even on error
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            await new Promise((resolve) => setTimeout(resolve, 10000));
             attempts++;
           }
         }
