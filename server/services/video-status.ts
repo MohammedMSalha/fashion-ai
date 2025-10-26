@@ -168,8 +168,9 @@ export async function updateVideoStatusFromFashn(
 
 export async function checkAndUpdateAllPendingVideos(): Promise<void> {
   try {
+    console.log("[CheckAllPending] ========== CRON JOB STARTING ==========");
+
     // Get all videos that are still processing
-    // Handle case where request_id column might not exist yet on production
     let result;
     try {
       result = await query(
@@ -192,7 +193,7 @@ export async function checkAndUpdateAllPendingVideos(): Promise<void> {
     const pendingCount = result.rows.length;
 
     if (pendingCount === 0) {
-      console.log("[CheckAllPending] No pending videos to check");
+      console.log("[CheckAllPending] ✓ No pending videos to check");
       return;
     }
 
@@ -200,18 +201,70 @@ export async function checkAndUpdateAllPendingVideos(): Promise<void> {
       `[CheckAllPending] Found ${pendingCount} pending video(s) to check`,
     );
 
+    // Get the API base URL - use environment variable or fall back to localhost
+    const apiBaseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:5173";
+
+    console.log(`[CheckAllPending] Using API base: ${apiBaseUrl}`);
+
+    // Check status for each pending video by calling the internal API
     for (const row of result.rows) {
-      console.log(
-        `[CheckAllPending] Checking video ${row.id} with request ${row.request_id}`,
-      );
-      await updateVideoStatusFromFashn(row.request_id);
+      try {
+        console.log(
+          `[CheckAllPending] Checking video ${row.id} with request ${row.request_id}`,
+        );
+
+        const statusUrl = `${apiBaseUrl}/api/video-status/${row.id}`;
+        console.log(`[CheckAllPending] Calling: ${statusUrl}`);
+
+        const response = await fetch(statusUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          console.error(
+            `[CheckAllPending] Failed to check video ${row.id}: ${response.status}`,
+          );
+          continue;
+        }
+
+        const data = await response.json();
+
+        if (data.video) {
+          const status = data.video.status;
+          console.log(
+            `[CheckAllPending] Video ${row.id} status from API: ${status}`,
+          );
+
+          if (status === "completed") {
+            console.log(
+              `[CheckAllPending] ✓ Video ${row.id} completed with URL: ${data.video.video_url}`,
+            );
+          } else if (status === "failed") {
+            console.log(
+              `[CheckAllPending] ✗ Video ${row.id} failed: ${data.video.error_message}`,
+            );
+          } else {
+            console.log(`[CheckAllPending] Video ${row.id} still processing...`);
+          }
+        }
+      } catch (error) {
+        console.error(
+          `[CheckAllPending] Error checking video ${row.id}:`,
+          error instanceof Error ? error.message : error,
+        );
+      }
     }
 
     console.log(
-      `[CheckAllPending] Completed check for ${pendingCount} video(s)`,
+      `[CheckAllPending] ========== Completed check for ${pendingCount} video(s) ==========`,
     );
   } catch (error) {
-    console.error("[CheckAllPending] Error checking pending videos:", error);
+    console.error("[CheckAllPending] Fatal error:", error);
   }
 }
 
