@@ -97,7 +97,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
           } catch (err) {
             console.error("Error polling video status:", err);
           }
-        }, 5000);
+        }, 10000);
 
         setPollInterval(interval);
         return () => clearInterval(interval);
