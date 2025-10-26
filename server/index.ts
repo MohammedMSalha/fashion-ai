@@ -117,6 +117,15 @@ export async function createServer() {
     "[Express] Auth endpoints registered: /api/auth/smtp-status, /api/auth/send-code, /api/auth/verify-code",
   );
 
+  // Vercel Cron endpoint for video status checking - BEFORE rate limiting
+  // Vercel will call this endpoint on a schedule (see vercel.json)
+  app.get("/api/cron/check-video-status", cronCheckVideoStatus);
+  // Manual trigger for video status checking (can be called by external cron service)
+  app.get("/api/check-video-status", cronCheckVideoStatus);
+  console.log(
+    "[Express] Cron endpoints registered: /api/cron/check-video-status, /api/check-video-status",
+  );
+
   // Disable caching for API endpoints
   app.use("/api/", (req, res, next) => {
     res.setHeader(
