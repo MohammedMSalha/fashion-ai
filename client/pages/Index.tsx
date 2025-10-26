@@ -498,7 +498,7 @@ export default function Index() {
               Creating your AI fashion video...
             </p>
             <p className="text-sm text-gray-500">
-              This usually takes 30-60 seconds
+              This usually takes 2-3 minutes
             </p>
           </div>
         </section>
@@ -517,7 +517,7 @@ export default function Index() {
               </h2>
               <p className="text-gray-400">Creating your AI fashion video...</p>
               <p className="text-sm text-gray-500 mt-4">
-                This may take 30-60 seconds
+                This may take 2-3 minutes
               </p>
             </div>
           </div>
