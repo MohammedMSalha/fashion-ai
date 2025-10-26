@@ -475,34 +475,226 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
       });
     }
 
-    console.log("[GetVideoStatus] Querying database for video:", videoId);
+    // Parse videoId as number for database query
+    const videoIdNum = parseInt(videoId, 10);
+    if (isNaN(videoIdNum)) {
+      console.error("[GetVideoStatus] Invalid videoId format:", videoId);
+      return res.status(400).json({
+        success: false,
+        error: "Invalid video ID format",
+      });
+    }
+
+    console.log("[GetVideoStatus] Querying database for video:", videoIdNum);
 
     const result = await query(
       `SELECT id, status, error_message, video_url, created_at, expires_at,
-              payment_intent_id, payment_amount, payment_currency, payment_status, payment_method_type, payment_email
+              payment_intent_id, payment_amount, payment_currency, payment_status, payment_method_type, payment_email,
+              request_id, duration, resolution
        FROM videos
        WHERE id = $1 AND deleted_at IS NULL`,
-      [videoId],
+      [videoIdNum],
     );
 
     console.log("[GetVideoStatus] Query result rows:", result.rows.length);
 
     if (result.rows.length === 0) {
-      console.log("[GetVideoStatus] Video not found for id:", videoId);
+      console.log("[GetVideoStatus] Video not found for id:", videoIdNum);
       return res.status(404).json({
         success: false,
         error: "Video not found",
       });
     }
 
-    console.log("[GetVideoStatus] Video found:", result.rows[0].id);
+    const video = result.rows[0];
+    console.log("[GetVideoStatus] Video found:", video.id);
+    console.log("[GetVideoStatus] Current status:", video.status);
+    console.log("[GetVideoStatus] Request ID:", video.request_id);
+    console.log("[GetVideoStatus] Video URL:", video.video_url ? "set" : "not set");
 
-    return res.status(200).json({
-      success: true,
-      video: result.rows[0],
-    });
+    // PHASE 1: No request_id yet - generation not started
+    if (!video.request_id) {
+      console.log(
+        "[GetVideoStatus] Request ID not set yet - generation not started",
+      );
+      return res.status(200).json({
+        success: true,
+        video: {
+          ...video,
+          status: "processing",
+          _phase: "waiting_for_generation_to_start",
+        },
+      });
+    }
+
+    // PHASE 2: Request ID exists - check fashion.ai API for actual status
+    if (video.video_url) {
+      // Already completed
+      console.log("[GetVideoStatus] Video already completed with URL:", video.video_url);
+      return res.status(200).json({
+        success: true,
+        video: {
+          ...video,
+          status: "completed",
+          _phase: "completed",
+        },
+      });
+    }
+
+    // Check status from fashion.ai
+    console.log(
+      "[GetVideoStatus] Checking fashion.ai API for request:",
+      video.request_id,
+    );
+
+    try {
+      const apiKey = process.env.FASHN_AI_API_KEY;
+      if (!apiKey) {
+        console.error("[GetVideoStatus] FASHN_AI_API_KEY not configured");
+        return res.status(200).json({
+          success: true,
+          video: {
+            ...video,
+            status: "processing",
+            _phase: "checking_api",
+          },
+        });
+      }
+
+      const response = await fetch(
+        `https://api.fashn.ai/v1/status/${video.request_id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      console.log("[GetVideoStatus] Fashion.ai response status:", response.status);
+
+      if (!response.ok) {
+        console.warn(
+          "[GetVideoStatus] Fashion.ai API error:",
+          response.status,
+        );
+        return res.status(200).json({
+          success: true,
+          video: {
+            ...video,
+            status: "processing",
+            _phase: "checking_api_error",
+          },
+        });
+      }
+
+      const fashnData = await response.json();
+      console.log("[GetVideoStatus] Fashion.ai response:", fashnData);
+
+      // Check if video is completed
+      if (
+        (fashnData.status === "completed" || fashnData.status === "succeeded") &&
+        fashnData.output &&
+        fashnData.output.length > 0
+      ) {
+        const videoUrl = fashnData.output[0];
+        console.log(
+          "[GetVideoStatus] Video completed on fashion.ai! URL:",
+          videoUrl,
+        );
+
+        // Update database with video URL
+        try {
+          await query(
+            `UPDATE videos
+             SET video_url = $1,
+                 status = 'completed',
+                 completed_at = CURRENT_TIMESTAMP
+             WHERE id = $2`,
+            [videoUrl, videoIdNum],
+          );
+          console.log("[GetVideoStatus] Database updated with video URL");
+        } catch (updateErr) {
+          console.error("[GetVideoStatus] Error updating database:", updateErr);
+        }
+
+        return res.status(200).json({
+          success: true,
+          video: {
+            ...video,
+            status: "completed",
+            video_url: videoUrl,
+            _phase: "completed_from_api",
+          },
+        });
+      }
+
+      // Check if failed
+      if (
+        fashnData.status === "failed" ||
+        fashnData.error ||
+        (fashnData.status !== "processing" &&
+          fashnData.status !== "submitted" &&
+          fashnData.status !== "starting" &&
+          fashnData.status !== "in_queue")
+      ) {
+        const errorMsg =
+          fashnData.error?.message ||
+          `Generation failed with status: ${fashnData.status}`;
+        console.log("[GetVideoStatus] Video generation failed:", errorMsg);
+
+        try {
+          await query(
+            `UPDATE videos
+             SET status = 'failed',
+                 error_message = $1
+             WHERE id = $2`,
+            [errorMsg, videoIdNum],
+          );
+          console.log("[GetVideoStatus] Database updated with failure status");
+        } catch (updateErr) {
+          console.error("[GetVideoStatus] Error updating database:", updateErr);
+        }
+
+        return res.status(200).json({
+          success: true,
+          video: {
+            ...video,
+            status: "failed",
+            error_message: errorMsg,
+            _phase: "failed",
+          },
+        });
+      }
+
+      // Still processing
+      console.log(
+        "[GetVideoStatus] Video still processing on fashion.ai:",
+        fashnData.status,
+      );
+      return res.status(200).json({
+        success: true,
+        video: {
+          ...video,
+          status: "processing",
+          _phase: "still_processing",
+          _fashn_status: fashnData.status,
+        },
+      });
+    } catch (apiErr) {
+      console.error("[GetVideoStatus] Error calling fashion.ai API:", apiErr);
+      return res.status(200).json({
+        success: true,
+        video: {
+          ...video,
+          status: "processing",
+          _phase: "api_error",
+        },
+      });
+    }
   } catch (error) {
-    console.error("Get video status error:", error);
+    console.error("[GetVideoStatus] Error:", error);
     return res.status(500).json({
       success: false,
       error: "Failed to retrieve video status",
