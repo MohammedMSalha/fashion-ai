@@ -228,7 +228,7 @@ export default function Index() {
 
             // Still processing, wait and try again
             await new Promise((resolve) => setTimeout(resolve, 10000));
-            attempts++
+            attempts++;
           } catch (error) {
             console.error("[Loading] Error checking video status:", error);
             // Continue polling even on error
