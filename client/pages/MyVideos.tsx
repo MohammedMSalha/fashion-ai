@@ -342,10 +342,10 @@ export default function MyVideos({ onBack }: MyVideosProps) {
               <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto">
                 <Play className="w-8 h-8 text-gray-400" />
               </div>
-              <h2 className="text-2xl font-bold text-white">No Videos Yet</h2>
+              <h2 className="text-2xl font-bold text-white">No Active Videos</h2>
               <p className="text-gray-400">
-                You haven't generated any videos yet. Start by creating your
-                first AI fashion video!
+                No videos are currently generating or ready. Start by creating
+                your first AI fashion video!
               </p>
               <Button
                 onClick={() => navigate("/")}
