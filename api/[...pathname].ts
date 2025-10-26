@@ -7,11 +7,14 @@ let cachedHandler: any = null;
 async function getHandler() {
   if (!cachedHandler) {
     try {
+      console.log("[Serverless] Initializing Express app...");
       const app = await createServer();
+      console.log("[Serverless] Express app created successfully");
       cachedHandler = serverless(app);
+      console.log("[Serverless] Serverless handler created");
       cachedApp = app;
     } catch (error) {
-      console.error("[Serverless] Failed to initialize Express app:", error);
+      console.error("[Serverless] Failed to initialize Express app:", error instanceof Error ? error.message : error);
       throw error;
     }
   }
