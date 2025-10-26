@@ -291,9 +291,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
             <div className="max-w-md w-full space-y-6">
               <div className="text-center space-y-2 mb-8">
                 <h2 className="text-3xl font-bold text-white">Verify Email</h2>
-                <p className="text-gray-400">
-                  Enter the code sent to {email}
-                </p>
+                <p className="text-gray-400">Enter the code sent to {email}</p>
               </div>
 
               <div className="space-y-4">
@@ -345,7 +343,8 @@ export default function MyVideos({ onBack }: MyVideosProps) {
               </div>
               <h2 className="text-2xl font-bold text-white">No Videos Yet</h2>
               <p className="text-gray-400">
-                You haven't generated any videos yet. Start by creating your first AI fashion video!
+                You haven't generated any videos yet. Start by creating your
+                first AI fashion video!
               </p>
               <Button
                 onClick={() => navigate("/")}
@@ -489,13 +488,14 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                           Created
                         </p>
                         <p className="text-sm font-medium">
-                          {new Date(
-                            currentVideo.created_at,
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          {new Date(currentVideo.created_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
                       <div className="flex-1">
@@ -503,13 +503,14 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                           Expires
                         </p>
                         <p className="text-sm font-medium">
-                          {new Date(
-                            currentVideo.expires_at,
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          {new Date(currentVideo.expires_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
                     </div>
