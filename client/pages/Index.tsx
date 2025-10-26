@@ -143,12 +143,31 @@ export default function Index() {
 
         while (attempts < maxAttempts) {
           try {
+            console.log(
+              `[Loading] Polling attempt ${attempts + 1}/${maxAttempts} - Checking status for videoId: ${videoId}`,
+            );
             const response = await fetch(
               createApiUrl(`/api/video-status/${videoId}`),
             );
+
+            if (!response.ok) {
+              console.error(
+                `[Loading] API error: ${response.status} ${response.statusText}`,
+              );
+              toast({
+                title: "Status Check Failed",
+                description: `API returned ${response.status}. Retrying...`,
+                variant: "destructive",
+              });
+              await new Promise((resolve) => setTimeout(resolve, 5000));
+              attempts++;
+              continue;
+            }
+
             const data = await response.json();
 
             console.log("[Loading] Video status:", data.video?.status);
+            console.log("[Loading] Full response:", data);
 
             if (data.video?.status === "completed") {
               console.log("[Loading] ✓ Video generation complete!");
