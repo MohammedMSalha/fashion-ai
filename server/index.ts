@@ -208,6 +208,11 @@ export async function createServer() {
         });
     });
   app.post("/api/save-video", videoLimiter, saveVideo);
+  // Test endpoint to verify Express is running
+  app.get("/api/test", (_req, res) => {
+    res.json({ status: "ok", message: "Express is running" });
+  });
+
   app.post("/api/videos", videoLimiter, getVideosByEmail);
   app.get("/api/video-status/:videoId", getVideoStatus);
   app.post("/api/video-status/:videoId", getVideoStatus);
