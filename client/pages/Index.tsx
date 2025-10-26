@@ -183,12 +183,7 @@ export default function Index() {
                 "[Loading] ✗ ERROR: video_url is missing from database!",
               );
               console.error("[Loading] Database record:", dbVideo);
-              toast({
-                title: "Error",
-                description: "Video URL not saved. Checking again...",
-                variant: "destructive",
-              });
-              // Keep polling - video might not be fully saved yet
+              // Keep polling - video URL might be saved in next check
               await new Promise((resolve) => setTimeout(resolve, 10000));
               attempts++;
               continue;
