@@ -462,7 +462,10 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
   try {
     const { videoId } = req.params;
 
+    console.log("[GetVideoStatus] ========== VIDEO STATUS REQUEST ==========");
     console.log("[GetVideoStatus] Request received with videoId:", videoId);
+    console.log("[GetVideoStatus] Full params:", req.params);
+    console.log("[GetVideoStatus] Full URL:", req.originalUrl);
 
     if (!videoId) {
       console.error("[GetVideoStatus] No videoId provided");
@@ -481,6 +484,8 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
         error: "Invalid video ID format",
       });
     }
+
+    console.log("[GetVideoStatus] Parsed videoId as number:", videoIdNum);
 
     console.log("[GetVideoStatus] Querying database for video:", videoIdNum);
 
