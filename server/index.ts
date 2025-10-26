@@ -131,9 +131,13 @@ export async function createServer() {
   // Manual trigger for cleanup (can be called on demand)
   app.get("/api/cleanup-videos", cronCleanupVideos);
 
+  // Debug endpoint to diagnose cleanup issues - BEFORE rate limiting
+  app.get("/api/debug/cleanup", debugCleanup);
+
   console.log(
     "[Express] Cron endpoints registered: /api/cron/check-video-status, /api/check-video-status, /api/cron/cleanup-videos, /api/cleanup-videos",
   );
+  console.log("[Express] Debug endpoint registered: /api/debug/cleanup");
 
   // Disable caching for API endpoints
   app.use("/api/", (req, res, next) => {
