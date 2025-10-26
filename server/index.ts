@@ -123,8 +123,15 @@ export async function createServer() {
   app.get("/api/cron/check-video-status", cronCheckVideoStatus);
   // Manual trigger for video status checking (can be called by external cron service)
   app.get("/api/check-video-status", cronCheckVideoStatus);
+
+  // Vercel Cron endpoint for cleanup of expired videos - BEFORE rate limiting
+  // Vercel will call this endpoint on a schedule (see vercel.json)
+  app.get("/api/cron/cleanup-videos", cronCleanupVideos);
+  // Manual trigger for cleanup (can be called on demand)
+  app.get("/api/cleanup-videos", cronCleanupVideos);
+
   console.log(
-    "[Express] Cron endpoints registered: /api/cron/check-video-status, /api/check-video-status",
+    "[Express] Cron endpoints registered: /api/cron/check-video-status, /api/check-video-status, /api/cron/cleanup-videos, /api/cleanup-videos",
   );
 
   // Disable caching for API endpoints
