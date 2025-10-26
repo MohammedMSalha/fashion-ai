@@ -32,10 +32,12 @@ export function startCleanupJob() {
         });
       }
 
-      // Hard delete all expired videos regardless of status
+      // Soft delete all expired videos regardless of status
       const result = await query(
-        `DELETE FROM videos
-         WHERE expires_at < CURRENT_TIMESTAMP`,
+        `UPDATE videos
+         SET deleted_at = CURRENT_TIMESTAMP
+         WHERE expires_at < CURRENT_TIMESTAMP
+         AND deleted_at IS NULL`,
       );
 
       console.log(
