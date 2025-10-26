@@ -151,19 +151,34 @@ export default function Index() {
 
             if (data.video?.status === "completed") {
               console.log("[Loading] ✓ Video generation complete!");
+              console.log("[Loading] Full video data:", JSON.stringify(data.video));
 
               // Transform database video to Video interface format
               const dbVideo = data.video;
+
+              if (!dbVideo.video_url) {
+                console.error("[Loading] ✗ ERROR: video_url is missing from database!");
+                console.error("[Loading] Database record:", dbVideo);
+                toast({
+                  title: "Error",
+                  description: "Video URL not saved. Checking again...",
+                  variant: "destructive",
+                });
+                // Keep polling - video might not be fully saved yet
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+                continue;
+              }
+
               const videoData: Video = {
                 id: String(dbVideo.id),
-                thumbnail: dbVideo.video_url || SAMPLE_VIDEOS[0].thumbnail,
+                thumbnail: dbVideo.video_url,
                 title: `AI Fashion Video ${dbVideo.id}`,
                 duration: `${dbVideo.duration}s`,
                 quality: dbVideo.resolution || "1080p",
                 createdAt: new Date(dbVideo.created_at)
                   .toISOString()
                   .split("T")[0],
-                downloadUrl: dbVideo.video_url || SAMPLE_VIDEOS[0].downloadUrl,
+                downloadUrl: dbVideo.video_url,
               };
 
               console.log("[Loading] Setting video data:", videoData);
