@@ -268,5 +268,6 @@ export async function createServer() {
     }
   }
 
+  console.log("[Express] Server created successfully with all routes registered");
   return app;
 }
