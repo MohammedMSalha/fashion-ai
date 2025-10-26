@@ -151,13 +151,18 @@ export default function Index() {
 
             if (data.video?.status === "completed") {
               console.log("[Loading] ✓ Video generation complete!");
-              console.log("[Loading] Full video data:", JSON.stringify(data.video));
+              console.log(
+                "[Loading] Full video data:",
+                JSON.stringify(data.video),
+              );
 
               // Transform database video to Video interface format
               const dbVideo = data.video;
 
               if (!dbVideo.video_url) {
-                console.error("[Loading] ✗ ERROR: video_url is missing from database!");
+                console.error(
+                  "[Loading] ✗ ERROR: video_url is missing from database!",
+                );
                 console.error("[Loading] Database record:", dbVideo);
                 toast({
                   title: "Error",
