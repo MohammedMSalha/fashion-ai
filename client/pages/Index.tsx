@@ -129,10 +129,71 @@ export default function Index() {
       // Clear the URL parameters
       window.history.replaceState({}, document.title, window.location.pathname);
 
-      // Simulate generation process
-      setTimeout(() => {
-        setCurrentPage("video-preview");
-      }, 3000);
+      // Poll video status until generation is complete
+      const pollVideoStatus = async () => {
+        const videoId = sessionStorage.getItem("fashionai_videoId");
+        if (!videoId) {
+          console.warn("No videoId found in sessionStorage");
+          return;
+        }
+
+        const maxAttempts = 120; // Max 10 minutes
+        let attempts = 0;
+
+        while (attempts < maxAttempts) {
+          try {
+            const response = await fetch(
+              createApiUrl(`/api/video-status/${videoId}`)
+            );
+            const data = await response.json();
+
+            console.log("[Loading] Video status:", data.video?.status);
+
+            if (data.video?.status === "completed") {
+              console.log("[Loading] ✓ Video generation complete!");
+              setCurrentPage("video-preview");
+              sessionStorage.removeItem("fashionai_videoId");
+              break;
+            }
+
+            if (data.video?.status === "failed") {
+              console.error("[Loading] ✗ Video generation failed");
+              toast({
+                title: "Generation Failed",
+                description:
+                  data.video?.error_message || "Failed to generate video",
+                variant: "destructive",
+              });
+              setCurrentPage("upload");
+              sessionStorage.removeItem("fashionai_videoId");
+              break;
+            }
+
+            // Still processing, wait and try again
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            attempts++;
+          } catch (error) {
+            console.error("[Loading] Error checking video status:", error);
+            // Continue polling even on error
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            attempts++;
+          }
+        }
+
+        // Timeout after 10 minutes
+        if (attempts >= maxAttempts) {
+          console.error("[Loading] Video generation timeout");
+          toast({
+            title: "Timeout",
+            description: "Video generation took too long. Please try again.",
+            variant: "destructive",
+          });
+          setCurrentPage("upload");
+          sessionStorage.removeItem("fashionai_videoId");
+        }
+      };
+
+      pollVideoStatus();
     } else if (paymentStatus === "cancelled") {
       // Payment was cancelled, show error and go back to generate
       setCurrentPage("generate");
