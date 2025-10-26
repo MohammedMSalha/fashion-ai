@@ -3,27 +3,49 @@ import { query } from "../db.js";
 
 export function startCleanupJob() {
   // Run cleanup job every 10 minutes
-  // Delete videos where expires_at <= now() and deleted_at is null
+  // Delete videos where expires_at <= now(), regardless of status
   cron.schedule("*/10 * * * *", async () => {
     try {
-      console.log("Running video cleanup job...");
+      console.log("[CleanupJob] Running video cleanup job...");
 
+      // First, check which videos will be deleted
+      const checkResult = await query(
+        `SELECT id, email, status, created_at, expires_at
+         FROM videos
+         WHERE expires_at <= CURRENT_TIMESTAMP
+         AND deleted_at IS NULL`,
+      );
+
+      const videosToDelete = checkResult.rows.length;
+
+      if (videosToDelete > 0) {
+        console.log(
+          `[CleanupJob] Found ${videosToDelete} expired video(s) to delete:`,
+        );
+        checkResult.rows.forEach((row: any) => {
+          console.log(
+            `[CleanupJob] - Video ID: ${row.id}, Email: ${row.email}, Status: ${row.status}, Expired: ${row.expires_at}`,
+          );
+        });
+      }
+
+      // Delete all expired videos regardless of status
       const result = await query(
-        `UPDATE videos 
+        `UPDATE videos
          SET deleted_at = CURRENT_TIMESTAMP
-         WHERE expires_at <= CURRENT_TIMESTAMP 
+         WHERE expires_at <= CURRENT_TIMESTAMP
          AND deleted_at IS NULL`,
       );
 
       console.log(
-        `Cleanup job completed. Deleted ${result.rowCount} expired videos.`,
+        `[CleanupJob] ✓ Cleanup completed. Deleted ${result.rowCount} expired video(s).`,
       );
     } catch (error) {
-      console.error("Video cleanup job error:", error);
+      console.error("[CleanupJob] ✗ Error during cleanup:", error);
     }
   });
 
-  console.log("Video cleanup job started (runs every 10 minutes)");
+  console.log("[CleanupJob] Video cleanup job started (runs every 10 minutes)");
 }
 
 // Manual cleanup function (can be called on demand)
