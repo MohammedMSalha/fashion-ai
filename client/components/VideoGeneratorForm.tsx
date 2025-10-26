@@ -14,8 +14,8 @@ interface FormData {
 }
 
 const PRICING = {
-  "5s": { "720p": 0.5, "1080p": 0.65 },
-  "10s": { "720p": 0.75, "1080p": 0.9 },
+  "5s": { "720p": 0.6, "1080p": 0.8 },
+  "10s": { "720p": 1.0, "1080p": 1.2 },
 };
 
 interface VideoGeneratorFormProps {
