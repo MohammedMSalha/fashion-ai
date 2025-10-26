@@ -10,9 +10,10 @@ export function startCleanupJob() {
 
       // First, check which videos will be deleted
       const checkResult = await query(
-        `SELECT id, email, status, created_at, expires_at
+        `SELECT id, email, status, created_at, expires_at,
+                CURRENT_TIMESTAMP as now
          FROM videos
-         WHERE expires_at <= CURRENT_TIMESTAMP
+         WHERE expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
          AND deleted_at IS NULL`,
       );
 
@@ -24,7 +25,10 @@ export function startCleanupJob() {
         );
         checkResult.rows.forEach((row: any) => {
           console.log(
-            `[CleanupJob] - Video ID: ${row.id}, Email: ${row.email}, Status: ${row.status}, Expired: ${row.expires_at}`,
+            `[CleanupJob] - Video ID: ${row.id}, Email: ${row.email}, Status: ${row.status}`,
+          );
+          console.log(
+            `[CleanupJob]   Expires: ${row.expires_at}, Current time: ${row.now}`,
           );
         });
       }
@@ -33,7 +37,7 @@ export function startCleanupJob() {
       const result = await query(
         `UPDATE videos
          SET deleted_at = CURRENT_TIMESTAMP
-         WHERE expires_at <= CURRENT_TIMESTAMP
+         WHERE expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
          AND deleted_at IS NULL`,
       );
 
