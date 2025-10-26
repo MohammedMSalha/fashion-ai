@@ -595,7 +595,16 @@ export default function Index() {
                 <div className="absolute bottom-6 left-0 right-0 px-6 z-20">
                   <Button
                     className="w-full bg-white hover:bg-gray-100 text-black font-semibold h-12 flex items-center justify-center gap-2"
-                    onClick={() => window.open(generatedVideo.downloadUrl)}
+                    onClick={() => {
+                      if (generatedVideo.downloadUrl) {
+                        const a = document.createElement("a");
+                        a.href = generatedVideo.downloadUrl;
+                        a.download = `fashion-video-${generatedVideo.id}.mp4`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                      }
+                    }}
                   >
                     <Download className="w-5 h-5" />
                     Download Video
