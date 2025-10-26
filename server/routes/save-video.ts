@@ -336,16 +336,15 @@ export const saveVideo: RequestHandler = async (req, res) => {
         // Insert new record
         result = await query(
           `INSERT INTO videos (
-            email, video_url, video_id, request_id, duration, resolution, status,
+            email, video_url, request_id, duration, resolution, status,
             payment_intent_id, payment_amount, payment_currency, payment_status,
             payment_method_type, payment_email
           )
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
            RETURNING id, expires_at, status`,
           [
             email,
             videoUrl || null,
-            videoId || null,
             requestId || null,
             duration,
             resolution,
@@ -363,16 +362,15 @@ export const saveVideo: RequestHandler = async (req, res) => {
       // No payment_intent_id, insert new record
       result = await query(
         `INSERT INTO videos (
-          email, video_url, video_id, request_id, duration, resolution, status,
+          email, video_url, request_id, duration, resolution, status,
           payment_intent_id, payment_amount, payment_currency, payment_status,
           payment_method_type, payment_email
         )
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
          RETURNING id, expires_at, status`,
         [
           email,
           videoUrl || null,
-          videoId || null,
           requestId || null,
           duration,
           resolution,
