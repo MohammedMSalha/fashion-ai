@@ -113,7 +113,7 @@ export default function Index() {
     return "home";
   });
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [generatedVideo] = useState<Video>(SAMPLE_VIDEOS[0]);
+  const [generatedVideo, setGeneratedVideo] = useState<Video>(SAMPLE_VIDEOS[0]);
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [showExpiryAlert, setShowExpiryAlert] = useState(true);
 
