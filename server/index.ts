@@ -201,16 +201,7 @@ export async function createServer() {
     }
   });
 
-  // Catch-all logging handler for debugging 404s
-  app.use((req, res) => {
-    console.log("[CatchAll] Unmatched request:", req.method, req.path, req.url);
-    res.status(404).json({
-      success: false,
-      error: "Endpoint not found",
-    });
-  });
-
-  // Global error handler (must be last)
+  // Global error handler (must be before catch-all)
   app.use(
     (
       err: any,
@@ -218,30 +209,24 @@ export async function createServer() {
       res: any,
       _next: express.NextFunction,
     ) => {
-      console.error("Unhandled error:", err);
-
-      // Ensure we always return JSON
-      const statusCode = err.statusCode || err.status || 500;
-      const message =
-        err.message || "An unexpected error occurred. Please try again.";
-
-      res.status(statusCode).json({
-        success: false,
-        error: message,
-      });
+      console.error("[ErrorHandler]", err);
+      if (!res.headersSent) {
+        res.status(err.status || 500).json({
+          success: false,
+          error: err.message || "Internal server error",
+        });
+      }
     },
   );
 
-  // Error handling middleware
-  app.use((err: any, req: any, res: any, next: any) => {
-    console.error("[Error Handler]", err.message || err);
-
-    if (!res.headersSent) {
-      res.status(err.status || 500).json({
-        success: false,
-        error: err.message || "Internal server error",
-      });
-    }
+  // Catch-all handler for 404s (MUST be last)
+  app.use((req, res) => {
+    console.log("[NotFound]", req.method, req.path);
+    res.status(404).json({
+      success: false,
+      error: "Endpoint not found",
+      path: req.path,
+    });
   });
 
   // Only add static file serving and SPA fallback for local development
