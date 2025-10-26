@@ -26,7 +26,9 @@ export const debugCleanup: RequestHandler = async (req, res) => {
 
     console.log("[DebugCleanup] Videos to be deleted:");
     expiredVideos.rows.forEach((row: any) => {
-      console.log(`[DebugCleanup] - ID: ${row.id}, Email: ${row.email}, Status: ${row.status}`);
+      console.log(
+        `[DebugCleanup] - ID: ${row.id}, Email: ${row.email}, Status: ${row.status}`,
+      );
       console.log(
         `[DebugCleanup]   Expires: ${row.expires_at}, Server Time: ${row.server_time}`,
       );
