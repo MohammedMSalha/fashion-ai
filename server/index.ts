@@ -236,13 +236,6 @@ export async function createServer() {
   // Image serving endpoint (for fashion.ai to access images)
   app.get("/api/image/:videoId", getImageByVideoId);
 
-  // Vercel Cron endpoint for video status checking
-  // Vercel will call this endpoint on a schedule (see vercel.json)
-  app.get("/api/cron/check-video-status", cronCheckVideoStatus);
-
-  // Manual trigger for video status checking (can be called by external cron service)
-  app.get("/api/check-video-status", cronCheckVideoStatus);
-
   // Global error handler (must be before catch-all)
   app.use(
     (
