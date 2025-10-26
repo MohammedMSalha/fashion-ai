@@ -32,12 +32,32 @@ import { startCleanupJob } from "./jobs/cleanup-videos.js";
 import { startVideoStatusCheckJob } from "./jobs/check-video-status.js";
 
 export async function createServer() {
+  console.log("[Express] Creating server...");
+
   // Initialize database and background jobs
-  await initializeDatabase();
-  startCleanupJob();
-  startVideoStatusCheckJob();
+  try {
+    await initializeDatabase();
+    console.log("[Express] Database initialized");
+  } catch (error) {
+    console.error("[Express] Database init failed:", error);
+  }
+
+  try {
+    startCleanupJob();
+    console.log("[Express] Cleanup job started");
+  } catch (error) {
+    console.error("[Express] Cleanup job failed:", error);
+  }
+
+  try {
+    startVideoStatusCheckJob();
+    console.log("[Express] Video status job started");
+  } catch (error) {
+    console.error("[Express] Video status job failed:", error);
+  }
 
   const app = express();
+  console.log("[Express] Express app created");
 
   // Trust proxy - required for Vercel and other reverse proxies that set X-Forwarded-For
   app.set("trust proxy", 1);
