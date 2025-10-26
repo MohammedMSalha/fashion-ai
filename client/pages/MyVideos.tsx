@@ -444,7 +444,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                       className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-3 rounded-full transition-all z-20"
                     >
                       <svg
-                        className="w-6 h-6 text-white"
+                        className="w-6 h-6 text-gray-400"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -470,7 +470,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                       className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-3 rounded-full transition-all z-20"
                     >
                       <svg
-                        className="w-6 h-6 text-white"
+                        className="w-6 h-6 text-gray-400"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
