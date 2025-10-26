@@ -159,6 +159,19 @@ export default function Index() {
           const data = await response.json();
 
           if (!data.video) {
+            if (data.error === "Video record not found") {
+              console.error("[Loading] ✗ Video record does not exist!");
+              console.error("[Loading] Debug info:", data._debug);
+              toast({
+                title: "Video Not Found",
+                description:
+                  "Video record wasn't created. Please upload your image and try again.",
+                variant: "destructive",
+              });
+              setCurrentPage("generate");
+              sessionStorage.removeItem("fashionai_videoId");
+              break;
+            }
             console.log(
               "[Loading] No video data in response, continuing to poll...",
             );
