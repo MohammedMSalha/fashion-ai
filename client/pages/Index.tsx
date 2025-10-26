@@ -108,154 +108,138 @@ export default function Index() {
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [showExpiryAlert, setShowExpiryAlert] = useState(true);
 
-  // Handle payment success/failure redirect from Stripe
+  // Poll video status when in-progress (after payment)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const paymentStatus = params.get("payment");
+    if (currentPage !== "in-progress") {
+      return;
+    }
 
-    if (paymentStatus === "success") {
-      // Payment was successful, go to generation page
-      setCurrentPage("in-progress");
+    const videoId = sessionStorage.getItem("fashionai_videoId");
+    if (!videoId) {
+      console.warn("[Loading] No videoId found in sessionStorage");
+      return;
+    }
 
-      // Clear the URL parameters
-      window.history.replaceState({}, document.title, window.location.pathname);
+    console.log("[Loading] Starting polling for videoId:", videoId);
 
-      // Poll video status until generation is complete
-      const pollVideoStatus = async () => {
-        const videoId = sessionStorage.getItem("fashionai_videoId");
-        if (!videoId) {
-          console.warn("No videoId found in sessionStorage");
-          return;
-        }
+    // Poll video status until generation is complete
+    const pollVideoStatus = async () => {
+      const maxAttempts = 120; // Max 10 minutes
+      let attempts = 0;
 
-        const maxAttempts = 120; // Max 10 minutes
-        let attempts = 0;
+      while (attempts < maxAttempts) {
+        try {
+          console.log(
+            `[Loading] Polling attempt ${attempts + 1}/${maxAttempts} - Checking status for videoId: ${videoId}`,
+          );
+          const response = await fetch(
+            createApiUrl(`/api/video-status/${videoId}`),
+          );
 
-        while (attempts < maxAttempts) {
-          try {
+          if (!response.ok) {
+            console.error(
+              `[Loading] API error: ${response.status} ${response.statusText}`,
+            );
+            toast({
+              title: "Status Check Failed",
+              description: `API returned ${response.status}. Retrying...`,
+              variant: "destructive",
+            });
+            await new Promise((resolve) => setTimeout(resolve, 10000));
+            attempts++;
+            continue;
+          }
+
+          const data = await response.json();
+
+          console.log("[Loading] Video status:", data.video?.status);
+          console.log("[Loading] Full response:", data);
+
+          if (data.video?.status === "completed") {
+            console.log("[Loading] ✓ Video generation complete!");
             console.log(
-              `[Loading] Polling attempt ${attempts + 1}/${maxAttempts} - Checking status for videoId: ${videoId}`,
-            );
-            const response = await fetch(
-              createApiUrl(`/api/video-status/${videoId}`),
+              "[Loading] Full video data:",
+              JSON.stringify(data.video),
             );
 
-            if (!response.ok) {
+            // Transform database video to Video interface format
+            const dbVideo = data.video;
+
+            if (!dbVideo.video_url) {
               console.error(
-                `[Loading] API error: ${response.status} ${response.statusText}`,
+                "[Loading] ✗ ERROR: video_url is missing from database!",
               );
+              console.error("[Loading] Database record:", dbVideo);
               toast({
-                title: "Status Check Failed",
-                description: `API returned ${response.status}. Retrying...`,
+                title: "Error",
+                description: "Video URL not saved. Checking again...",
                 variant: "destructive",
               });
+              // Keep polling - video might not be fully saved yet
               await new Promise((resolve) => setTimeout(resolve, 10000));
               attempts++;
               continue;
             }
 
-            const data = await response.json();
+            const videoData: Video = {
+              id: String(dbVideo.id),
+              thumbnail: dbVideo.video_url,
+              title: `AI Fashion Video ${dbVideo.id}`,
+              duration: `${dbVideo.duration}s`,
+              quality: dbVideo.resolution || "1080p",
+              createdAt: new Date(dbVideo.created_at)
+                .toISOString()
+                .split("T")[0],
+              downloadUrl: dbVideo.video_url,
+            };
 
-            console.log("[Loading] Video status:", data.video?.status);
-            console.log("[Loading] Full response:", data);
-
-            if (data.video?.status === "completed") {
-              console.log("[Loading] ✓ Video generation complete!");
-              console.log(
-                "[Loading] Full video data:",
-                JSON.stringify(data.video),
-              );
-
-              // Transform database video to Video interface format
-              const dbVideo = data.video;
-
-              if (!dbVideo.video_url) {
-                console.error(
-                  "[Loading] ✗ ERROR: video_url is missing from database!",
-                );
-                console.error("[Loading] Database record:", dbVideo);
-                toast({
-                  title: "Error",
-                  description: "Video URL not saved. Checking again...",
-                  variant: "destructive",
-                });
-                // Keep polling - video might not be fully saved yet
-                await new Promise((resolve) => setTimeout(resolve, 10000));
-                continue;
-              }
-
-              const videoData: Video = {
-                id: String(dbVideo.id),
-                thumbnail: dbVideo.video_url,
-                title: `AI Fashion Video ${dbVideo.id}`,
-                duration: `${dbVideo.duration}s`,
-                quality: dbVideo.resolution || "1080p",
-                createdAt: new Date(dbVideo.created_at)
-                  .toISOString()
-                  .split("T")[0],
-                downloadUrl: dbVideo.video_url,
-              };
-
-              console.log("[Loading] Setting video data:", videoData);
-              setGeneratedVideo(videoData);
-              setCurrentPage("video-preview");
-              sessionStorage.removeItem("fashionai_videoId");
-              break;
-            }
-
-            if (data.video?.status === "failed") {
-              console.error("[Loading] ✗ Video generation failed");
-              toast({
-                title: "Generation Failed",
-                description:
-                  data.video?.error_message || "Failed to generate video",
-                variant: "destructive",
-              });
-              setCurrentPage("upload");
-              sessionStorage.removeItem("fashionai_videoId");
-              break;
-            }
-
-            // Still processing, wait and try again
-            await new Promise((resolve) => setTimeout(resolve, 10000));
-            attempts++;
-          } catch (error) {
-            console.error("[Loading] Error checking video status:", error);
-            // Continue polling even on error
-            await new Promise((resolve) => setTimeout(resolve, 10000));
-            attempts++;
+            console.log("[Loading] Setting video data:", videoData);
+            setGeneratedVideo(videoData);
+            setCurrentPage("video-preview");
+            sessionStorage.removeItem("fashionai_videoId");
+            break;
           }
+
+          if (data.video?.status === "failed") {
+            console.error("[Loading] ✗ Video generation failed");
+            toast({
+              title: "Generation Failed",
+              description:
+                data.video?.error_message || "Failed to generate video",
+              variant: "destructive",
+            });
+            setCurrentPage("generate");
+            sessionStorage.removeItem("fashionai_videoId");
+            break;
+          }
+
+          // Still processing, wait and try again
+          console.log("[Loading] Still processing, waiting 10 seconds...");
+          await new Promise((resolve) => setTimeout(resolve, 10000));
+          attempts++;
+        } catch (error) {
+          console.error("[Loading] Error checking video status:", error);
+          // Continue polling even on error
+          await new Promise((resolve) => setTimeout(resolve, 10000));
+          attempts++;
         }
+      }
 
-        // Timeout after 10 minutes
-        if (attempts >= maxAttempts) {
-          console.error("[Loading] Video generation timeout");
-          toast({
-            title: "Timeout",
-            description: "Video generation took too long. Please try again.",
-            variant: "destructive",
-          });
-          setCurrentPage("upload");
-          sessionStorage.removeItem("fashionai_videoId");
-        }
-      };
+      // Timeout after 10 minutes
+      if (attempts >= maxAttempts) {
+        console.error("[Loading] Video generation timeout");
+        toast({
+          title: "Timeout",
+          description: "Video generation took too long. Please try again.",
+          variant: "destructive",
+        });
+        setCurrentPage("generate");
+        sessionStorage.removeItem("fashionai_videoId");
+      }
+    };
 
-      pollVideoStatus();
-    } else if (paymentStatus === "cancelled") {
-      // Payment was cancelled, show error and go back to generate
-      setCurrentPage("generate");
-
-      // Clear the URL parameters
-      window.history.replaceState({}, document.title, window.location.pathname);
-
-      // Show error toast
-      toast({
-        title: "Payment Cancelled",
-        description: "Your payment was not completed. Please try again.",
-        variant: "destructive",
-      });
-    }
-  }, [toast]);
+    pollVideoStatus();
+  }, [currentPage, toast]);
 
   const handleGenerateClick = useCallback(() => {
     setCurrentPage("in-progress");
