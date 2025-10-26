@@ -23,7 +23,7 @@ export function startCleanupJob() {
     }
   });
 
-  console.log("Video cleanup job started (runs every hour)");
+  console.log("Video cleanup job started (runs every 10 minutes)");
 }
 
 // Manual cleanup function (can be called on demand)
