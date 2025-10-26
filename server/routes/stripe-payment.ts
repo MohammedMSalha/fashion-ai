@@ -73,8 +73,8 @@ export const createPaymentIntent: RequestHandler = async (req, res) => {
       });
     }
 
-    // Validate amount (minimum $0.50 = 50 cents, maximum $999.99 = 99999 cents)
-    if (amount < 50 || amount > 99999) {
+    // Validate amount (minimum $0.60 = 60 cents, maximum $999.99 = 99999 cents)
+    if (amount < 60 || amount > 99999) {
       return res.status(400).json({
         success: false,
         error: "Invalid amount",
