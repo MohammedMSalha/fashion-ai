@@ -546,7 +546,9 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                       onClick={async () => {
                         if (currentVideo.video_url) {
                           try {
-                            const response = await fetch(currentVideo.video_url);
+                            const response = await fetch(
+                              currentVideo.video_url,
+                            );
                             const blob = await response.blob();
                             const url = window.URL.createObjectURL(blob);
                             const a = document.createElement("a");

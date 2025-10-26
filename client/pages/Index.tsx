@@ -592,7 +592,9 @@ export default function Index() {
                     onClick={async () => {
                       if (generatedVideo.downloadUrl) {
                         try {
-                          const response = await fetch(generatedVideo.downloadUrl);
+                          const response = await fetch(
+                            generatedVideo.downloadUrl,
+                          );
                           const blob = await response.blob();
                           const url = window.URL.createObjectURL(blob);
                           const a = document.createElement("a");
