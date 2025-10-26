@@ -17,11 +17,10 @@ export const debugCleanup: RequestHandler = async (req, res) => {
 
     // Get videos that SHOULD be deleted
     const expiredVideos = await query(
-      `SELECT id, email, status, created_at, expires_at, deleted_at,
+      `SELECT id, email, status, created_at, expires_at,
               CURRENT_TIMESTAMP as server_time
        FROM videos
-       WHERE expires_at AT TIME ZONE 'UTC' <= CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
-       AND deleted_at IS NULL`,
+       WHERE expires_at < CURRENT_TIMESTAMP`,
     );
 
     console.log("[DebugCleanup] Videos to be deleted:");
