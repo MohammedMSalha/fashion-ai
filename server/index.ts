@@ -28,6 +28,7 @@ import {
   verifyCodeHandler,
 } from "./routes/email-auth.js";
 import { cronCheckVideoStatus } from "./routes/cron-video-status.js";
+import { cronCleanupVideos } from "./routes/cron-cleanup-videos.js";
 import { initializeDatabase } from "./db.js";
 import { startCleanupJob } from "./jobs/cleanup-videos.js";
 import { startVideoStatusCheckJob } from "./jobs/check-video-status.js";
