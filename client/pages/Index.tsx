@@ -267,6 +267,7 @@ export default function Index() {
 
   const goHome = () => {
     setCurrentPage("home");
+    setGeneratedVideo(null); // Reset generated video when going home
   };
 
   const currentVideo = SAMPLE_VIDEOS[currentVideoIndex];
