@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  ArrowLeft,
-  Download,
-  Pause,
-  Play,
-  Loader,
-  Heart,
-  Share2,
-} from "lucide-react";
+import { ArrowLeft, Download, Pause, Play, Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createApiUrl } from "@/config/api";
 
