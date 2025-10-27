@@ -36,13 +36,14 @@ export default function MyVideos({ onBack }: MyVideosProps) {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [videos, setVideos] = useState<DatabaseVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pollInterval, setPollInterval] = useState<NodeJS.Timeout | null>(null);
   const [smtpEnabled, setSmtpEnabled] = useState(false);
   const [checkingSMTP, setCheckingSMTP] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Check SMTP status and load saved email from localStorage on mount
   useEffect(() => {
