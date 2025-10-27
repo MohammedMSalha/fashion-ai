@@ -485,16 +485,19 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 pointer-events-none" />
 
                   {/* Center Play/Pause Button */}
-                  <button
-                    onClick={() => setIsPlaying(!isPlaying)}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-4 rounded-full transition-all z-20 pointer-events-auto"
-                  >
-                    {isPlaying ? (
-                      <Pause className="w-8 h-8 text-white" />
-                    ) : (
-                      <Play className="w-8 h-8 text-white" />
-                    )}
-                  </button>
+                  {filteredVideos.length > 0 && (
+                    <button
+                      onClick={() => setIsPlaying(!isPlaying)}
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-4 rounded-full transition-all z-20 pointer-events-auto active:scale-90"
+                      aria-label={isPlaying ? "Pause video" : "Play video"}
+                    >
+                      {isPlaying ? (
+                        <Pause className="w-8 h-8 text-white" />
+                      ) : (
+                        <Play className="w-8 h-8 text-white" />
+                      )}
+                    </button>
+                  )}
 
                   {/* Left Navigation */}
                   {filteredVideos.length > 1 && (
