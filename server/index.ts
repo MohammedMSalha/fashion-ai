@@ -74,13 +74,13 @@ export async function createServer() {
   app.set("trust proxy", 1);
 
   // Security middleware - allow payment API for Stripe
-  app.use(
-    helmet({
-      permissionsPolicy: {
-        payment: ["self"],
-      },
-    }),
-  );
+  app.use(helmet());
+
+  // Set Permissions-Policy header explicitly to allow payment
+  app.use((req, res, next) => {
+    res.setHeader("Permissions-Policy", "payment=(self)");
+    next();
+  });
 
   // CORS configuration
   const corsOptions: CorsOptions = {
