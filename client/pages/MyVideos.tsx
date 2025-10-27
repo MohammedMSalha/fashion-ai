@@ -160,7 +160,8 @@ export default function MyVideos({ onBack }: MyVideosProps) {
 
   // Reset and auto-play when current video changes
   useEffect(() => {
-    if (!videoRef.current || step !== "videos" || filteredVideos.length === 0) return;
+    if (!videoRef.current || step !== "videos" || filteredVideos.length === 0)
+      return;
 
     // Reset video to start
     videoRef.current.currentTime = 0;
