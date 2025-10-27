@@ -50,7 +50,10 @@ function expressPlugin(): Plugin {
           next();
         });
       } catch (error) {
-        console.error("[Vite Plugin] Failed to initialize Express server:", error);
+        console.error(
+          "[Vite Plugin] Failed to initialize Express server:",
+          error,
+        );
         throw error;
       }
     },
