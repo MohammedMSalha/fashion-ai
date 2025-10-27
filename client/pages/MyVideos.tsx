@@ -206,21 +206,34 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     setError(null);
 
     try {
-      const response = await fetch(createApiUrl("/api/videos"), {
+      const apiUrl = createApiUrl("/api/videos");
+      console.log("[MyVideos] Loading videos from:", apiUrl);
+
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
+      console.log("[MyVideos] Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error("Failed to load videos");
+        const errorText = await response.text();
+        console.error("[MyVideos] Error response:", errorText);
+        throw new Error(
+          `Failed to load videos (${response.status}): ${errorText || response.statusText}`,
+        );
       }
 
       const data = await response.json();
+      console.log("[MyVideos] Videos loaded:", data.videos?.length || 0);
       setVideos(data.videos || []);
       setStep("videos");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const message =
+        err instanceof Error ? err.message : "Failed to connect to server";
+      console.error("[MyVideos] Error:", message, err);
+      setError(message);
     } finally {
       setLoading(false);
     }
