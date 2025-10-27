@@ -441,7 +441,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                             filteredVideos.length,
                         )
                       }
-                      className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 backdrop-blur-sm p-2 sm:p-3 rounded-full transition-all z-20 active:scale-95"
+                      className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 backdrop-blur-sm p-2 sm:p-3 rounded-full transition-all z-20 active:scale-95 pointer-events-auto"
                     >
                       <svg
                         className="w-5 h-5 sm:w-6 sm:h-6 text-white"
