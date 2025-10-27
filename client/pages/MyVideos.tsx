@@ -77,31 +77,34 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     initializeComponent();
   }, []);
 
-  // Auto-play when videos are loaded
+  // Update isPlaying state to match video playback state
   useEffect(() => {
-    if (step === "videos" && videos.length > 0) {
-      setIsPlaying(true);
-    }
-  }, [step, videos.length]);
+    if (!videoRef.current) return;
 
-  // Reset and auto-play when current video changes
-  useEffect(() => {
-    if (videoRef.current && step === "videos") {
-      videoRef.current.currentTime = 0;
-      if (isPlaying) {
-        videoRef.current.play();
-      }
-    }
-  }, [currentVideoIndex, step]);
+    const updatePlayingState = () => {
+      setIsPlaying(!videoRef.current?.paused);
+    };
 
-  // Handle video play/pause
+    const video = videoRef.current;
+    video.addEventListener("play", updatePlayingState);
+    video.addEventListener("pause", updatePlayingState);
+
+    return () => {
+      video.removeEventListener("play", updatePlayingState);
+      video.removeEventListener("pause", updatePlayingState);
+    };
+  }, []);
+
+  // Handle play/pause button clicks
   useEffect(() => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.play();
-      } else {
-        videoRef.current.pause();
-      }
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.play().catch((err) => {
+        console.debug("Play error (expected on some browsers):", err);
+      });
+    } else {
+      videoRef.current.pause();
     }
   }, [isPlaying]);
 
