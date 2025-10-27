@@ -77,6 +77,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     initializeComponent();
   }, []);
 
+  // Auto-play when videos are loaded
+  useEffect(() => {
+    if (step === "videos" && videos.length > 0) {
+      setIsPlaying(true);
+    }
+  }, [step, videos.length]);
+
   // Handle video play/pause
   useEffect(() => {
     if (videoRef.current) {
