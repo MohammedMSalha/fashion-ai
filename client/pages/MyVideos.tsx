@@ -440,7 +440,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                 your first AI fashion video!
               </p>
               <Button
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  if (onBack) {
+                    onBack();
+                  } else {
+                    navigate("/");
+                  }
+                }}
                 className="w-full h-12 bg-white hover:bg-gray-100 text-black font-semibold transition mt-4"
               >
                 Create Video
