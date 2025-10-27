@@ -77,6 +77,17 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     initializeComponent();
   }, []);
 
+  // Handle video play/pause
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+
   // Poll for video status updates
   useEffect(() => {
     if (step === "videos" && videos.length > 0) {
