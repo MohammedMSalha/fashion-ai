@@ -114,7 +114,6 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
       console.log("[SmartVideoForm] Sending config:", {
         email,
         imageLength: imagePreview.length,
-        imagePreview: imagePreview.substring(0, 100),
         duration: payload.duration,
         resolution: payload.resolution,
       });
@@ -148,13 +147,17 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
       const data = await response.json();
       console.log("[SmartVideoForm] Configuration saved:", data);
 
-      if (data.videoId) {
-        setVideoId(data.videoId);
-        localStorage.setItem("fashionai_email", email);
-        setStep("payment");
-      } else {
-        throw new Error("No videoId in response");
+      if (!data.videoId) {
+        console.error("[SmartVideoForm] Invalid response - no videoId:", data);
+        throw new Error("Server did not return a video ID");
       }
+
+      console.log("[SmartVideoForm] Setting videoId:", data.videoId);
+      setVideoId(data.videoId);
+      localStorage.setItem("fashionai_email", email);
+
+      console.log("[SmartVideoForm] Moving to payment step");
+      setStep("payment");
     } catch (err) {
       const errorMsg =
         err instanceof Error ? err.message : "Failed to save configuration";
