@@ -37,17 +37,22 @@ function expressPlugin(): Plugin {
     name: "express-plugin",
     apply: "serve", // Only apply during development (serve mode)
     async configureServer(server) {
-      const app = await createServer();
+      try {
+        const app = await createServer();
 
-      // Add middleware to intercept API requests before Vite's routing
-      server.middlewares.use((req, res, next) => {
-        // If it's an API request, handle it with Express
-        if (req.url.startsWith("/api/")) {
-          return app(req, res, next);
-        }
-        // Otherwise continue to next middleware
-        next();
-      });
+        // Add middleware to intercept API requests before Vite's routing
+        server.middlewares.use((req, res, next) => {
+          // If it's an API request, handle it with Express
+          if (req.url.startsWith("/api/")) {
+            return app(req, res, next);
+          }
+          // Otherwise continue to next middleware
+          next();
+        });
+      } catch (error) {
+        console.error("[Vite Plugin] Failed to initialize Express server:", error);
+        throw error;
+      }
     },
   };
 }
