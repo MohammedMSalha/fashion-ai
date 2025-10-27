@@ -439,9 +439,10 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                 // Video Content
                 <>
                   <video
+                    ref={videoRef}
                     src={currentVideo.video_url || ""}
                     className="w-full h-full object-cover pointer-events-none select-none"
-                    playsInline // Crucial for iOS to prevent fullscreen on load
+                    playsInline
                     loop
                     muted
                     controlsList="nofullscreen"
