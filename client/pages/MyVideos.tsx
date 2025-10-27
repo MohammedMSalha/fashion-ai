@@ -417,6 +417,9 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                     autoPlay={isPlaying}
                     loop
                     muted
+                    controlsList="nofullscreen"
+                    disablePictureInPicture
+                    onContextMenu={(e) => e.preventDefault()}
                   />
 
                   {/* Gradient Overlay */}
