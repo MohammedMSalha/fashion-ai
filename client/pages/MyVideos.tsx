@@ -413,13 +413,23 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                 <>
                   <video
                     src={currentVideo.video_url || ""}
-                    className="w-full h-full object-cover pointer-events-none"
+                    className="w-full h-full object-cover pointer-events-none select-none"
                     autoPlay={isPlaying}
                     loop
                     muted
                     controlsList="nofullscreen"
                     disablePictureInPicture
                     onContextMenu={(e) => e.preventDefault()}
+                    onDoubleClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onTouchEnd={(e) => {
+                      // Prevent double-tap zoom and fullscreen on mobile
+                      if (e.touches && e.touches.length < 2) {
+                        e.preventDefault();
+                      }
+                    }}
                   />
 
                   {/* Gradient Overlay */}
