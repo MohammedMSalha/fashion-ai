@@ -73,8 +73,14 @@ export async function createServer() {
   // Trust proxy - required for Vercel and other reverse proxies that set X-Forwarded-For
   app.set("trust proxy", 1);
 
-  // Security middleware
-  app.use(helmet());
+  // Security middleware - allow payment API for Stripe
+  app.use(
+    helmet({
+      permissionsPolicy: {
+        payment: ["self"],
+      },
+    }),
+  );
 
   // CORS configuration
   const corsOptions: CorsOptions = {
