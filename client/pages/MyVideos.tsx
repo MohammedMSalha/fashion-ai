@@ -84,6 +84,16 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     }
   }, [step, videos.length]);
 
+  // Reset and auto-play when current video changes
+  useEffect(() => {
+    if (videoRef.current && step === "videos") {
+      videoRef.current.currentTime = 0;
+      if (isPlaying) {
+        videoRef.current.play();
+      }
+    }
+  }, [currentVideoIndex, step]);
+
   // Handle video play/pause
   useEffect(() => {
     if (videoRef.current) {
