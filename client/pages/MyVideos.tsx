@@ -144,6 +144,41 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     };
   }, [pollInterval]);
 
+  // Auto-play when videos are loaded
+  useEffect(() => {
+    if (step === "videos" && filteredVideos.length > 0) {
+      setIsPlaying(true);
+    }
+  }, [step, filteredVideos.length]);
+
+  // Reset and auto-play when current video changes
+  useEffect(() => {
+    if (!videoRef.current || step !== "videos" || filteredVideos.length === 0) return;
+
+    // Reset video to start
+    videoRef.current.currentTime = 0;
+
+    // Auto-play the new video
+    setIsPlaying(true);
+    videoRef.current.play().catch((err) => {
+      console.debug("Auto-play on video change failed:", err);
+    });
+  }, [currentVideoIndex, step, filteredVideos.length]);
+
+  // Auto-advance slider when video ends
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || filteredVideos.length <= 1) return;
+
+    const handleVideoEnd = () => {
+      console.log("[MyVideos] Video ended, auto-advancing to next");
+      setCurrentVideoIndex((prev) => (prev + 1) % filteredVideos.length);
+    };
+
+    video.addEventListener("ended", handleVideoEnd);
+    return () => video.removeEventListener("ended", handleVideoEnd);
+  }, [filteredVideos.length]);
+
   const handleEmailSubmit = async () => {
     if (!email) {
       setError("Please enter your email");
