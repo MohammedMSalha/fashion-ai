@@ -155,14 +155,21 @@ export default function MyVideos({ onBack }: MyVideosProps) {
 
     try {
       if (smtpEnabled) {
-        const response = await fetch(createApiUrl("/api/auth/send-code"), {
+        const apiUrl = createApiUrl("/api/auth/send-code");
+        console.log("[MyVideos] Sending code to:", apiUrl);
+
+        const response = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
         });
 
         if (!response.ok) {
-          throw new Error("Failed to send verification code");
+          const errorText = await response.text();
+          console.error("[MyVideos] Error response:", errorText);
+          throw new Error(
+            `Failed to send verification code (${response.status}): ${errorText || response.statusText}`,
+          );
         }
 
         setStep("verification");
@@ -171,7 +178,10 @@ export default function MyVideos({ onBack }: MyVideosProps) {
         await handleLoadVideos();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const message =
+        err instanceof Error ? err.message : "Failed to connect to server";
+      console.error("[MyVideos] Email submit error:", message, err);
+      setError(message);
     } finally {
       setLoading(false);
     }
