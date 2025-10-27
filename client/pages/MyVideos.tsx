@@ -361,9 +361,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
           // TikTok-style Video Feed
           <div className="w-full h-full bg-black overflow-hidden flex items-center justify-center px-4 sm:px-0">
             {/* Main Video Area - TikTok 9:16 aspect ratio */}
-            <div className="relative w-full max-w-md aspect-[9/16] rounded-lg overflow-hidden pointer-events-none">
-              {/* Interactive overlay for buttons */}
-              <div className="absolute inset-0 pointer-events-auto z-50"></div>
+            <div className="relative w-full max-w-md aspect-[9/16] rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
               {currentVideo.status === "processing" ? (
                 // Loading State
                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
