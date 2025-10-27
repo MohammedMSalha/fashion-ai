@@ -45,6 +45,13 @@ export default function MyVideos({ onBack }: MyVideosProps) {
   const [checkingSMTP, setCheckingSMTP] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Filter videos to show only those being generated or already generated (must be before useEffect hooks)
+  const filteredVideos = videos.filter(
+    (v) =>
+      (v.status === "processing" && v.request_id) ||
+      (v.status === "completed" && v.video_url),
+  );
+
   // Check SMTP status and load saved email from localStorage on mount
   useEffect(() => {
     const initializeComponent = async () => {
