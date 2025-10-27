@@ -673,7 +673,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   )}
 
                   {/* Download Button - Bottom Center */}
-                  <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 px-4 sm:px-6 z-20 pointer-events-auto">
+                  <div className="absolute bottom-20 sm:bottom-24 left-0 right-0 px-4 sm:px-6 z-20 pointer-events-auto">
                     <Button
                       className="w-full bg-white hover:bg-gray-100 text-black font-bold h-11 sm:h-12 text-sm sm:text-base flex items-center justify-center gap-2 rounded-lg transition-all shadow-lg active:scale-95 pointer-events-auto"
                       onClick={async () => {
