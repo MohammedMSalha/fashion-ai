@@ -422,7 +422,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                   {/* Center Play/Pause Button */}
                   <button
                     onClick={() => setIsPlaying(!isPlaying)}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-4 rounded-full transition-all z-20"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 backdrop-blur-sm p-4 rounded-full transition-all z-20 pointer-events-auto"
                   >
                     {isPlaying ? (
                       <Pause className="w-8 h-8 text-white" />
