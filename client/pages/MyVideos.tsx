@@ -156,7 +156,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     if (step === "videos" && filteredVideos.length > 0) {
       setIsPlaying(true);
     }
-  }, [step, filteredVideos.length]);
+  }, [step, videos.length]);
 
   // Reset and auto-play when current video changes
   useEffect(() => {
@@ -170,7 +170,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
     videoRef.current.play().catch((err) => {
       console.debug("Auto-play on video change failed:", err);
     });
-  }, [currentVideoIndex, step, filteredVideos.length]);
+  }, [currentVideoIndex, step, videos.length]);
 
   // Auto-advance slider when video ends
   useEffect(() => {
@@ -184,7 +184,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
 
     video.addEventListener("ended", handleVideoEnd);
     return () => video.removeEventListener("ended", handleVideoEnd);
-  }, [filteredVideos.length]);
+  }, [videos.length]);
 
   const handleEmailSubmit = async () => {
     if (!email) {
