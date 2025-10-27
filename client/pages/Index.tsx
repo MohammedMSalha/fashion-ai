@@ -328,10 +328,21 @@ export default function Index() {
           )}
 
           {/* Floating Action Button Menu */}
-          <div className="fixed bottom-4 left-4 md:bottom-6 md:right-6 md:left-auto z-40">
+          {/* Backdrop when menu is open */}
+          {showFabMenu && (
             <div
-              className={`flex flex-col gap-2 md:gap-3 mb-4 transition-all duration-300 ${
-                showFabMenu ? "opacity-100 visible" : "opacity-0 invisible"
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
+              onClick={() => setShowFabMenu(false)}
+            />
+          )}
+
+          <div className="fixed bottom-4 left-4 md:bottom-6 md:right-6 md:left-auto z-40">
+            {/* Menu Items Container */}
+            <div
+              className={`flex flex-col gap-2 md:gap-3 mb-4 transition-all duration-300 origin-bottom ${
+                showFabMenu
+                  ? "opacity-100 visible scale-100"
+                  : "opacity-0 invisible scale-95"
               }`}
             >
               <button
@@ -339,13 +350,11 @@ export default function Index() {
                   setCurrentPage("my-videos");
                   setShowFabMenu(false);
                 }}
-                className="flex items-center gap-3 bg-white hover:bg-gray-100 text-black px-2 md:px-4 py-2 md:py-3 rounded-full font-semibold transition-all"
+                className="flex items-center gap-3 bg-white hover:bg-blue-50 text-black px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-full font-semibold transition-all shadow-md hover:shadow-lg whitespace-nowrap"
                 title="My Videos"
               >
-                <Play className="w-4 h-4 md:w-5 md:h-5" />
-                <span
-                  className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}
-                >
+                <Play className="w-5 h-5 md:w-5 md:h-5 flex-shrink-0" />
+                <span className="text-sm md:text-sm font-medium inline">
                   My Videos
                 </span>
               </button>
@@ -355,13 +364,11 @@ export default function Index() {
                   setCurrentPage("about");
                   setShowFabMenu(false);
                 }}
-                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-2 md:px-4 py-2 md:py-3 rounded-full transition-all"
+                className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-full transition-all shadow-md hover:shadow-lg whitespace-nowrap"
                 title="About Us"
               >
-                <Info className="w-4 h-4 md:w-5 md:h-5" />
-                <span
-                  className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}
-                >
+                <Info className="w-5 h-5 md:w-5 md:h-5 flex-shrink-0" />
+                <span className="text-sm md:text-sm font-medium inline">
                   About Us
                 </span>
               </button>
@@ -371,13 +378,11 @@ export default function Index() {
                   setCurrentPage("contact");
                   setShowFabMenu(false);
                 }}
-                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-2 md:px-4 py-2 md:py-3 rounded-full transition-all"
+                className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-full transition-all shadow-md hover:shadow-lg whitespace-nowrap"
                 title="Contact"
               >
-                <Mail className="w-4 h-4 md:w-5 md:h-5" />
-                <span
-                  className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}
-                >
+                <Mail className="w-5 h-5 md:w-5 md:h-5 flex-shrink-0" />
+                <span className="text-sm md:text-sm font-medium inline">
                   Contact
                 </span>
               </button>
@@ -387,13 +392,11 @@ export default function Index() {
                   setCurrentPage("terms");
                   setShowFabMenu(false);
                 }}
-                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-2 md:px-4 py-2 md:py-3 rounded-full transition-all"
+                className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-full transition-all shadow-md hover:shadow-lg whitespace-nowrap"
                 title="Terms"
               >
-                <FileText className="w-4 h-4 md:w-5 md:h-5" />
-                <span
-                  className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}
-                >
+                <FileText className="w-5 h-5 md:w-5 md:h-5 flex-shrink-0" />
+                <span className="text-sm md:text-sm font-medium inline">
                   Terms
                 </span>
               </button>
@@ -403,13 +406,11 @@ export default function Index() {
                   setCurrentPage("privacy");
                   setShowFabMenu(false);
                 }}
-                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-2 md:px-4 py-2 md:py-3 rounded-full transition-all"
+                className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-full transition-all shadow-md hover:shadow-lg whitespace-nowrap"
                 title="Privacy"
               >
-                <Lock className="w-4 h-4 md:w-5 md:h-5" />
-                <span
-                  className={`text-xs md:text-sm font-medium ${showFabMenu ? "inline" : "hidden"} md:inline`}
-                >
+                <Lock className="w-5 h-5 md:w-5 md:h-5 flex-shrink-0" />
+                <span className="text-sm md:text-sm font-medium inline">
                   Privacy
                 </span>
               </button>
