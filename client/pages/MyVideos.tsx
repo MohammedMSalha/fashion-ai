@@ -360,6 +360,21 @@ export default function MyVideos({ onBack }: MyVideosProps) {
         ) : (
           // TikTok-style Video Feed
           <div className="w-full h-full bg-black overflow-hidden flex items-center justify-center px-4 sm:px-0">
+            <style>{`
+              video {
+                user-select: none;
+                -webkit-user-select: none;
+              }
+              video::-webkit-media-controls {
+                display: none !important;
+              }
+              video::-webkit-media-controls-enclosure {
+                display: none !important;
+              }
+              video::-moz-media-controls {
+                display: none !important;
+              }
+            `}</style>
             {/* Main Video Area - TikTok 9:16 aspect ratio */}
             <div
               className="relative w-full max-w-md aspect-[9/16] rounded-lg overflow-hidden"
