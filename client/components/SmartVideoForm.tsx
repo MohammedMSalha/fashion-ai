@@ -461,18 +461,32 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     const price = calculatePrice();
 
     if (!price || !email || !videoId) {
+      console.error("[SmartVideoForm] Payment step missing data:", {
+        price,
+        email,
+        videoId,
+      });
       return (
         <div className="w-full space-y-6">
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
-            <p className="text-red-400">
-              Error: Missing payment information. Please go back and try again.
+            <p className="text-red-400 font-semibold mb-2">
+              Error: Missing payment information
+            </p>
+            <p className="text-red-300 text-sm">
+              {!price && "Price not calculated. "}
+              {!email && "Email missing. "}
+              {!videoId && "Video ID missing. "}
+              Please go back and try again.
             </p>
           </div>
           <button
-            onClick={() => setStep("review")}
+            onClick={() => {
+              setStep("review");
+              setVideoId(null);
+            }}
             className="text-white underline hover:opacity-80"
           >
-            Go back
+            Go back to review
           </button>
         </div>
       );
@@ -487,14 +501,15 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           duration={duration}
           quality={quality}
           onSuccess={() => {
+            console.log("[SmartVideoForm] Payment successful, resetting form");
             setStep("upload");
             setVideoId(null);
             setImagePreview("");
             onGenerate?.();
           }}
           onCancel={() => {
+            console.log("[SmartVideoForm] Payment cancelled");
             setStep("review");
-            setVideoId(null);
           }}
         />
       </div>
