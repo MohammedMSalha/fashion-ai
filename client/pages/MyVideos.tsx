@@ -459,6 +459,7 @@ export default function MyVideos({ onBack }: MyVideosProps) {
                     ref={videoRef}
                     src={currentVideo.video_url || ""}
                     className="w-full h-full object-cover pointer-events-none select-none"
+                    autoPlay
                     playsInline
                     loop
                     muted
