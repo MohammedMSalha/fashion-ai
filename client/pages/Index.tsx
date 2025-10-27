@@ -572,9 +572,6 @@ export default function Index() {
 
                 {/* Video Info */}
                 <div className="absolute bottom-24 left-0 right-0 px-6 text-white z-10">
-                  <p className="text-2xl font-bold mb-3">
-                    {generatedVideo.title}
-                  </p>
                   <div className="flex gap-2">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
                       {generatedVideo.duration}
