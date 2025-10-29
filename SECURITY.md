@@ -9,6 +9,7 @@ Fashion AI Video Generator implements multiple layers of security to protect use
 ## 🛡️ Built-In Security Features
 
 ### Transport Security
+
 - **HTTPS/TLS**: All communications encrypted in transit
 - **SSL/TLS Database**: PostgreSQL connections use SSL/TLS
 - **Secure Cookies**: HttpOnly and Secure flags set
@@ -16,6 +17,7 @@ Fashion AI Video Generator implements multiple layers of security to protect use
 - **Certificate Pinning**: Can be enabled for production
 
 ### Data Protection
+
 - **Password Hashing**: Passwords hashed with bcrypt (if implemented)
 - **Encryption at Rest**: Optional database encryption
 - **Sensitive Data Masking**: Error messages don't expose sensitive info
@@ -23,6 +25,7 @@ Fashion AI Video Generator implements multiple layers of security to protect use
 - **PII Protection**: Personal data handled securely
 
 ### API Security
+
 - **Input Validation**: Zod schema validation on all inputs
 - **SQL Injection Prevention**: Parameterized queries via pg library
 - **XSS Prevention**: Context-aware output encoding
@@ -32,6 +35,7 @@ Fashion AI Video Generator implements multiple layers of security to protect use
 - **Timeout Protection**: 30-second request timeout
 
 ### Authentication & Authorization
+
 - **Email Verification**: Optional email-based access control
 - **Session Management**: Secure session handling
 - **Token Expiration**: Automatic token expiration (15 minutes for codes)
@@ -39,6 +43,7 @@ Fashion AI Video Generator implements multiple layers of security to protect use
 - **Video Ownership**: Verified before download/delete
 
 ### Webhook Security
+
 - **Signature Verification**: Stripe webhook signature verified
 - **Timestamp Validation**: Replay attack prevention
 - **Raw Body Preservation**: Accurate signature verification
@@ -48,6 +53,7 @@ Fashion AI Video Generator implements multiple layers of security to protect use
 ## 🔑 API Key Management
 
 ### Stripe API Keys
+
 ```
 STRIPE_SECRET_KEY=sk_live_...          # Production secret key
 STRIPE_PUBLISHABLE_KEY=pk_live_...     # Production public key
@@ -55,6 +61,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...        # Webhook signing secret
 ```
 
 **Protection:**
+
 - Never expose secret keys in frontend
 - Rotate keys regularly (quarterly recommended)
 - Use different keys for test and production
@@ -62,11 +69,13 @@ STRIPE_WEBHOOK_SECRET=whsec_...        # Webhook signing secret
 - Monitor API usage for unauthorized calls
 
 ### Fashion.ai API Key
+
 ```
 FASHN_AI_API_KEY=fa-...                # Video generation API key
 ```
 
 **Protection:**
+
 - Never commit to git
 - Store only in environment variables
 - Use IP whitelist if available
@@ -74,11 +83,13 @@ FASHN_AI_API_KEY=fa-...                # Video generation API key
 - Rotate periodically (every 6 months)
 
 ### Database Credentials
+
 ```
 DATABASE_URL=postgresql://user:pass@host/db
 ```
 
 **Protection:**
+
 - Use strong, unique passwords
 - Never commit to git
 - Use Neon's password rotation feature
@@ -89,11 +100,12 @@ DATABASE_URL=postgresql://user:pass@host/db
 ## 📋 Security Checklist
 
 ### Before Deployment
+
 - [ ] All API keys stored in environment variables (not code)
 - [ ] HTTPS/SSL certificate obtained and configured
 - [ ] Database backups configured
 - [ ] Rate limiting configured appropriately
-- [ ] CORS origin set to specific domain (not *)
+- [ ] CORS origin set to specific domain (not \*)
 - [ ] Error messages reviewed (no sensitive data exposed)
 - [ ] Input validation configured on all forms
 - [ ] Webhook signature verification enabled
@@ -105,6 +117,7 @@ DATABASE_URL=postgresql://user:pass@host/db
 - [ ] Email verification configured (if needed)
 
 ### Regular Maintenance
+
 - [ ] Review access logs weekly
 - [ ] Monitor failed authentication attempts
 - [ ] Check for security vulnerabilities monthly
@@ -117,6 +130,7 @@ DATABASE_URL=postgresql://user:pass@host/db
 - [ ] Check SSL certificate expiration
 
 ### Incident Response
+
 - [ ] Have incident response plan
 - [ ] Know how to disable API keys
 - [ ] Know how to revoke user sessions
@@ -129,6 +143,7 @@ DATABASE_URL=postgresql://user:pass@host/db
 ## 🔍 Vulnerability Scanning
 
 ### Dependencies
+
 ```bash
 # Check for known vulnerabilities
 pnpm audit
@@ -141,6 +156,7 @@ pnpm audit --audit-level=moderate
 ```
 
 ### Code Analysis
+
 ```bash
 # Run TypeScript type checking
 pnpm typecheck
@@ -169,6 +185,7 @@ Permissions-Policy: payment=(self)
 ## 🔐 Database Security
 
 ### Connection Security
+
 - SSL/TLS encryption required for connections
 - Connection pooling with max 5 connections
 - Connection timeout: 3 seconds
@@ -176,6 +193,7 @@ Permissions-Policy: payment=(self)
 - Automatic connection cleanup
 
 ### Data Protection
+
 - Soft-delete for video retention (not hard delete)
 - Automatic expiry after 48 hours
 - Deleted data cleaned up automatically
@@ -183,28 +201,29 @@ Permissions-Policy: payment=(self)
 - Access logs maintained
 
 ### SQL Injection Prevention
+
 - All queries use parameterized statements
 - No string concatenation for SQL
 - Input validation before queries
 - Error messages don't expose SQL
 
 Example (SAFE):
+
 ```typescript
 // ✓ SAFE - parameterized query
 const result = await query(
-  'SELECT * FROM videos WHERE id = $1 AND email = $2',
-  [videoId, email]
+  "SELECT * FROM videos WHERE id = $1 AND email = $2",
+  [videoId, email],
 );
 
 // ✗ UNSAFE - string concatenation
-const result = await query(
-  `SELECT * FROM videos WHERE id = ${videoId}`
-);
+const result = await query(`SELECT * FROM videos WHERE id = ${videoId}`);
 ```
 
 ## 📧 Email Security
 
 ### SMTP Configuration
+
 - TLS/SSL encryption
 - Secure password storage (env variables)
 - No credentials in logs
@@ -212,6 +231,7 @@ const result = await query(
 - Rate limiting on email sends (5 per hour)
 
 ### Email Data
+
 - Addresses stored in database
 - Sensitive emails sent via POST body (not URL)
 - Verification codes have short expiry (15 min)
@@ -220,12 +240,14 @@ const result = await query(
 ## 💳 Payment Security
 
 ### PCI Compliance
+
 - No credit card data stored
 - All payments via Stripe (PCI DSS Level 1)
 - No card details transmitted to server
 - Client-side encryption via Stripe.js
 
 ### Payment Flow
+
 1. Client creates PaymentIntent via API
 2. Client collects card details via Stripe.js
 3. Client confirms payment with Stripe
@@ -234,6 +256,7 @@ const result = await query(
 6. Server processes webhook event
 
 **Never:**
+
 - Store credit card numbers
 - Log payment details
 - Handle raw card data
@@ -242,6 +265,7 @@ const result = await query(
 ## 🔒 Secret Management
 
 ### Environment Variables
+
 - Never commit .env to git (add to .gitignore)
 - Use platform-specific secret management:
   - **Vercel**: Settings → Environment Variables
@@ -249,6 +273,7 @@ const result = await query(
   - **Fly.io**: `flyctl secrets set KEY=value`
 
 ### Rotation Strategy
+
 ```
 Quarterly (3 months):
 - STRIPE_SECRET_KEY
@@ -271,6 +296,7 @@ On Demand:
 ## 🛡️ DDOS Protection
 
 ### Rate Limiting
+
 ```
 Default: 5 requests per minute per IP
 Configurable per endpoint
@@ -283,21 +309,23 @@ Prevents:
 ```
 
 ### Implementation
+
 ```typescript
 const limiter = rateLimit({
-  windowMs: 60 * 1000,        // 1 minute
-  max: 5,                      // 5 requests
-  message: 'Too many requests',
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // 5 requests
+  message: "Too many requests",
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-app.use('/api/', limiter);
+app.use("/api/", limiter);
 ```
 
 ## 🔍 Monitoring & Logging
 
 ### What Gets Logged
+
 - API requests (method, path, status)
 - Authentication attempts
 - Payment transactions
@@ -306,6 +334,7 @@ app.use('/api/', limiter);
 - Webhook events
 
 ### What Gets NOT Logged
+
 - Credit card numbers
 - API keys or secrets
 - Passwords
@@ -314,6 +343,7 @@ app.use('/api/', limiter);
 - Raw email addresses (hashed if possible)
 
 ### Log Retention
+
 - Keep logs for 90 days minimum
 - Archive logs for 1 year
 - Delete logs after retention period
@@ -322,6 +352,7 @@ app.use('/api/', limiter);
 ## 🚨 Breach Response Plan
 
 ### If Key is Compromised
+
 1. Immediately invalidate the key
 2. Generate new key
 3. Update all services using old key
@@ -332,6 +363,7 @@ app.use('/api/', limiter);
 8. Document incident
 
 ### If Database is Compromised
+
 1. Take database offline
 2. Restore from last known good backup
 3. Change database password
@@ -344,18 +376,21 @@ app.use('/api/', limiter);
 ## 👥 User Privacy
 
 ### Data Collection
+
 - Only collect necessary data (email, images)
 - Purpose of collection is clear
 - User consent obtained
 - Data minimization principle
 
 ### Data Retention
+
 - Videos deleted after 48 hours (soft delete)
 - Soft-deleted videos cleaned up after 30 days
 - Email addresses retained for user access
 - Payment information retained per Stripe policy (7 years)
 
 ### GDPR Compliance
+
 - Right to access: User can request their data
 - Right to erasure: User can request permanent deletion
 - Right to rectification: User can correct their data
@@ -363,6 +398,7 @@ app.use('/api/', limiter);
 - Data processing agreement with Stripe
 
 ### CCPA Compliance
+
 - Disclose data collection
 - Provide opt-out mechanism
 - Allow data download/deletion
@@ -380,6 +416,7 @@ app.use('/api/', limiter);
 ## 📞 Security Contact
 
 For security issues:
+
 - Do NOT file public issues for security vulnerabilities
 - Email security@example.com with details
 - Include steps to reproduce

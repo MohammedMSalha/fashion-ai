@@ -125,8 +125,8 @@ The application automatically creates the `videos` table on first connection. No
 
 1. Create account at [stripe.com](https://stripe.com)
 2. Go to **Developers** → **API Keys**
-3. Copy your **Secret Key** (sk_test_...)
-4. Copy your **Publishable Key** (pk_test_...)
+3. Copy your **Secret Key** (sk*test*...)
+4. Copy your **Publishable Key** (pk*test*...)
 5. Add to `.env`:
    ```env
    STRIPE_SECRET_KEY=sk_test_xxxxx
@@ -186,32 +186,34 @@ fashion-ai-video-generator/
 
 ### .env File Variables
 
-| Variable | Required | Type | Description |
-|----------|----------|------|-------------|
-| `DATABASE_URL` | Yes | String | PostgreSQL connection string |
-| `STRIPE_SECRET_KEY` | Yes | String | Stripe API secret key |
-| `STRIPE_PUBLISHABLE_KEY` | Yes | String | Stripe API public key |
-| `STRIPE_WEBHOOK_SECRET` | Yes | String | Stripe webhook signing secret |
-| `FASHN_AI_API_KEY` | Yes | String | Fashion.ai API key |
-| `SMTP_HOST` | No | String | SMTP server hostname |
-| `SMTP_PORT` | No | Number | SMTP server port (default: 587) |
-| `SMTP_USER` | No | String | SMTP username |
-| `SMTP_PASS` | No | String | SMTP password |
-| `SMTP_FROM` | No | String | Sender email address |
-| `SMTP_SECURE` | No | Boolean | Use SSL/TLS (default: false) |
-| `CORS_ORIGIN` | No | String | CORS allowed origins (default: *) |
+| Variable                 | Required | Type    | Description                        |
+| ------------------------ | -------- | ------- | ---------------------------------- |
+| `DATABASE_URL`           | Yes      | String  | PostgreSQL connection string       |
+| `STRIPE_SECRET_KEY`      | Yes      | String  | Stripe API secret key              |
+| `STRIPE_PUBLISHABLE_KEY` | Yes      | String  | Stripe API public key              |
+| `STRIPE_WEBHOOK_SECRET`  | Yes      | String  | Stripe webhook signing secret      |
+| `FASHN_AI_API_KEY`       | Yes      | String  | Fashion.ai API key                 |
+| `SMTP_HOST`              | No       | String  | SMTP server hostname               |
+| `SMTP_PORT`              | No       | Number  | SMTP server port (default: 587)    |
+| `SMTP_USER`              | No       | String  | SMTP username                      |
+| `SMTP_PASS`              | No       | String  | SMTP password                      |
+| `SMTP_FROM`              | No       | String  | Sender email address               |
+| `SMTP_SECURE`            | No       | Boolean | Use SSL/TLS (default: false)       |
+| `CORS_ORIGIN`            | No       | String  | CORS allowed origins (default: \*) |
 
 See [SMTP_SETUP.md](./SMTP_SETUP.md) for detailed email configuration.
 
 ## 🧪 Testing Your Installation
 
 ### 1. Test Frontend
+
 ```bash
 # Should display the Fashion AI Video Generator homepage
 # Navigate to http://localhost:5173
 ```
 
 ### 2. Test Backend API
+
 ```bash
 # Test health endpoint
 curl http://localhost:5173/api/health
@@ -223,6 +225,7 @@ curl http://localhost:5173/api/auth/smtp-status
 ```
 
 ### 3. Test Database Connection
+
 ```bash
 # Check if database was created
 psql postgresql://user:password@host/database
@@ -233,6 +236,7 @@ psql postgresql://user:password@host/database
 ```
 
 ### 4. Test Video Generation Endpoint
+
 ```bash
 # Save a video config (will need base64 image)
 curl -X POST http://localhost:5173/api/save-video-config \
@@ -248,7 +252,9 @@ curl -X POST http://localhost:5173/api/save-video-config \
 ## 🚫 Common Issues & Solutions
 
 ### Issue: `pnpm: command not found`
+
 **Solution:**
+
 ```bash
 # Install pnpm globally
 npm install -g pnpm
@@ -258,7 +264,9 @@ pnpm --version
 ```
 
 ### Issue: `DATABASE_URL not found`
+
 **Solution:**
+
 ```bash
 # Make sure .env file exists in root directory
 # Check that DATABASE_URL is set correctly
@@ -269,7 +277,9 @@ psql postgresql://user:password@host/database -c "SELECT 1"
 ```
 
 ### Issue: `Cannot find module 'pg'`
+
 **Solution:**
+
 ```bash
 # Reinstall dependencies
 rm -rf node_modules pnpm-lock.yaml
@@ -277,7 +287,9 @@ pnpm install
 ```
 
 ### Issue: `Port 5173 already in use`
+
 **Solution:**
+
 ```bash
 # Use a different port
 pnpm dev -- --port 3000
@@ -291,7 +303,9 @@ taskkill /PID <PID> /F
 ```
 
 ### Issue: `STRIPE_SECRET_KEY is not set`
+
 **Solution:**
+
 ```bash
 # 1. Create .env file if it doesn't exist
 touch .env
@@ -305,7 +319,9 @@ pnpm dev
 ```
 
 ### Issue: Database migration errors
+
 **Solution:**
+
 ```bash
 # The application auto-creates tables
 # If you get errors, check:
@@ -341,6 +357,7 @@ EOF
 ## 📝 Build for Production
 
 ### Build Application
+
 ```bash
 # Build both client and server
 pnpm build
@@ -351,6 +368,7 @@ pnpm build
 ```
 
 ### Run Production Build Locally
+
 ```bash
 # Start the production server
 pnpm start

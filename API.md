@@ -19,15 +19,15 @@ Optional email verification adds a verification code requirement for video acces
 
 ## Status Codes
 
-| Code | Meaning |
-|------|---------|
-| 200 | Success |
-| 201 | Created |
-| 204 | No Content |
-| 400 | Bad Request |
-| 404 | Not Found |
-| 429 | Too Many Requests (rate limited) |
-| 500 | Server Error |
+| Code | Meaning                          |
+| ---- | -------------------------------- |
+| 200  | Success                          |
+| 201  | Created                          |
+| 204  | No Content                       |
+| 400  | Bad Request                      |
+| 404  | Not Found                        |
+| 429  | Too Many Requests (rate limited) |
+| 500  | Server Error                     |
 
 ## Rate Limiting
 
@@ -56,6 +56,7 @@ Optional email verification adds a verification code requirement for video acces
 Saves video configuration and returns a `videoId` for payment processing.
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -74,6 +75,7 @@ Saves video configuration and returns a `videoId` for payment processing.
 | resolution | string | Yes | Video resolution (480p, 720p, 1080p, 2K) |
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -84,6 +86,7 @@ Saves video configuration and returns a `videoId` for payment processing.
 ```
 
 **Response (400):**
+
 ```json
 {
   "error": "Invalid image format",
@@ -92,6 +95,7 @@ Saves video configuration and returns a `videoId` for payment processing.
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:5173/api/save-video-config \
   -H "Content-Type: application/json" \
@@ -114,6 +118,7 @@ curl -X POST http://localhost:5173/api/save-video-config \
 Creates a Stripe PaymentIntent for the video generation.
 
 **Request Body:**
+
 ```json
 {
   "amount": 2999,
@@ -134,6 +139,7 @@ Creates a Stripe PaymentIntent for the video generation.
 | quality | string | Yes | Video quality |
 
 **Response (200):**
+
 ```json
 {
   "clientSecret": "pi_1234567890_secret_abcdefghij",
@@ -144,6 +150,7 @@ Creates a Stripe PaymentIntent for the video generation.
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:5173/api/create-payment-intent \
   -H "Content-Type: application/json" \
@@ -163,6 +170,7 @@ curl -X POST http://localhost:5173/api/create-payment-intent \
 Creates a Stripe Checkout session for hosted payment page.
 
 **Request Body:**
+
 ```json
 {
   "amount": 2999,
@@ -174,6 +182,7 @@ Creates a Stripe Checkout session for hosted payment page.
 ```
 
 **Response (200):**
+
 ```json
 {
   "sessionId": "cs_test_abc123",
@@ -192,6 +201,7 @@ Creates a Stripe Checkout session for hosted payment page.
 Retrieves all videos for a user (excluding deleted ones).
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com"
@@ -204,6 +214,7 @@ Retrieves all videos for a user (excluding deleted ones).
 | email | string | Yes | User email address |
 
 **Response (200):**
+
 ```json
 {
   "videos": [
@@ -223,6 +234,7 @@ Retrieves all videos for a user (excluding deleted ones).
 ```
 
 **Response (404):**
+
 ```json
 {
   "error": "No videos found",
@@ -231,6 +243,7 @@ Retrieves all videos for a user (excluding deleted ones).
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:5173/api/videos \
   -H "Content-Type: application/json" \
@@ -249,6 +262,7 @@ Soft-deletes a video (marks as deleted but keeps in database).
 | videoId | number | Yes (URL) | Video ID to delete |
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com"
@@ -256,6 +270,7 @@ Soft-deletes a video (marks as deleted but keeps in database).
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -265,6 +280,7 @@ Soft-deletes a video (marks as deleted but keeps in database).
 ```
 
 **Response (404):**
+
 ```json
 {
   "error": "Video not found"
@@ -272,6 +288,7 @@ Soft-deletes a video (marks as deleted but keeps in database).
 ```
 
 **Example:**
+
 ```bash
 curl -X DELETE http://localhost:5173/api/videos/123 \
   -H "Content-Type: application/json" \
@@ -294,6 +311,7 @@ Gets the current generation status of a video.
 | videoId | number | Yes (URL) | Video ID |
 
 **Response (200):**
+
 ```json
 {
   "video": {
@@ -317,6 +335,7 @@ Gets the current generation status of a video.
 | failed | Generation failed |
 
 **Response (404):**
+
 ```json
 {
   "error": "Video not found"
@@ -324,6 +343,7 @@ Gets the current generation status of a video.
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:5173/api/video-status/123
 ```
@@ -339,6 +359,7 @@ curl http://localhost:5173/api/video-status/123
 Checks if email verification is configured.
 
 **Response (200):**
+
 ```json
 {
   "configured": true
@@ -346,6 +367,7 @@ Checks if email verification is configured.
 ```
 
 Or:
+
 ```json
 {
   "configured": false
@@ -353,6 +375,7 @@ Or:
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:5173/api/auth/smtp-status
 ```
@@ -364,6 +387,7 @@ curl http://localhost:5173/api/auth/smtp-status
 Sends a 6-digit verification code to user's email.
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com"
@@ -371,6 +395,7 @@ Sends a 6-digit verification code to user's email.
 ```
 
 **Response (200):**
+
 ```json
 {
   "requiresCode": true,
@@ -380,6 +405,7 @@ Sends a 6-digit verification code to user's email.
 ```
 
 **Response (200 - SMTP not configured):**
+
 ```json
 {
   "requiresCode": false,
@@ -388,6 +414,7 @@ Sends a 6-digit verification code to user's email.
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:5173/api/auth/send-code \
   -H "Content-Type: application/json" \
@@ -401,6 +428,7 @@ curl -X POST http://localhost:5173/api/auth/send-code \
 Verifies the 6-digit code sent to user's email.
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -415,6 +443,7 @@ Verifies the 6-digit code sent to user's email.
 | code | string | Yes | 6-digit verification code |
 
 **Response (200):**
+
 ```json
 {
   "verified": true,
@@ -423,6 +452,7 @@ Verifies the 6-digit code sent to user's email.
 ```
 
 **Response (400):**
+
 ```json
 {
   "error": "Invalid code",
@@ -431,6 +461,7 @@ Verifies the 6-digit code sent to user's email.
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:5173/api/auth/verify-code \
   -H "Content-Type: application/json" \
@@ -448,11 +479,13 @@ curl -X POST http://localhost:5173/api/auth/verify-code \
 Receives and processes Stripe webhook events.
 
 **Headers:**
+
 ```
 stripe-signature: t=1234567890,v1=abcdef123456...
 ```
 
 **Payload (payment_intent.succeeded):**
+
 ```json
 {
   "id": "evt_1234567890",
@@ -474,12 +507,14 @@ stripe-signature: t=1234567890,v1=abcdef123456...
 ```
 
 **Automatically triggers:**
+
 1. Video generation via Fashion.ai API
 2. Database update with payment info
 3. Status changed to "processing"
 4. Video status polling started
 
 **Response (200):**
+
 ```json
 {
   "received": true,
@@ -500,6 +535,7 @@ stripe-signature: t=1234567890,v1=abcdef123456...
 Simple health check endpoint.
 
 **Response (200):**
+
 ```json
 {
   "status": "ok"
@@ -507,6 +543,7 @@ Simple health check endpoint.
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:5173/api/health
 ```
@@ -518,12 +555,14 @@ curl http://localhost:5173/api/health
 ### Complete Video Generation Workflow
 
 1. **Save Configuration**
+
    ```bash
    POST /api/save-video-config
    Response: videoId = 123
    ```
 
 2. **Create Payment Intent**
+
    ```bash
    POST /api/create-payment-intent
    Body: { videoId: 123, ... }
@@ -535,12 +574,14 @@ curl http://localhost:5173/api/health
    - Stripe sends webhook automatically
 
 4. **Webhook Handler**
+
    ```bash
    POST /api/stripe-webhook (automatic)
    Triggers: Video generation starts
    ```
 
 5. **Poll Status**
+
    ```bash
    GET /api/video-status/123 (every 5 seconds)
    Until status = "completed"
@@ -557,23 +598,27 @@ curl http://localhost:5173/api/health
 ## 🚨 Error Handling
 
 ### Network Errors
+
 - Implement exponential backoff for retries
 - Check `X-RateLimit-Remaining` header
 - Handle 429 (Too Many Requests) gracefully
 
 ### Payment Errors
+
 - Invalid amount: Return 400
 - Missing email: Return 400
 - Duplicate payment: Return 400
 - Stripe connection error: Return 500
 
 ### Video Errors
+
 - Video not found: Return 404
 - Invalid configuration: Return 400
 - Generation failure: Status = "failed"
 - Expired video: Return 404
 
 ### Email Errors
+
 - Invalid email format: Return 400
 - Code expired: Return 400
 - Too many attempts: Return 429
@@ -587,21 +632,23 @@ curl http://localhost:5173/api/health
 
 ```javascript
 // Create video config
-const response = await fetch('/api/save-video-config', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const response = await fetch("/api/save-video-config", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    email: 'user@example.com',
-    imageBase64: 'data:image/jpeg;base64,...',
+    email: "user@example.com",
+    imageBase64: "data:image/jpeg;base64,...",
     duration: 10,
-    resolution: '1080p'
-  })
+    resolution: "1080p",
+  }),
 });
 
 const { videoId } = await response.json();
 
 // Get video status
-const status = await fetch(`/api/video-status/${videoId}`).then(r => r.json());
+const status = await fetch(`/api/video-status/${videoId}`).then((r) =>
+  r.json(),
+);
 console.log(status.video.status); // completed, processing, failed, etc.
 ```
 
@@ -647,6 +694,7 @@ curl http://localhost:5173/api/video-status/123 | jq '.video.status'
 ## 📞 Support
 
 For API issues:
+
 1. Check environment variables are set
 2. Verify database connection
 3. Check Stripe API keys

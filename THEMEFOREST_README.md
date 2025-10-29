@@ -23,20 +23,23 @@ A complete, production-ready SaaS application for generating professional fashio
 ### 1. Get API Keys (You need 3 services)
 
 **A) Neon Database** (Free tier available)
+
 - Go to https://neon.tech
 - Create account and new project
 - Copy connection string → Keep for step 3
 
 **B) Stripe** (Free account)
+
 - Go to https://stripe.com
 - Create account
 - Go to Developers → API Keys
-- Copy Secret Key (sk_test_...) → Keep for step 3
-- Copy Publishable Key (pk_test_...) → Keep for step 3
+- Copy Secret Key (sk*test*...) → Keep for step 3
+- Copy Publishable Key (pk*test*...) → Keep for step 3
 - Go to Developers → Webhooks
 - Note the signing secret → Keep for step 3
 
 **C) Fashion.ai** (Contact their sales)
+
 - Go to https://fashion.ai
 - Create account or contact sales
 - Get your API key → Keep for step 3
@@ -66,6 +69,7 @@ FASHN_AI_API_KEY = [Fashion.ai API key from step 1C]
 ### 4. Configure Stripe Webhook
 
 In Stripe Dashboard:
+
 1. Go to **Developers** → **Webhooks**
 2. Click "Add Endpoint"
 3. Endpoint URL: `https://your-deployed-app.vercel.app/api/stripe-webhook`
@@ -75,6 +79,7 @@ In Stripe Dashboard:
 ### 5. Test Your Setup
 
 Visit your deployed URL and:
+
 1. Upload an image
 2. Configure video (duration/quality)
 3. Test payment with Stripe test card: `4242 4242 4242 4242` (any future date, any CVC)
@@ -84,17 +89,17 @@ Visit your deployed URL and:
 
 ## 📚 Documentation Map
 
-| Document | Purpose | Read Time |
-|----------|---------|-----------|
-| [README.md](./README.md) | Full feature overview and tech stack | 10 min |
-| [INSTALLATION.md](./INSTALLATION.md) | Step-by-step setup for local development | 10 min |
-| [DEPLOYMENT.md](./DEPLOYMENT.md) | Deploy to Vercel, Netlify, Fly.io, Docker | 15 min |
-| [FEATURES.md](./FEATURES.md) | Complete feature list and descriptions | 5 min |
-| [SECURITY.md](./SECURITY.md) | Security features, checklist, compliance | 10 min |
-| [SMTP_SETUP.md](./SMTP_SETUP.md) | Email verification setup (optional) | 5 min |
-| [API.md](./API.md) | API endpoint reference | 10 min |
-| [CHANGELOG.md](./CHANGELOG.md) | Version history and updates | 2 min |
-| [LICENSE.md](./LICENSE.md) | License and usage terms | 5 min |
+| Document                             | Purpose                                   | Read Time |
+| ------------------------------------ | ----------------------------------------- | --------- |
+| [README.md](./README.md)             | Full feature overview and tech stack      | 10 min    |
+| [INSTALLATION.md](./INSTALLATION.md) | Step-by-step setup for local development  | 10 min    |
+| [DEPLOYMENT.md](./DEPLOYMENT.md)     | Deploy to Vercel, Netlify, Fly.io, Docker | 15 min    |
+| [FEATURES.md](./FEATURES.md)         | Complete feature list and descriptions    | 5 min     |
+| [SECURITY.md](./SECURITY.md)         | Security features, checklist, compliance  | 10 min    |
+| [SMTP_SETUP.md](./SMTP_SETUP.md)     | Email verification setup (optional)       | 5 min     |
+| [API.md](./API.md)                   | API endpoint reference                    | 10 min    |
+| [CHANGELOG.md](./CHANGELOG.md)       | Version history and updates               | 2 min     |
+| [LICENSE.md](./LICENSE.md)           | License and usage terms                   | 5 min     |
 
 ## 🔧 Tech Stack Summary
 
@@ -107,17 +112,17 @@ Visit your deployed URL and:
 
 ## ⚙️ Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `.env` | Environment variables (create this) |
-| `.env.example` | Environment template |
-| `vercel.json` | Vercel deployment config |
-| `netlify.toml` | Netlify deployment config |
-| `fly.toml` | Fly.io deployment config |
-| `package.json` | Node.js dependencies |
-| `vite.config.ts` | Frontend build config |
-| `tsconfig.json` | TypeScript config |
-| `tailwind.config.ts` | Tailwind CSS config |
+| File                 | Purpose                             |
+| -------------------- | ----------------------------------- |
+| `.env`               | Environment variables (create this) |
+| `.env.example`       | Environment template                |
+| `vercel.json`        | Vercel deployment config            |
+| `netlify.toml`       | Netlify deployment config           |
+| `fly.toml`           | Fly.io deployment config            |
+| `package.json`       | Node.js dependencies                |
+| `vite.config.ts`     | Frontend build config               |
+| `tsconfig.json`      | TypeScript config                   |
+| `tailwind.config.ts` | Tailwind CSS config                 |
 
 ## 🎯 Setup Checklist
 
@@ -150,7 +155,9 @@ FASHN_AI_API_KEY=fa_...               # Required (for video generation)
 ## 🚀 Deployment Recommendations
 
 ### For Easy Setup (Recommended)
+
 **→ Use Vercel**
+
 - Free tier available
 - Auto-deploys on git push
 - Auto-scales
@@ -158,6 +165,7 @@ FASHN_AI_API_KEY=fa_...               # Required (for video generation)
 - See: [DEPLOYMENT.md](./DEPLOYMENT.md#vercel-deployment-recommended)
 
 ### For Alternative Platforms
+
 - **Netlify**: Good alternative, uses serverless functions
 - **Fly.io**: Self-hosted, full control
 - **Docker**: Container-based, any host
@@ -166,15 +174,19 @@ FASHN_AI_API_KEY=fa_...               # Required (for video generation)
 ## 🆘 Common Issues & Solutions
 
 ### Issue: "Cannot find module 'pg'"
+
 → Run `pnpm install` to install dependencies
 
 ### Issue: "DATABASE_URL not set"
+
 → Create `.env` file and add your database URL
 
 ### Issue: Payment button not working
+
 → Check that `STRIPE_PUBLISHABLE_KEY` is set in `.env`
 
 ### Issue: "Webhook returned 404"
+
 → Make sure webhook URL in Stripe Dashboard is correct (https://your-domain.com/api/stripe-webhook)
 
 For more issues, see [DEPLOYMENT.md](./DEPLOYMENT.md#troubleshooting)
@@ -250,18 +262,23 @@ The app is ready to make money immediately:
 ## 🎨 Customization Tips
 
 ### Change Pricing
+
 Edit `client/components/SmartVideoForm.tsx` - search for price amounts
 
 ### Change Colors
+
 Edit `client/global.css` for theme colors
 
 ### Add Your Logo
+
 Replace `public/logo.svg` with your logo
 
 ### Change App Name
+
 Search for "Fashion AI" throughout the codebase and replace
 
 ### Customize Text
+
 Edit component files in `client/pages/` and `client/components/`
 
 See [README.md](./README.md) for more customization guide.
@@ -269,6 +286,7 @@ See [README.md](./README.md) for more customization guide.
 ## ✅ Quality Assurance
 
 This product includes:
+
 - ✅ TypeScript for type safety
 - ✅ Comprehensive error handling
 - ✅ Security best practices
@@ -283,6 +301,7 @@ This product includes:
 ## 📊 Analytics Ready
 
 Track your business metrics:
+
 - Number of videos generated
 - Payment success rate
 - Video generation time
@@ -302,6 +321,7 @@ See [FEATURES.md](./FEATURES.md#monitoring--logging) for monitoring details.
 ## 🚀 Launch Checklist
 
 Before going public:
+
 - [ ] All API keys configured
 - [ ] Stripe switched to LIVE keys (not test)
 - [ ] Custom domain configured
@@ -335,7 +355,7 @@ You cannot:
 
 ## 🎉 You're All Set!
 
-Your fashion AI video generator is ready to generate revenue. 
+Your fashion AI video generator is ready to generate revenue.
 
 **Ready to deploy?** → Jump to [DEPLOYMENT.md](./DEPLOYMENT.md)
 

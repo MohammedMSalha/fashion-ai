@@ -49,6 +49,7 @@ FASHN_AI_API_KEY = your_fashion_ai_api_key
 ```
 
 Optional variables:
+
 ```
 SMTP_HOST = smtp.gmail.com
 SMTP_PORT = 587
@@ -95,15 +96,18 @@ CORS_ORIGIN = https://yourdomain.com
 ### Vercel-Specific Features
 
 **Background Jobs:**
+
 - Video cleanup runs every 10 minutes
 - Video status polling runs every 2 minutes
 - Configured in `vercel.json` under `crons`
 
 **Environment Variables:**
+
 - Variables are automatically available to serverless functions
 - No need to rebuild for environment changes (redeploy)
 
 **Deployment Logs:**
+
 - View in Vercel Dashboard → Deployments → Logs
 - Check function logs for debugging
 
@@ -123,6 +127,7 @@ Netlify provides an alternative with serverless functions via `netlify/functions
 ### Step 2: Configure Build Settings
 
 Netlify auto-detects from `package.json`:
+
 - Build command: `npm run build`
 - Publish directory: `dist/spa`
 - Functions directory: `netlify/functions`
@@ -300,6 +305,7 @@ docker push yourusername/fashion-ai-generator:latest
 5. Add to environment as `DATABASE_URL`
 
 Connection string format:
+
 ```
 postgresql://neondb_owner:password@ep-xxxxx.region.neon.tech/neondb?sslmode=require
 ```
@@ -321,17 +327,21 @@ The application auto-creates the `videos` table on first connection.
 ## 🔑 Environment Variables Reference
 
 ### Stripe
+
 - `STRIPE_SECRET_KEY`: Found in Stripe Dashboard → API Keys (Secret Key)
 - `STRIPE_PUBLISHABLE_KEY`: Found in Stripe Dashboard → API Keys (Publishable Key)
 - `STRIPE_WEBHOOK_SECRET`: Generated when creating webhook endpoint
 
 ### Fashion.ai
+
 - `FASHN_AI_API_KEY`: Obtained from Fashion.ai dashboard
 
 ### Database
+
 - `DATABASE_URL`: PostgreSQL connection string (URL format)
 
 ### Email (Optional)
+
 - `SMTP_HOST`: SMTP server (e.g., smtp.gmail.com)
 - `SMTP_PORT`: SMTP port (587 for TLS, 465 for SSL)
 - `SMTP_USER`: Email address or username
@@ -340,25 +350,29 @@ The application auto-creates the `videos` table on first connection.
 - `SMTP_SECURE`: true/false for SSL/TLS
 
 ### CORS (Optional)
-- `CORS_ORIGIN`: Allowed origins (default: *)
+
+- `CORS_ORIGIN`: Allowed origins (default: \*)
 
 ## 🧪 Testing Deployment
 
 After deployment, test these endpoints:
 
 ### Health Check
+
 ```bash
 curl https://your-domain.com/api/health
 # Response: {"status":"ok"}
 ```
 
 ### SMTP Status
+
 ```bash
 curl https://your-domain.com/api/auth/smtp-status
 # Response: {"configured":true/false}
 ```
 
 ### Create Payment Intent
+
 ```bash
 curl -X POST https://your-domain.com/api/create-payment-intent \
   -H "Content-Type: application/json" \
@@ -376,6 +390,7 @@ curl -X POST https://your-domain.com/api/create-payment-intent \
 ### Webhook Returns 404
 
 **Solution:**
+
 - Verify webhook URL in Stripe Dashboard
 - Check that `STRIPE_WEBHOOK_SECRET` is set
 - Ensure `api/[[...pathname]].ts` is deployed
@@ -383,6 +398,7 @@ curl -X POST https://your-domain.com/api/create-payment-intent \
 ### Payment Not Processing
 
 **Solution:**
+
 - Verify `STRIPE_SECRET_KEY` is set
 - Check database connection with: `GET /api/health`
 - View Stripe webhook logs: Stripe Dashboard → Developers → Webhooks
@@ -390,6 +406,7 @@ curl -X POST https://your-domain.com/api/create-payment-intent \
 ### Videos Not Generating
 
 **Solution:**
+
 - Check `FASHN_AI_API_KEY` is valid
 - Verify database: `SELECT COUNT(*) FROM videos;`
 - Check video status: `GET /api/video-status/:videoId`
@@ -397,6 +414,7 @@ curl -X POST https://your-domain.com/api/create-payment-intent \
 ### Email Verification Not Working
 
 **Solution:**
+
 - If SMTP not needed, skip configuration
 - If needed, verify SMTP credentials
 - Test with: `GET /api/auth/smtp-status`
@@ -404,6 +422,7 @@ curl -X POST https://your-domain.com/api/create-payment-intent \
 ### Database Connection Error
 
 **Solution:**
+
 - Verify `DATABASE_URL` format is correct
 - Add `?sslmode=require` if using Neon
 - Check database is accessible from deployment environment
@@ -411,6 +430,7 @@ curl -X POST https://your-domain.com/api/create-payment-intent \
 ### Cold Start Issues
 
 **Solution:**
+
 - Vercel: Usually < 2s
 - Netlify: Usually < 5s
 - Fly.io: Usually < 1s
@@ -419,16 +439,19 @@ curl -X POST https://your-domain.com/api/create-payment-intent \
 ## 📊 Monitoring
 
 ### Vercel Dashboard
+
 - Deployments → View logs
 - Analytics → Requests/Performance
 - Integrations → View connected services
 
 ### Stripe Dashboard
+
 - Developers → Webhooks → Event logs
 - Payments → Transaction history
 - Customers → User list
 
 ### Database
+
 ```bash
 # Connect to Neon database
 psql postgresql://neondb_owner:password@host/neondb

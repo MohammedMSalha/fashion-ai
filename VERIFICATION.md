@@ -92,6 +92,7 @@ pnpm dev
 Open browser to http://localhost:5173
 
 **Visual Checks:**
+
 - [ ] App loads without errors
 - [ ] Logo/branding visible
 - [ ] Navigation menu present
@@ -100,6 +101,7 @@ Open browser to http://localhost:5173
 - [ ] Responsive on mobile (test with DevTools)
 
 **Console Check:**
+
 - Open DevTools (F12)
 - Go to Console tab
 - Should see NO red errors
@@ -124,6 +126,7 @@ curl http://localhost:5173/api/health
 ### 4. Payment Form Verification
 
 In browser:
+
 1. Click "Start Generating" button
 2. Upload a test image (JPEG or PNG)
 3. Select video duration
@@ -134,6 +137,7 @@ In browser:
 8. **DO NOT** enter real card details in test mode
 
 **Stripe Test Card:**
+
 - Number: 4242 4242 4242 4242
 - Expiry: Any future date (e.g., 12/99)
 - CVC: Any 3 digits (e.g., 123)
@@ -146,16 +150,18 @@ Test creating a video record:
 
 ```javascript
 // In browser console, test video config save
-fetch('/api/save-video-config', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+fetch("/api/save-video-config", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    email: 'test@example.com',
-    imageBase64: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABA...',
+    email: "test@example.com",
+    imageBase64: "data:image/jpeg;base64,/9j/4AAQSkZJRgABA...",
     duration: 10,
-    resolution: '1080p'
-  })
-}).then(r => r.json()).then(console.log);
+    resolution: "1080p",
+  }),
+})
+  .then((r) => r.json())
+  .then(console.log);
 
 // Expected response: { success: true, videoId: XX, status: 'awaiting_payment' }
 ```
@@ -228,6 +234,7 @@ Open https://your-app.vercel.app in browser:
 9. Wait for redirect to "Generating Video" page
 
 **Expected behavior:**
+
 - Payment processes without errors
 - Redirected to generation page
 - Spinner shows "Generating Video"
@@ -236,6 +243,7 @@ Open https://your-app.vercel.app in browser:
 - Download button available
 
 **Check database:**
+
 ```bash
 psql "$DATABASE_URL" -c "
 SELECT id, email, status, payment_status, payment_amount, request_id, video_url
@@ -262,6 +270,7 @@ LIMIT 1;
 **File:** `client/components/SmartVideoForm.tsx`
 
 Verify:
+
 - [ ] Form renders
 - [ ] Image upload works
 - [ ] Duration dropdown works
@@ -275,6 +284,7 @@ Verify:
 **File:** `client/components/StripePaymentForm.tsx`
 
 Verify:
+
 - [ ] Stripe form loads
 - [ ] Card input fields appear
 - [ ] Pay button is enabled
@@ -288,6 +298,7 @@ Verify:
 **File:** `client/pages/Index.tsx` (in-progress section)
 
 Verify:
+
 - [ ] Loading spinner shows
 - [ ] "Generating Video" message displays
 - [ ] Polling starts automatically
@@ -430,6 +441,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 ### Scenario 1: Complete Payment Flow
 
 **Steps:**
+
 1. Upload image
 2. Configure video (10s, 1080p)
 3. Enter email
@@ -438,6 +450,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 6. Download video
 
 **Expected Result:**
+
 - Payment succeeds
 - Video generation starts
 - Video appears in "My Videos"
@@ -449,6 +462,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 (Only if SMTP configured)
 
 **Steps:**
+
 1. Go to "My Videos"
 2. Enter email
 3. Receive verification code
@@ -456,6 +470,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 5. View videos
 
 **Expected Result:**
+
 - Email received with code
 - Code accepted
 - Videos display
@@ -464,12 +479,14 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 ### Scenario 3: Video Expiry
 
 **Steps:**
+
 1. Create video
 2. Wait 48+ hours
 3. Try to access video
 4. Run cleanup job manually
 
 **Expected Result:**
+
 - Video initially available
 - After 48 hours, video removed from listing
 - Soft-deleted in database
@@ -478,12 +495,14 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 ### Scenario 4: Error Handling
 
 **Steps:**
+
 1. Try payment without required fields
 2. Try invalid email format
 3. Attempt payment with invalid card (4000 0000 0000 9995)
 4. Cancel payment
 
 **Expected Result:**
+
 - Validation errors shown
 - Error messages are clear
 - App doesn't crash
@@ -494,6 +513,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 ## 📋 Verification Checklist
 
 ### Pre-Launch
+
 - [ ] .env file created with all required variables
 - [ ] Database URL verified working
 - [ ] Stripe keys verified working
@@ -505,6 +525,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 - [ ] `/api/health` returns {"status":"ok"}
 
 ### Pre-Deployment
+
 - [ ] All environment variables set correctly
 - [ ] Database backups configured
 - [ ] SSL certificate obtained
@@ -517,6 +538,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 - [ ] Terms of service added (if required)
 
 ### Post-Deployment
+
 - [ ] App loads on production domain
 - [ ] `/api/health` endpoint responds
 - [ ] Payment form appears
@@ -529,6 +551,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 - [ ] All buttons/links functional
 
 ### Security
+
 - [ ] HTTPS/SSL enabled
 - [ ] No API keys in frontend code
 - [ ] No secrets in git history
@@ -545,6 +568,7 @@ time psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM videos;"
 ## 🆘 Troubleshooting Verification
 
 ### If Health Check Fails
+
 ```bash
 # Check server is running
 ps aux | grep node
@@ -560,6 +584,7 @@ pnpm dev
 ```
 
 ### If Payment Fails
+
 ```bash
 # Check Stripe API keys
 grep STRIPE .env
@@ -575,6 +600,7 @@ psql "$DATABASE_URL" -c "SELECT * FROM videos WHERE email = 'test@example.com';"
 ```
 
 ### If Video Generation Fails
+
 ```bash
 # Check Fashion.ai API key
 grep FASHN_AI_API_KEY .env
@@ -590,6 +616,7 @@ curl https://your-domain.com/api/video-status/123
 ```
 
 ### If Database Connection Fails
+
 ```bash
 # Test connection
 psql "$DATABASE_URL" -c "SELECT 1;"
@@ -611,6 +638,7 @@ ping ep-xxxxx.neon.tech
 Once all verifications pass, you can confidently deploy to production and launch publicly.
 
 **Verification Status:**
+
 - [ ] All pre-launch checks passed
 - [ ] All pre-deployment checks passed
 - [ ] All post-deployment checks passed
@@ -620,10 +648,10 @@ Once all verifications pass, you can confidently deploy to production and launch
 - [ ] Team trained and ready
 - [ ] Support process documented
 
-**Date Verified:** _______________
+**Date Verified:** ******\_\_\_******
 
-**Verified By:** _______________
+**Verified By:** ******\_\_\_******
 
-**Sign-Off:** _______________
+**Sign-Off:** ******\_\_\_******
 
 See [README.md](./README.md) for more information.

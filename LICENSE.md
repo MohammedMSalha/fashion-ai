@@ -9,6 +9,7 @@ Subject to the terms and conditions of this License, the copyright holder grants
 ## 2. Permitted Use
 
 You may:
+
 - Use the Software for commercial and non-commercial purposes
 - Modify the Software for your specific needs
 - Deploy the Software to production environments
@@ -18,6 +19,7 @@ You may:
 ## 3. Restrictions
 
 You may NOT:
+
 - Resell the Software as-is without substantial modifications
 - Claim original authorship of the Software
 - Remove or modify copyright notices and license text
@@ -31,6 +33,7 @@ All intellectual property rights, including but not limited to copyrights, paten
 ## 5. Modifications
 
 If you modify the Software, you must:
+
 - Clearly mark modifications as your own
 - Retain all copyright notices from the original Software
 - Document your changes
@@ -39,6 +42,7 @@ If you modify the Software, you must:
 ## 6. Derivative Works
 
 You may create derivative works (modified versions) of the Software. However:
+
 - You may not distribute derivative works under the same license
 - You must acknowledge the original Software and copyright holder
 - You are responsible for compliance with this License in derivative works
@@ -48,6 +52,7 @@ You may create derivative works (modified versions) of the Software. However:
 THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
 IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR:
+
 - Any indirect, incidental, special, consequential, or punitive damages
 - Loss of profits, revenue, data, or use
 - Business interruption
@@ -57,6 +62,7 @@ IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR:
 ## 8. Warranty Disclaimer
 
 THE COPYRIGHT HOLDER DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING:
+
 - Warranty of merchantability
 - Warranty of fitness for a particular purpose
 - Warranty of non-infringement
@@ -67,6 +73,7 @@ The Software is provided on an "as-is" basis, and the entire risk of quality and
 ## 9. Third-Party Components
 
 The Software includes third-party libraries and components that are subject to their own licenses. These include:
+
 - React (MIT License)
 - Express.js (MIT License)
 - Stripe SDK (Apache License 2.0)
@@ -78,6 +85,7 @@ You are responsible for complying with the licenses of all third-party component
 ## 10. Payment Processing
 
 This Software integrates with Stripe for payment processing. Use of Stripe is subject to:
+
 - Stripe's Terms of Service: https://stripe.com/legal
 - Stripe's Privacy Policy: https://stripe.com/privacy
 - Stripe's Processing Agreement
@@ -87,6 +95,7 @@ You are responsible for your own compliance with Stripe's terms and conditions.
 ## 11. Data and Privacy
 
 You are responsible for:
+
 - Protecting user data and privacy
 - Complying with applicable data protection laws (GDPR, CCPA, etc.)
 - Obtaining necessary user consent for data collection
@@ -98,6 +107,7 @@ You are responsible for:
 This License is effective until terminated. Your rights under this License will terminate automatically without notice if you fail to comply with any term(s) of this License.
 
 Upon termination:
+
 - You must cease use of the Software
 - You must destroy or return all copies of the Software
 - All provisions that by their nature should survive termination shall survive
@@ -121,6 +131,7 @@ The copyright holder is not obligated to provide any support, maintenance, updat
 ## 17. Commercial Use
 
 If you use the Software for commercial purposes:
+
 - You accept full responsibility for your use
 - You must ensure you have proper liability insurance
 - You are responsible for support and maintenance of your deployment
@@ -133,6 +144,7 @@ The copyright holder reserves the right to change this License at any time. Chan
 ## 19. Compliance
 
 You agree to comply with:
+
 - All applicable laws and regulations
 - Payment processor terms (Stripe)
 - Platform terms (Vercel, Netlify, Fly.io, etc.)
