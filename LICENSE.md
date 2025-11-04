@@ -70,10 +70,10 @@ If you modify the Software, you must:
 You may create derivative works (modified versions) of the Software. However:
 
 - You may not distribute derivative works under the same license
-- You must acknowledge the original Software and copyright holder
+- You must acknowledge the original Software and copyright holder (Mohammed Salha)
 - You are responsible for compliance with this License in derivative works
 
-## 7. Limitation of Liability
+## 8. Limitation of Liability
 
 THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
