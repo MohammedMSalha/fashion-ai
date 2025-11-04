@@ -263,6 +263,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
             videoRecord.image_base64,
             videoRecord.duration as 5 | 10,
             videoRecord.resolution as "720p" | "1080p",
+            videoRecord.fashn_ai_key,
           );
 
           console.log(
