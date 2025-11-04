@@ -24,14 +24,15 @@ export const checkPendingVideos: RequestHandler = async (req, res) => {
 
     // Get all pending videos for this email
     const result = await query(
-      `SELECT id, request_id FROM videos
+      `SELECT id, request_id, fashn_ai_key FROM videos
        WHERE email = $1 AND status = 'processing' AND request_id IS NOT NULL AND deleted_at IS NULL`,
       [email],
     );
 
     // Check status for each pending video
     for (const row of result.rows) {
-      await updateVideoStatusFromFashn(row.request_id);
+      // Pass the user's API key if available
+      await updateVideoStatusFromFashn(row.request_id, row.fashn_ai_key);
     }
 
     // Return updated videos
