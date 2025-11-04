@@ -2,6 +2,22 @@
 
 A full-stack SaaS application that generates professional fashion videos using AI. Users can upload fashion images, configure video settings, and purchase generated videos through integrated Stripe payments.
 
+---
+
+## 📖 NEW: Complete Platform Usage Guide
+
+👉 **[Read the Platform Usage Guide](./PLATFORM_USAGE_GUIDE.md)** for comprehensive instructions on:
+- How to use the platform
+- API keys management (system vs user-provided)
+- Environment variables setup
+- Demo mode configuration
+- Payment processing
+- Video generation workflow
+- Troubleshooting (30+ common issues)
+- FAQ (30+ questions)
+
+---
+
 ## 🎯 Features
 
 - **AI Video Generation**: Generate professional fashion videos from static images
@@ -112,7 +128,7 @@ The application will be available at `http://localhost:5173`
 ├── client/                          # React frontend
 │   ├── pages/                       # Route components
 │   │   ├── Index.tsx                # Home page with video generator
-│   │   ├── MyVideos.tsx             # User video gallery
+│   │   ├─�� MyVideos.tsx             # User video gallery
 │   │   └── Generate.tsx             # Video generation flow
 │   ├── components/
 │   │   ├── SmartVideoForm.tsx       # Video configuration form
