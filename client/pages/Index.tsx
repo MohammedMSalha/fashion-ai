@@ -110,6 +110,7 @@ export default function Index() {
   const [showExpiryAlert, setShowExpiryAlert] = useState(true);
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [demoMode, setDemoMode] = useState<boolean | null>(null);
 
   // Poll video status when in-progress (after payment)
   useEffect(() => {
