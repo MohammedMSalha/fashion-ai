@@ -12,25 +12,41 @@ Subject to the terms and conditions of this License, the copyright holder (Moham
 
 **IMPORTANT**: This Software is an exclusive product. The copyright holder retains all ownership rights. You are granted a limited license to use this Software only as permitted under this Agreement.
 
-## 2. Permitted Use
+## 2. Ownership and Exclusivity
 
-You may:
+This Software is an **exclusive product** owned entirely by **Mohammed Salha**. The copyright holder retains all ownership rights, including:
+
+- All source code and compiled versions
+- All intellectual property and design concepts
+- All trademarks and branding
+- All documentation and materials
+- All improvements and derivative works
+
+You are NOT granted ownership of any part of the Software. Your use of the Software is governed solely by this License.
+
+## 3. Permitted Use
+
+Subject to the terms of this License, you may:
 
 - Use the Software for commercial and non-commercial purposes
 - Modify the Software for your specific needs
 - Deploy the Software to production environments
-- Create derivative works based on the Software
-- Use the Software source code in your projects
+- Create derivative works based on the Software for your own use
+- Use the Software in your business or projects
 
-## 3. Restrictions
+## 4. Restrictions
 
 You may NOT:
 
-- Resell the Software as-is without substantial modifications
-- Claim original authorship of the Software
-- Remove or modify copyright notices and license text
-- Use the Software to compete directly with the original product
-- Distribute the unmodified source code publicly without permission
+- Resell, redistribute, or relicense the Software (modified or unmodified)
+- Claim original authorship or ownership of the Software
+- Remove or modify copyright notices, license text, or ownership statements
+- Use the Software to create a competing product
+- Distribute the Software's source code publicly without explicit permission
+- Use the Software in any way that violates applicable laws
+- Transfer ownership or exclusive rights to any third party
+- Sublicense the Software to others
+- Use the Software for purposes other than your own business
 
 ## 4. Intellectual Property
 
