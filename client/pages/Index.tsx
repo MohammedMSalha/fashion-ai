@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import VideoSlider from "@/components/VideoSlider";
 import SmartVideoForm from "@/components/SmartVideoForm";
+import ApiKeyModal from "@/components/ApiKeyModal";
 import MyVideos from "./MyVideos";
 import { useToast } from "@/hooks/use-toast";
 import { createApiUrl } from "@/config/api";
