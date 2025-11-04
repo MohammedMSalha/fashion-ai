@@ -778,6 +778,9 @@ export default function Index() {
           </div>
         </section>
       )}
+
+      {/* API KEY MODAL */}
+      <ApiKeyModal open={showApiKeyModal} onApiKeySubmit={handleApiKeySubmit} />
     </div>
   );
 }
