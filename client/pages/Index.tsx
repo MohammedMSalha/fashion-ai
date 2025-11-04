@@ -809,7 +809,11 @@ export default function Index() {
       )}
 
       {/* API KEY MODAL */}
-      <ApiKeyModal open={showApiKeyModal} onApiKeySubmit={handleApiKeySubmit} />
+      <ApiKeyModal
+        open={showApiKeyModal}
+        onApiKeySubmit={handleApiKeySubmit}
+        onClose={() => setShowApiKeyModal(false)}
+      />
     </div>
   );
 }
