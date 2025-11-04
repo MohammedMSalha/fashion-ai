@@ -90,11 +90,12 @@ export default function ApiKeyModal({
               <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-purple-300 mb-1">
-                  Demo Mode Only
+                  {demoMode === true ? "Demo Mode - Required" : "Demo Mode Only"}
                 </p>
                 <p className="text-xs text-purple-200/80 leading-relaxed">
-                  This step is only required for demo use. In production, this
-                  won't be needed.
+                  {demoMode === true
+                    ? "Your Fashion.ai API key is required to generate videos in demo mode."
+                    : "This step is only required for demo use. In production, this won't be needed."}
                 </p>
               </div>
             </div>
