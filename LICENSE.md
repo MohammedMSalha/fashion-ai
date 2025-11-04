@@ -48,9 +48,13 @@ You may NOT:
 - Sublicense the Software to others
 - Use the Software for purposes other than your own business
 
-## 4. Intellectual Property
+## 5. Intellectual Property
 
-All intellectual property rights, including but not limited to copyrights, patents, trademarks, and trade secrets, remain the property of the copyright holder. The Software is protected by international copyright laws.
+All intellectual property rights, including but not limited to copyrights, patents, trademarks, trade secrets, and design rights, are owned exclusively by **Mohammed Salha**. The Software is protected by international copyright laws and agreements.
+
+**No intellectual property rights are transferred to you under this License.** You are granted only a limited, non-exclusive license to use the Software as permitted herein.
+
+The copyright holder may pursue legal action to protect intellectual property rights against unauthorized use, distribution, or reproduction of the Software.
 
 ## 5. Modifications
 
