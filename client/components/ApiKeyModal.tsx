@@ -64,9 +64,8 @@ export default function ApiKeyModal({
   };
 
   const handleOpenChange = (newOpen: boolean) => {
-    // Allow closing by clicking outside (backdrop) only if Demo mode is false
-    // If Demo mode is true, API key is required so don't allow dismissal
-    if (!newOpen && demoMode !== true) {
+    // Allow closing by clicking outside (backdrop)
+    if (!newOpen) {
       handleSkip();
     }
   };
