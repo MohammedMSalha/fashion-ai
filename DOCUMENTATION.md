@@ -10,6 +10,11 @@ Complete guide to all documentation files for Fashion AI Video Generator.
 - **Get an overview:** [README.md](./README.md) - Full feature list and tech stack
 - **Verify it works:** [VERIFICATION.md](./VERIFICATION.md) - Testing and verification guide
 
+### For Everyone
+
+- **How to use the platform:** [PLATFORM_USAGE_GUIDE.md](./PLATFORM_USAGE_GUIDE.md) - Complete usage guide, API keys, environment variables
+- **How it works:** [README.md](./README.md) - Features, tech stack, architecture
+
 ### For Developers
 
 - **Install locally:** [INSTALLATION.md](./INSTALLATION.md) - Step-by-step setup
