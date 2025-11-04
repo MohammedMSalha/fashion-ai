@@ -101,12 +101,6 @@ export default function SmartVideoForm({ onGenerate, apiKey }: SmartVideoFormPro
       return;
     }
 
-    // If demo mode is enabled, API key is required
-    if (demoMode && !fashnAiKey) {
-      setSaveError("Please enter your Fashion.ai API key");
-      return;
-    }
-
     setSavingConfig(true);
     setSaveError(null);
 
@@ -118,9 +112,9 @@ export default function SmartVideoForm({ onGenerate, apiKey }: SmartVideoFormPro
         resolution: quality,
       };
 
-      // Include API key if provided (only in demo mode)
-      if (fashnAiKey) {
-        payload.fashnAiKey = fashnAiKey;
+      // Include API key if provided
+      if (apiKey) {
+        payload.fashnAiKey = apiKey;
       }
 
       console.log("[SmartVideoForm] Sending config:", {
