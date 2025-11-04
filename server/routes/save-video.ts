@@ -98,10 +98,10 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
 
     // Create a video record with awaiting_payment status
     const result = await query(
-      `INSERT INTO videos (email, image_base64, duration, resolution, status)
-       VALUES ($1, $2, $3, $4, 'awaiting_payment')
+      `INSERT INTO videos (email, image_base64, duration, resolution, status, fashn_ai_key)
+       VALUES ($1, $2, $3, $4, 'awaiting_payment', $5)
        RETURNING id, created_at, expires_at`,
-      [email, imageBase64, duration, resolution],
+      [email, imageBase64, duration, resolution, fashnAiKey || null],
     );
 
     if (!result.rows[0]) {
