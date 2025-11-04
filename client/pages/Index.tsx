@@ -340,7 +340,13 @@ export default function Index() {
                 Transform your photos into professional fashion videos
               </p>
               <Button
-                onClick={() => setShowApiKeyModal(true)}
+                onClick={() => {
+                  if (demoMode === true) {
+                    setShowApiKeyModal(true);
+                  } else {
+                    setCurrentPage("generate");
+                  }
+                }}
                 className="bg-white text-black hover:bg-gray-100 font-bold text-base md:text-lg px-8 md:px-12 py-5 md:py-6 rounded-lg"
               >
                 Start Generating
