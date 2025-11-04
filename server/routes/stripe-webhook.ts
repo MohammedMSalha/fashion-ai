@@ -221,7 +221,7 @@ export const handleStripeWebhook: RequestHandler = async (req, res) => {
         );
         try {
           const videoResult = await query(
-            `SELECT id, image_base64, resolution, duration, status FROM videos WHERE id = $1`,
+            `SELECT id, image_base64, resolution, duration, status, fashn_ai_key FROM videos WHERE id = $1`,
             [videoIdNum],
           );
 
