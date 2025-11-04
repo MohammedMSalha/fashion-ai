@@ -8,8 +8,7 @@ interface DemoConfigResponse {
 
 export const handleDemo: RequestHandler = (req, res) => {
   // Check for both DEMO and Demo (case-insensitive)
-  const demoMode =
-    process.env.DEMO === "true" || process.env.Demo === "true";
+  const demoMode = process.env.DEMO === "true" || process.env.Demo === "true";
 
   const response: DemoConfigResponse = {
     demoMode,
@@ -19,7 +18,14 @@ export const handleDemo: RequestHandler = (req, res) => {
       : "Demo mode disabled: System API key will be used for all generations",
   };
 
-  console.log("[DemoConfig] demoMode:", demoMode, "- DEMO env:", process.env.DEMO, "- Demo env:", process.env.Demo);
+  console.log(
+    "[DemoConfig] demoMode:",
+    demoMode,
+    "- DEMO env:",
+    process.env.DEMO,
+    "- Demo env:",
+    process.env.Demo,
+  );
   console.log("[DemoConfig]", response.message);
   res.status(200).json(response);
 };
