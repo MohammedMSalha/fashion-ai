@@ -391,6 +391,18 @@ Read all documents in order:
 
 ## 🎯 By Use Case
 
+### "I want to understand how to use the platform"
+
+→ [PLATFORM_USAGE_GUIDE.md](./PLATFORM_USAGE_GUIDE.md) (20 min)
+
+### "I want to understand API keys and environment variables"
+
+→ [PLATFORM_USAGE_GUIDE.md#api-keys-management](./PLATFORM_USAGE_GUIDE.md#api-keys-management) + [PLATFORM_USAGE_GUIDE.md#environment-variables](./PLATFORM_USAGE_GUIDE.md#environment-variables) (10 min)
+
+### "I want to enable Demo Mode with user-provided keys"
+
+→ [PLATFORM_USAGE_GUIDE.md#demo-mode-setup](./PLATFORM_USAGE_GUIDE.md#demo-mode-setup) (5 min)
+
 ### "I want to get started immediately"
 
 → [THEMEFOREST_README.md](./THEMEFOREST_README.md) (5 min)
