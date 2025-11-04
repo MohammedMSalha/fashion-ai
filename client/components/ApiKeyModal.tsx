@@ -128,17 +128,19 @@ export default function ApiKeyModal({
         </div>
 
         {/* Button Container */}
-        <div className="flex gap-3 mt-6 pt-4 border-t border-gray-700">
+        <div className={`flex gap-3 mt-6 pt-4 border-t border-gray-700 ${demoMode === true ? "flex-col" : ""}`}>
+          {demoMode !== true && (
+            <Button
+              variant="outline"
+              className="flex-1 bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white font-semibold transition"
+              onClick={handleSkip}
+              disabled={isLoading}
+            >
+              Skip for Now
+            </Button>
+          )}
           <Button
-            variant="outline"
-            className="flex-1 bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white font-semibold transition"
-            onClick={handleSkip}
-            disabled={isLoading}
-          >
-            Skip for Now
-          </Button>
-          <Button
-            className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold shadow-lg hover:shadow-purple-500/50 transition disabled:opacity-50"
+            className={`${demoMode === true ? "w-full" : "flex-1"} bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold shadow-lg hover:shadow-purple-500/50 transition disabled:opacity-50`}
             onClick={handleSubmit}
             disabled={!apiKey.trim() || isLoading}
           >
