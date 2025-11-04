@@ -1,0 +1,191 @@
+FASHION AI VIDEO GENERATOR
+Credits and Licensing & Assets
+
+================================================================================
+LICENSING & ASSETS
+================================================================================
+
+PROPRIETARY SOURCE CODE
+- Source code is proprietary and licensed to buyers under Envato's license.
+- All intellectual property rights reserved by Mohammed Salha (Copyright © 2025)
+- For full license terms, see LICENSE.txt or documentation/license.html
+
+================================================================================
+INCLUDED ASSETS
+================================================================================
+
+PLACEHOLDER VIDEOS
+- Location: /public/videos/
+- Purpose: Demonstration and preview only
+- Files included:
+  * monkey1.mp4 (Playful Monkey)
+  * monkey2.mp4 (Wild Monkey Moves)
+  * tiger.mp4 (Majestic Tiger)
+  * zebra.mp4 (Striped Zebra)
+  * elephant.mp4 (Gentle Elephant)
+
+IMPORTANT: These videos are placeholder content for testing and preview purposes.
+Buyers MUST replace these videos with properly licensed media that they own or 
+have the rights to use before deploying to production.
+
+The videos included in this package should NOT be:
+- Used in production without replacement
+- Redistributed as-is
+- Claimed as original content by the buyer
+
+================================================================================
+THIRD-PARTY INTEGRATIONS
+================================================================================
+
+STRIPE PAYMENT PROCESSING
+- Integrated via official Stripe SDK
+- Uses Stripe API (https://stripe.com)
+- Stripe Terms of Service: https://stripe.com/legal
+- Stripe Privacy Policy: https://stripe.com/privacy
+- No Stripe assets are redistributed in this item
+- Buyers must have their own Stripe account
+
+FASHN.AI VIDEO GENERATION
+- Integrated via Fashn.ai official API
+- Uses Fashion.ai video generation service
+- No Fashn.ai assets are redistributed in this item
+- Buyers must have their own Fashn.ai API credentials
+- Subject to Fashn.ai's terms of service
+
+================================================================================
+OPEN-SOURCE DEPENDENCIES
+================================================================================
+
+The following open-source libraries are used (all with permissive licenses):
+
+FRONTEND LIBRARIES
+- React (MIT License)
+- React Router (MIT License)
+- Tailwind CSS (MIT License)
+- Radix UI (MIT License)
+- Framer Motion (MIT License)
+- Recharts (Apache 2.0 License)
+- Stripe React JS (MIT License)
+- Three.js (MIT License)
+- Lucide React (MIT License)
+- Sonner (MIT License)
+- TanStack React Query (MIT License)
+
+BACKEND LIBRARIES
+- Express.js (MIT License)
+- PostgreSQL Node Client (MIT License)
+- Stripe Node.js SDK (Apache 2.0 License)
+- Nodemailer (MIT License)
+- Node Cron (ISC License)
+- Helmet (MIT License)
+- Express Rate Limit (MIT License)
+- CORS (MIT License)
+- Zod (MIT License)
+
+DEVELOPMENT TOOLS
+- TypeScript (Apache 2.0 License)
+- Vite (MIT License)
+- Vitest (MIT License)
+- SWC (Apache 2.0 License)
+- Prettier (MIT License)
+- Tailwind CSS Typography (MIT License)
+
+All open-source dependencies are licensed under commercially compatible licenses:
+- MIT License (majority)
+- Apache 2.0 License
+- ISC License
+- BSD License
+
+For complete details on all dependencies and their licenses, see 
+THIRD_PARTY_LICENSES.md
+
+================================================================================
+BUYER RESPONSIBILITIES
+================================================================================
+
+MEDIA AND CONTENT
+- Replace all placeholder videos with properly licensed content
+- Ensure all media used complies with applicable copyright laws
+- Obtain necessary licenses for any images, videos, or media displayed to users
+
+THIRD-PARTY SERVICES
+- Set up and maintain your own Stripe account
+- Obtain and manage your own Fashn.ai API credentials
+- Configure your own database (optional, can use Neon PostgreSQL)
+- Comply with terms of service for all integrated services
+
+DATA AND PRIVACY
+- Implement and maintain GDPR/CCPA compliance if required
+- Protect user data appropriately
+- Display privacy notices to your users
+- Maintain security of all API keys and credentials
+
+COMPLIANCE
+- Comply with all applicable laws and regulations
+- Respect intellectual property rights of third parties
+- Follow terms of service for all integrated platforms
+- Maintain proper licensing for any additional assets used
+
+================================================================================
+WHAT IS INCLUDED
+================================================================================
+
+✓ Complete full-stack source code (React frontend + Express backend)
+✓ Database schema and migration support (PostgreSQL)
+✓ Stripe payment processing integration
+✓ Fashn.ai AI video generation API integration
+✓ Email verification system (optional SMTP)
+✓ User video management and download functionality
+✓ Complete documentation and setup guides
+✓ Deployment configurations (Vercel, Netlify, Fly.io)
+✓ Security best practices (Helmet, CORS, rate limiting)
+✓ Responsive UI with Tailwind CSS and Radix UI components
+
+================================================================================
+WHAT IS NOT INCLUDED
+================================================================================
+
+✗ Stripe account (buyer must create their own)
+✗ Fashn.ai API credentials (buyer must obtain their own)
+✗ Database server (optional - buyer can use Neon or self-host)
+✗ Email service provider (optional - buyer can configure SMTP)
+✗ Domain name (buyer must purchase separately)
+✗ SSL/TLS certificates (automatic with hosting providers)
+✗ Legal templates (buyer responsible for privacy policy, ToS, etc.)
+✗ Original video content (included videos are placeholders only)
+✗ Customer support beyond documentation provided
+
+================================================================================
+DEPLOYMENT SUPPORT
+================================================================================
+
+The application includes configurations for deployment on:
+- Vercel (recommended for full-stack hosting)
+- Netlify (with serverless functions)
+- Fly.io (traditional server deployment)
+- Custom servers with Node.js
+
+Complete deployment documentation is provided in DEPLOYMENT.md
+
+================================================================================
+SUPPORT AND RESOURCES
+================================================================================
+
+Documentation Files:
+- README.md - Product overview and features
+- INSTALLATION.md - Setup and installation guide
+- DEPLOYMENT.md - Deployment instructions
+- PLATFORM_USAGE_GUIDE.md - Complete user guide
+- SECURITY.md - Security features and best practices
+- SMTP_SETUP.md - Email verification configuration
+- API.md - API documentation
+- CHANGELOG.md - Version history and updates
+
+For licensing questions or inquiries:
+Contact: Mohammed Salha
+Product: Fashion AI Video Generator
+Copyright © 2025 Mohammed Salha - All Rights Reserved
+
+================================================================================
+LAST UPDATED: 2025
+================================================================================
