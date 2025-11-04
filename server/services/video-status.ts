@@ -66,9 +66,10 @@ export async function checkVideoGenerationStatus(
 
 export async function updateVideoStatusFromFashn(
   requestId: string,
+  userApiKey?: string,
 ): Promise<void> {
   try {
-    const status = await checkVideoGenerationStatus(requestId);
+    const status = await checkVideoGenerationStatus(requestId, userApiKey);
     if (!status) {
       console.log(
         `[UpdateStatus] No status response for request: ${requestId}`,
