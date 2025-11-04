@@ -22,6 +22,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
     height: number;
   } | null>(null);
   const [email, setEmail] = useState("");
+  const [fashnAiKey, setFashnAiKey] = useState("");
   const [duration, setDuration] = useState<"5s" | "10s">("10s");
   const [quality, setQuality] = useState<"720p" | "1080p">("1080p");
   const [dragActive, setDragActive] = useState(false);
@@ -29,6 +30,7 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   const [videoId, setVideoId] = useState<number | null>(null);
   const [savingConfig, setSavingConfig] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [demoMode, setDemoMode] = useState<boolean | null>(null);
 
   // Load saved email from localStorage
   useEffect(() => {
