@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -68,7 +67,7 @@ export default function ApiKeyModal({
     <AlertDialog open={open}>
       <AlertDialogContent className="max-w-md bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-purple-500/30 shadow-2xl">
         <AlertDialogHeader>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
               <Zap className="w-6 h-6 text-white" />
             </div>
@@ -76,55 +75,58 @@ export default function ApiKeyModal({
               API Key Required
             </AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="space-y-4 mt-4">
-            <p className="text-gray-300 text-sm">
-              To generate your video, you need to provide your Fashion.ai API
-              key.
-            </p>
+        </AlertDialogHeader>
 
-            {/* Enhanced Alert Box */}
-            <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-400/50 rounded-lg p-4">
-              <div className="flex gap-3">
-                <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-purple-300 mb-1">
-                    Demo Mode Only
-                  </p>
-                  <p className="text-xs text-purple-200/80 leading-relaxed">
-                    This step is only required for demo use. In production, this
-                    won't be needed.
-                  </p>
-                </div>
+        {/* Main Content */}
+        <div className="space-y-4">
+          {/* Description Text */}
+          <p className="text-gray-300 text-sm">
+            To generate your video, you need to provide your Fashion.ai API
+            key.
+          </p>
+
+          {/* Enhanced Alert Box */}
+          <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-400/50 rounded-lg p-4">
+            <div className="flex gap-3">
+              <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-purple-300 mb-1">
+                  Demo Mode Only
+                </p>
+                <p className="text-xs text-purple-200/80 leading-relaxed">
+                  This step is only required for demo use. In production, this
+                  won't be needed.
+                </p>
               </div>
             </div>
+          </div>
 
-            {/* API Key Input */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-200 mb-3">
-                Enter Your API Key
-              </label>
-              <Input
-                type="password"
-                placeholder="fa-XXXXXXXXXXXXXXXXXXXXXXXX"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                className="h-11 bg-gray-800 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-500/50 text-sm"
-                disabled={isLoading}
-              />
-              <p className="text-xs text-gray-400 mt-2">
-                Don't have a key?{" "}
-                <a
-                  href="https://fashn.ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-400 hover:text-purple-300 font-semibold underline transition"
-                >
-                  Get one from fashn.ai
-                </a>
-              </p>
-            </div>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+          {/* API Key Input */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-200 mb-3">
+              Enter Your API Key
+            </label>
+            <Input
+              type="password"
+              placeholder="fa-XXXXXXXXXXXXXXXXXXXXXXXX"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              className="h-11 bg-gray-800 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-500/50 text-sm"
+              disabled={isLoading}
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              Don't have a key?{" "}
+              <a
+                href="https://fashn.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-400 hover:text-purple-300 font-semibold underline transition"
+              >
+                Get one from fashn.ai
+              </a>
+            </p>
+          </div>
+        </div>
 
         {/* Button Container */}
         <div className="flex gap-3 mt-6 pt-4 border-t border-gray-700">
