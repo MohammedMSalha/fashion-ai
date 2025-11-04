@@ -330,6 +330,12 @@ Complete guide to all documentation files for Fashion AI Video Generator.
 
 ## 🗺️ Reading Paths
 
+### Path 0: Learn How to Use (20 minutes)
+
+1. [PLATFORM_USAGE_GUIDE.md](./PLATFORM_USAGE_GUIDE.md) - How the platform works, user workflow
+2. [PLATFORM_USAGE_GUIDE.md#api-keys-management](./PLATFORM_USAGE_GUIDE.md#api-keys-management) - API keys explanation
+3. [PLATFORM_USAGE_GUIDE.md#environment-variables](./PLATFORM_USAGE_GUIDE.md#environment-variables) - Variables reference
+
 ### Path 1: Buyer/Quick Start (20 minutes)
 
 1. [THEMEFOREST_README.md](./THEMEFOREST_README.md) - Start here!
