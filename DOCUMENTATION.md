@@ -449,6 +449,7 @@ Read all documents in order:
 
 | Document              | Lines      | Read Time    | Priority   |
 | --------------------- | ---------- | ------------ | ---------- |
+| PLATFORM_USAGE_GUIDE.md | 1,316     | 20 min       | ⭐⭐⭐⭐⭐ |
 | README.md             | 381        | 10 min       | ⭐⭐⭐⭐⭐ |
 | THEMEFOREST_README.md | 347        | 5 min        | ⭐⭐⭐⭐⭐ |
 | INSTALLATION.md       | 404        | 10 min       | ⭐⭐⭐⭐   |
@@ -462,7 +463,7 @@ Read all documents in order:
 | LICENSE.md            | 153        | 5 min        | ⭐⭐⭐     |
 | VERIFICATION.md       | 630        | 15 min       | ⭐⭐⭐⭐   |
 | DOCUMENTATION.md      | 400+       | 5 min        | ⭐⭐⭐     |
-| **Total**             | **~5,000** | **~2 hours** |            |
+| **Total**             | **~6,300** | **~2.5 hours** |            |
 
 ---
 
