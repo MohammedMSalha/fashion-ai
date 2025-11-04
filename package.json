@@ -1,5 +1,9 @@
 {
-  "name": "fusion-starter",
+  "name": "fashion-ai-video-generator",
+  "version": "1.0.0",
+  "description": "Full-stack SaaS application for generating professional fashion videos using AI with Stripe payment processing and real-time video generation status tracking.",
+  "author": "Mohammed Salha",
+  "license": "UNLICENSED",
   "private": true,
   "type": "module",
   "pkg": {
