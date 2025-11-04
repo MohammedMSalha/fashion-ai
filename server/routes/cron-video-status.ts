@@ -56,7 +56,10 @@ export const cronCheckVideoStatus: RequestHandler = async (req, res) => {
               );
 
               // Pass the user's API key if available
-              await updateVideoStatusFromFashn(row.request_id, row.fashn_ai_key);
+              await updateVideoStatusFromFashn(
+                row.request_id,
+                row.fashn_ai_key,
+              );
               videosUpdated++;
             } catch (error) {
               console.error(

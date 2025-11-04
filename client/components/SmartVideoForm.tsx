@@ -46,7 +46,12 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
         if (response.ok) {
           const data = await response.json();
           setDemoMode(data.demoMode);
-          console.log("[SmartVideoForm] Demo mode:", data.demoMode, "-", data.message);
+          console.log(
+            "[SmartVideoForm] Demo mode:",
+            data.demoMode,
+            "-",
+            data.message,
+          );
         }
       } catch (error) {
         console.error("[SmartVideoForm] Failed to fetch demo config:", error);
@@ -448,7 +453,9 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
           {demoMode === true && fashnAiKey && (
             <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
               <span className="text-sm text-gray-400">Custom API Key</span>
-              <span className="text-sm font-medium text-green-400">✓ Provided</span>
+              <span className="text-sm font-medium text-green-400">
+                ✓ Provided
+              </span>
             </div>
           )}
           <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
