@@ -108,7 +108,7 @@ The Software includes third-party libraries and components that are subject to t
 
 You are responsible for complying with the licenses of all third-party components.
 
-## 10. Payment Processing
+## 11. Payment Processing
 
 This Software integrates with Stripe for payment processing. Use of Stripe is subject to:
 
