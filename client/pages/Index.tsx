@@ -112,6 +112,25 @@ export default function Index() {
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [demoMode, setDemoMode] = useState<boolean | null>(null);
 
+  // Fetch demo configuration on mount
+  useEffect(() => {
+    const fetchDemoConfig = async () => {
+      try {
+        const response = await fetch(createApiUrl("/api/demo"));
+        if (response.ok) {
+          const data = await response.json();
+          setDemoMode(data.demoMode);
+          console.log("[Index] Demo mode:", data.demoMode);
+        }
+      } catch (error) {
+        console.error("[Index] Failed to fetch demo config:", error);
+        setDemoMode(false);
+      }
+    };
+
+    fetchDemoConfig();
+  }, []);
+
   // Poll video status when in-progress (after payment)
   useEffect(() => {
     if (currentPage !== "in-progress") {
