@@ -2,6 +2,26 @@
 
 Complete guide to all documentation files for Fashion AI Video Generator.
 
+---
+
+## 🆕 NEW: Platform Usage Guide
+
+**[PLATFORM_USAGE_GUIDE.md](./PLATFORM_USAGE_GUIDE.md)** - Start here to learn how to use the platform!
+
+This comprehensive guide includes:
+- ✅ How to use the platform (step-by-step)
+- ✅ API keys explained (system vs user-provided)
+- ✅ Environment variables (complete reference)
+- ✅ Demo mode setup (enabling user API keys)
+- ✅ Payment processing (Stripe integration)
+- ✅ Video management (upload, generate, download)
+- ✅ 30+ troubleshooting solutions
+- ✅ 30+ FAQ answers
+
+**Read time**: 20 minutes | **Priority**: ⭐⭐⭐⭐⭐
+
+---
+
 ## 📖 Quick Navigation
 
 ### For Buyers/Sellers on ThemeForest
@@ -162,7 +182,7 @@ Complete guide to all documentation files for Fashion AI Video Generator.
 
 **Who should read:** Product managers, business stakeholders
 **Read time:** 5 minutes
-**Priority:** ⭐⭐���
+**Priority:** ⭐⭐⭐
 
 ### 6. API.md (657 lines)
 
