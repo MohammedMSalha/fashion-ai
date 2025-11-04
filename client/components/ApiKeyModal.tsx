@@ -13,11 +13,13 @@ import { AlertCircle, Zap } from "lucide-react";
 interface ApiKeyModalProps {
   open: boolean;
   onApiKeySubmit: (apiKey: string | null) => void;
+  onClose?: () => void;
 }
 
 export default function ApiKeyModal({
   open,
   onApiKeySubmit,
+  onClose,
 }: ApiKeyModalProps) {
   const [apiKey, setApiKey] = useState("");
   const [demoMode, setDemoMode] = useState<boolean | null>(null);
