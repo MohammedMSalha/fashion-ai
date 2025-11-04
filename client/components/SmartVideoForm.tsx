@@ -8,6 +8,7 @@ import StripePaymentForm from "./StripePaymentForm";
 
 interface SmartVideoFormProps {
   onGenerate?: () => void;
+  apiKey?: string | null;
 }
 
 const PRICING = {
@@ -15,14 +16,13 @@ const PRICING = {
   "10s": { "720p": 1.0, "1080p": 1.2 },
 };
 
-export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
+export default function SmartVideoForm({ onGenerate, apiKey }: SmartVideoFormProps) {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [imageResolution, setImageResolution] = useState<{
     width: number;
     height: number;
   } | null>(null);
   const [email, setEmail] = useState("");
-  const [fashnAiKey, setFashnAiKey] = useState("");
   const [duration, setDuration] = useState<"5s" | "10s">("10s");
   const [quality, setQuality] = useState<"720p" | "1080p">("1080p");
   const [dragActive, setDragActive] = useState(false);
@@ -30,7 +30,6 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   const [videoId, setVideoId] = useState<number | null>(null);
   const [savingConfig, setSavingConfig] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [demoMode, setDemoMode] = useState<boolean | null>(null);
 
   // Load saved email from localStorage and fetch demo config
   useEffect(() => {
