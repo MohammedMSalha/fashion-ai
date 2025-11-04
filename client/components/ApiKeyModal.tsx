@@ -65,8 +65,15 @@ export default function ApiKeyModal({
     onApiKeySubmit(null);
   };
 
+  const handleOpenChange = (newOpen: boolean) => {
+    // If modal is being closed (via backdrop or ESC), just close it without submitting
+    if (!newOpen && onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <AlertDialog open={open}>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent className="max-w-md bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-purple-500/30 shadow-2xl">
         <AlertDialogHeader>
           <div className="flex items-center gap-3 mb-4">
