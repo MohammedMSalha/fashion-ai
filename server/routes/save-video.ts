@@ -493,7 +493,7 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
     const result = await query(
       `SELECT id, status, error_message, video_url, created_at, expires_at,
               payment_intent_id, payment_amount, payment_currency, payment_status, payment_method_type, payment_email,
-              request_id, duration, resolution
+              request_id, duration, resolution, fashn_ai_key
        FROM videos
        WHERE id = $1 AND deleted_at IS NULL`,
       [videoIdNum],
