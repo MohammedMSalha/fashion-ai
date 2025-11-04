@@ -25,7 +25,7 @@ interface SaveVideoResponse {
 
 export const saveVideoConfig: RequestHandler = async (req, res) => {
   try {
-    const { email, imageBase64, duration, resolution } = req.body;
+    const { email, imageBase64, duration, resolution, fashnAiKey } = req.body;
 
     console.log("[Save Config] Received request:", {
       hasEmail: !!email,
@@ -33,6 +33,7 @@ export const saveVideoConfig: RequestHandler = async (req, res) => {
       imageLength: imageBase64?.length,
       duration,
       resolution,
+      hasFashnAiKey: !!fashnAiKey,
     });
 
     // Validate inputs
