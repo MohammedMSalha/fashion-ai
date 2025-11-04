@@ -77,7 +77,7 @@ You may create derivative works (modified versions) of the Software. However:
 
 THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR:
+IN NO EVENT SHALL THE COPYRIGHT HOLDER (MOHAMMED SALHA) BE LIABLE FOR:
 
 - Any indirect, incidental, special, consequential, or punitive damages
 - Loss of profits, revenue, data, or use
@@ -85,9 +85,9 @@ IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR:
 - Cost of substitute goods or services
 - Even if advised of the possibility of such damages
 
-## 8. Warranty Disclaimer
+## 9. Warranty Disclaimer
 
-THE COPYRIGHT HOLDER DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING:
+THE COPYRIGHT HOLDER (MOHAMMED SALHA) DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING:
 
 - Warranty of merchantability
 - Warranty of fitness for a particular purpose
@@ -96,7 +96,7 @@ THE COPYRIGHT HOLDER DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING:
 
 The Software is provided on an "as-is" basis, and the entire risk of quality and performance is with you.
 
-## 9. Third-Party Components
+## 10. Third-Party Components
 
 The Software includes third-party libraries and components that are subject to their own licenses. These include:
 
