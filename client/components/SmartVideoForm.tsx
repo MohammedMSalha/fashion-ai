@@ -32,12 +32,29 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [demoMode, setDemoMode] = useState<boolean | null>(null);
 
-  // Load saved email from localStorage
+  // Load saved email from localStorage and fetch demo config
   useEffect(() => {
     const savedEmail = localStorage.getItem("fashionai_email");
     if (savedEmail) {
       setEmail(savedEmail);
     }
+
+    // Fetch demo configuration
+    const fetchDemoConfig = async () => {
+      try {
+        const response = await fetch(createApiUrl("/api/demo"));
+        if (response.ok) {
+          const data = await response.json();
+          setDemoMode(data.demoMode);
+          console.log("[SmartVideoForm] Demo mode:", data.demoMode, "-", data.message);
+        }
+      } catch (error) {
+        console.error("[SmartVideoForm] Failed to fetch demo config:", error);
+        setDemoMode(false); // Default to false (system key mode)
+      }
+    };
+
+    fetchDemoConfig();
   }, []);
 
   const detectImageResolution = (file: File) => {
