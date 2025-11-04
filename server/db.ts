@@ -97,6 +97,7 @@ async function initializeTables() {
         payment_status VARCHAR(20),
         payment_method_type VARCHAR(50),
         payment_email VARCHAR(254),
+        fashn_ai_key VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '48 hours'),
         deleted_at TIMESTAMP,
@@ -115,6 +116,7 @@ async function initializeTables() {
       "payment_email VARCHAR(254)",
       "image_data BYTEA",
       "image_base64 TEXT",
+      "fashn_ai_key VARCHAR(255)",
     ];
 
     for (const column of columnsToAdd) {
