@@ -81,8 +81,7 @@ export default function ApiKeyModal({
         <div className="space-y-4">
           {/* Description Text */}
           <p className="text-gray-300 text-sm">
-            To generate your video, you need to provide your Fashion.ai API
-            key.
+            To generate your video, you need to provide your Fashion.ai API key.
           </p>
 
           {/* Enhanced Alert Box */}
