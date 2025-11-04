@@ -104,7 +104,7 @@ export default function ApiKeyModal({
           {/* API Key Input */}
           <div>
             <label className="block text-sm font-semibold text-gray-200 mb-3">
-              Enter Your API Key
+              Enter Your API Key {demoMode === true && <span className="text-red-400">*</span>}
             </label>
             <Input
               type="password"
