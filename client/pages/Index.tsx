@@ -108,6 +108,8 @@ export default function Index() {
   const [generatedVideo, setGeneratedVideo] = useState<Video | null>(null);
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [showExpiryAlert, setShowExpiryAlert] = useState(true);
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [apiKey, setApiKey] = useState<string | null>(null);
 
   // Poll video status when in-progress (after payment)
   useEffect(() => {
