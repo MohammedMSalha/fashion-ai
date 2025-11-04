@@ -73,7 +73,7 @@ Complete guide to all documentation files for Fashion AI Video Generator.
 
 **Who should read:** Everyone (start here)
 **Read time:** 10 minutes
-**Priority:** ⭐⭐⭐⭐⭐
+**Priority:** ���⭐⭐⭐⭐
 
 ### 2. THEMEFOREST_README.md (347 lines)
 
@@ -441,7 +441,7 @@ Read all documents in order:
 
 ### "I want to understand the legal terms"
 
-→ [LICENSE.md](./LICENSE.md) (5 min)
+�� [LICENSE.md](./LICENSE.md) (5 min)
 
 ---
 
@@ -470,6 +470,16 @@ Read all documents in order:
 ## 🔍 Finding Information
 
 ### By Topic
+
+#### How to Use the Platform
+
+- User Workflow: [PLATFORM_USAGE_GUIDE.md - User Workflow](./PLATFORM_USAGE_GUIDE.md#user-workflow)
+- API Keys: [PLATFORM_USAGE_GUIDE.md - API Keys Management](./PLATFORM_USAGE_GUIDE.md#api-keys-management)
+- Environment Variables: [PLATFORM_USAGE_GUIDE.md - Environment Variables](./PLATFORM_USAGE_GUIDE.md#environment-variables)
+- Demo Mode: [PLATFORM_USAGE_GUIDE.md - Demo Mode](./PLATFORM_USAGE_GUIDE.md#demo-mode-setup)
+- Payment Flow: [PLATFORM_USAGE_GUIDE.md - Payment Processing](./PLATFORM_USAGE_GUIDE.md#payment-processing)
+- Troubleshooting: [PLATFORM_USAGE_GUIDE.md - Troubleshooting](./PLATFORM_USAGE_GUIDE.md#troubleshooting)
+- FAQ: [PLATFORM_USAGE_GUIDE.md - FAQ](./PLATFORM_USAGE_GUIDE.md#faq)
 
 #### Database
 
