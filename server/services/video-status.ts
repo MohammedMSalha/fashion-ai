@@ -281,9 +281,11 @@ export async function generateVideoAsync(
   imageUrlOrBase64: string,
   duration: 5 | 10,
   resolution: "720p" | "1080p",
+  userApiKey?: string,
 ): Promise<GenerateVideoResult> {
   try {
-    const apiKey = process.env.FASHN_AI_API_KEY;
+    // Use user-provided API key if available, otherwise use system key
+    const apiKey = userApiKey || process.env.FASHN_AI_API_KEY;
     if (!apiKey) {
       console.error("[GenerateVideo] FASHN_AI_API_KEY not configured");
       return {
@@ -291,6 +293,9 @@ export async function generateVideoAsync(
         error: "FASHN_AI_API_KEY not configured",
       };
     }
+
+    const isUsingUserKey = !!userApiKey;
+    console.log("[GenerateVideo] Using", isUsingUserKey ? "user-provided" : "system", "API key");
 
     console.log("[GenerateVideo] Starting video generation");
     console.log(
