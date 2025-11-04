@@ -28,6 +28,29 @@ Complete guide to all documentation files for Fashion AI Video Generator.
 
 ## 📑 Documentation Files
 
+### 0. PLATFORM_USAGE_GUIDE.md (1,316 lines)
+
+**Purpose:** Complete guide on how to use the platform
+
+**Contents:**
+
+- Platform overview
+- Step-by-step usage guide (upload, configure, pay, download)
+- API keys management (system vs user-provided keys)
+- Environment variables complete reference
+- Demo mode setup and usage
+- User workflow and journey
+- Video generation process
+- Payment processing
+- Video access and management
+- Troubleshooting guide (30+ common issues)
+- FAQ (30+ questions)
+- Support and contact information
+
+**Who should read:** End users, users, platform operators, new developers
+**Read time:** 20 minutes
+**Priority:** ⭐⭐⭐⭐⭐
+
 ### 1. README.md (381 lines)
 
 **Purpose:** Main product documentation
