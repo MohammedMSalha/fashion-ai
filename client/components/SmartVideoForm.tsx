@@ -16,7 +16,10 @@ const PRICING = {
   "10s": { "720p": 1.0, "1080p": 1.2 },
 };
 
-export default function SmartVideoForm({ onGenerate, apiKey }: SmartVideoFormProps) {
+export default function SmartVideoForm({
+  onGenerate,
+  apiKey,
+}: SmartVideoFormProps) {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [imageResolution, setImageResolution] = useState<{
     width: number;
@@ -289,7 +292,6 @@ export default function SmartVideoForm({ onGenerate, apiKey }: SmartVideoFormPro
                 required
               />
             </div>
-
 
             {/* Duration */}
             <div>

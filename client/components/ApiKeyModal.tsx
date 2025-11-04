@@ -17,7 +17,10 @@ interface ApiKeyModalProps {
   onApiKeySubmit: (apiKey: string | null) => void;
 }
 
-export default function ApiKeyModal({ open, onApiKeySubmit }: ApiKeyModalProps) {
+export default function ApiKeyModal({
+  open,
+  onApiKeySubmit,
+}: ApiKeyModalProps) {
   const [apiKey, setApiKey] = useState("");
   const [demoMode, setDemoMode] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,12 +75,13 @@ export default function ApiKeyModal({ open, onApiKeySubmit }: ApiKeyModalProps) 
           <AlertDialogTitle>Fashion.ai API Key</AlertDialogTitle>
           <AlertDialogDescription className="space-y-3">
             <p>
-              To generate your video, you need to provide your Fashion.ai API key.
+              To generate your video, you need to provide your Fashion.ai API
+              key.
             </p>
             <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
               <p className="text-xs text-blue-300">
-                💡 <strong>Demo Mode:</strong> This step is only required for demo use. In production, this
-                won't be needed.
+                💡 <strong>Demo Mode:</strong> This step is only required for
+                demo use. In production, this won't be needed.
               </p>
             </div>
             <div>

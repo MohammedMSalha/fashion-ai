@@ -482,7 +482,10 @@ export default function Index() {
               </div>
 
               {/* Smart Form */}
-              <SmartVideoForm onGenerate={handleGenerateClick} apiKey={apiKey} />
+              <SmartVideoForm
+                onGenerate={handleGenerateClick}
+                apiKey={apiKey}
+              />
             </div>
           </div>
         </section>
