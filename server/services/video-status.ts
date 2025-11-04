@@ -28,7 +28,7 @@ export async function checkVideoGenerationStatus(
     }
 
     const isUsingUserKey = !!userApiKey;
-    console.log("[CheckStatus] Using', isUsingUserKey ? \"user-provided\" : \"system", 'API key');
+    console.log(`[CheckStatus] Using ${isUsingUserKey ? "user-provided" : "system"} API key`);
 
     console.log(`[CheckStatus] Checking status for request: ${requestId}`);
 
