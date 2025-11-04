@@ -63,15 +63,8 @@ export default function ApiKeyModal({
     onApiKeySubmit(null);
   };
 
-  const handleOpenChange = (newOpen: boolean) => {
-    // Allow closing by clicking outside (backdrop)
-    if (!newOpen) {
-      handleSkip();
-    }
-  };
-
   return (
-    <AlertDialog open={open} onOpenChange={handleOpenChange}>
+    <AlertDialog open={open}>
       <AlertDialogContent className="max-w-md bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-purple-500/30 shadow-2xl">
         <AlertDialogHeader>
           <div className="flex items-center gap-3 mb-4">
