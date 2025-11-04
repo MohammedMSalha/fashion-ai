@@ -15,11 +15,6 @@ interface ApiKeyModalProps {
   onApiKeySubmit: (apiKey: string | null) => void;
 }
 
-interface ApiKeyModalProps {
-  open: boolean;
-  onApiKeySubmit: (apiKey: string | null) => void;
-}
-
 export default function ApiKeyModal({
   open,
   onApiKeySubmit,
