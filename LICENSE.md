@@ -179,8 +179,18 @@ For licensing questions, commercial inquiries, or licensing variations, please c
 
 ---
 
-**Last Updated:** 2024
+## 21. Copyright and Ownership Statement
 
-**Copyright © 2024 - All Rights Reserved**
+**This Software is the exclusive property of Mohammed Salha.**
 
-The use, reproduction, modification, or distribution of the Software without proper authorization is prohibited and may result in civil and criminal penalties.
+**Copyright © 2025 Mohammed Salha - All Rights Reserved**
+
+The Software, including all source code, documentation, design, and intellectual property, is owned exclusively by Mohammed Salha. All rights are reserved worldwide.
+
+The use, reproduction, modification, or distribution of the Software without proper authorization from Mohammed Salha is strictly prohibited and may result in civil and criminal penalties under international copyright law.
+
+**Last Updated:** 2025
+
+**Copyright Holder:** Mohammed Salha
+**Product:** Fashion AI Video Generator
+**License Type:** Exclusive Commercial License
