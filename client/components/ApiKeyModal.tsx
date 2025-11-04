@@ -97,7 +97,9 @@ export default function ApiKeyModal({
               <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-purple-300 mb-1">
-                  {demoMode === true ? "Demo Mode - Required" : "Demo Mode Only"}
+                  {demoMode === true
+                    ? "Demo Mode - Required"
+                    : "Demo Mode Only"}
                 </p>
                 <p className="text-xs text-purple-200/80 leading-relaxed">
                   {demoMode === true
@@ -111,7 +113,8 @@ export default function ApiKeyModal({
           {/* API Key Input */}
           <div>
             <label className="block text-sm font-semibold text-gray-200 mb-3">
-              Enter Your API Key {demoMode === true && <span className="text-red-400">*</span>}
+              Enter Your API Key{" "}
+              {demoMode === true && <span className="text-red-400">*</span>}
             </label>
             <Input
               type="password"
@@ -136,7 +139,9 @@ export default function ApiKeyModal({
         </div>
 
         {/* Button Container */}
-        <div className={`flex gap-3 mt-6 pt-4 border-t border-gray-700 ${demoMode === true ? "flex-col" : ""}`}>
+        <div
+          className={`flex gap-3 mt-6 pt-4 border-t border-gray-700 ${demoMode === true ? "flex-col" : ""}`}
+        >
           {demoMode !== true && (
             <Button
               variant="outline"
