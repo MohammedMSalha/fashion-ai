@@ -314,6 +314,34 @@ export default function SmartVideoForm({ onGenerate }: SmartVideoFormProps) {
               />
             </div>
 
+            {/* Fashion.ai API Key (only in demo mode) */}
+            {demoMode === true && (
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Fashion.ai API Key <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  type="password"
+                  placeholder="fa-XXXXXXXXXXXXXXXXXXXXXXXX"
+                  value={fashnAiKey}
+                  onChange={(e) => setFashnAiKey(e.target.value)}
+                  className="h-10 bg-gray-800 border-gray-700 text-white text-sm"
+                  required
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Get your API key from{" "}
+                  <a
+                    href="https://fashn.ai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:text-blue-300 underline"
+                  >
+                    fashn.ai
+                  </a>
+                </p>
+              </div>
+            )}
+
             {/* Duration */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
