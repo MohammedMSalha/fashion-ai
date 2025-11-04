@@ -17,13 +17,18 @@ interface FashnStatusResponse {
 
 export async function checkVideoGenerationStatus(
   requestId: string,
+  userApiKey?: string,
 ): Promise<FashnStatusResponse | null> {
   try {
-    const apiKey = process.env.FASHN_AI_API_KEY;
+    // Use user-provided API key if available, otherwise use system key
+    const apiKey = userApiKey || process.env.FASHN_AI_API_KEY;
     if (!apiKey) {
       console.error("[CheckStatus] FASHN_AI_API_KEY not configured");
       return null;
     }
+
+    const isUsingUserKey = !!userApiKey;
+    console.log("[CheckStatus] Using', isUsingUserKey ? \"user-provided\" : \"system", 'API key');
 
     console.log(`[CheckStatus] Checking status for request: ${requestId}`);
 
