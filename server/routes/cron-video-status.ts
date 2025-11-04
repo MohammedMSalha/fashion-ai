@@ -28,7 +28,7 @@ export const cronCheckVideoStatus: RequestHandler = async (req, res) => {
 
         // Get all videos that are still processing
         const result = await query(
-          `SELECT id, request_id FROM videos WHERE status = 'processing' AND request_id IS NOT NULL ORDER BY created_at DESC`,
+          `SELECT id, request_id, fashn_ai_key FROM videos WHERE status = 'processing' AND request_id IS NOT NULL ORDER BY created_at DESC`,
         );
 
         const pendingCount = result.rows.length;
@@ -55,7 +55,8 @@ export const cronCheckVideoStatus: RequestHandler = async (req, res) => {
                 `[CronCheckVideoStatus] Checking video ${row.id} with request ${row.request_id}`,
               );
 
-              await updateVideoStatusFromFashn(row.request_id);
+              // Pass the user's API key if available
+              await updateVideoStatusFromFashn(row.request_id, row.fashn_ai_key);
               videosUpdated++;
             } catch (error) {
               console.error(
