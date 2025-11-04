@@ -73,18 +73,18 @@ export default function ApiKeyModal({
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={handleOpenChange}>
-      <AlertDialogContent className="max-w-md bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-purple-500/30 shadow-2xl">
-        <AlertDialogHeader>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="max-w-md bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-purple-500/30 shadow-2xl">
+        <DialogHeader>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <AlertDialogTitle className="text-2xl font-bold text-transparent bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text">
+            <DialogTitle className="text-2xl font-bold text-transparent bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text">
               API Key Required
-            </AlertDialogTitle>
+            </DialogTitle>
           </div>
-        </AlertDialogHeader>
+        </DialogHeader>
 
         {/* Main Content */}
         <div className="space-y-4">
@@ -169,7 +169,7 @@ export default function ApiKeyModal({
             )}
           </Button>
         </div>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 }
