@@ -577,7 +577,8 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
     );
 
     try {
-      const apiKey = process.env.FASHN_AI_API_KEY;
+      // Use user-provided API key if available, otherwise use system key
+      const apiKey = video.fashn_ai_key || process.env.FASHN_AI_API_KEY;
       if (!apiKey) {
         console.error("[GetVideoStatus] FASHN_AI_API_KEY not configured");
         return res.status(200).json({
@@ -589,6 +590,11 @@ export const getVideoStatus: RequestHandler = async (req, res) => {
           },
         });
       }
+
+      const isUsingUserKey = !!video.fashn_ai_key;
+      console.log(
+        `[GetVideoStatus] Using ${isUsingUserKey ? "user-provided" : "system"} API key for status check`,
+      );
 
       const response = await fetch(
         `https://api.fashn.ai/v1/status/${video.request_id}`,
