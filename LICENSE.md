@@ -56,7 +56,7 @@ All intellectual property rights, including but not limited to copyrights, paten
 
 The copyright holder may pursue legal action to protect intellectual property rights against unauthorized use, distribution, or reproduction of the Software.
 
-## 5. Modifications
+## 6. Modifications
 
 If you modify the Software, you must:
 
@@ -65,7 +65,7 @@ If you modify the Software, you must:
 - Document your changes
 - Not claim exclusive ownership of modified versions
 
-## 6. Derivative Works
+## 7. Derivative Works
 
 You may create derivative works (modified versions) of the Software. However:
 
