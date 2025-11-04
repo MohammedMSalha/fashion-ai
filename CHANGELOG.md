@@ -113,13 +113,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- Comprehensive README
-- Detailed installation guide
-- Deployment guides for multiple platforms
-- SMTP setup instructions
-- API documentation
-- Environment variable reference
-- Troubleshooting guides
+- **Comprehensive Platform Usage Guide** (NEW)
+  - Complete user and operator guide
+  - API keys and environment variables reference
+  - Demo mode setup and configuration
+  - Full workflow documentation
+  - Extensive troubleshooting (20+ issues)
+  - FAQ with 30+ questions
+- Comprehensive README with tech stack overview
+- Detailed installation guide for local development
+- Deployment guides for Vercel, Netlify, and Fly.io
+- SMTP setup instructions for email verification
+- Complete API documentation
+- Environment variable reference and setup
+- Troubleshooting guides and common issues
+- Documentation index for easy navigation
 
 ### Build & Development
 
