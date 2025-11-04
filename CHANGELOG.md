@@ -29,6 +29,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stripe webhook signature verification
 - API error handling and logging
 - Comprehensive documentation
+- **NEW**: Comprehensive Platform Usage Guide (PLATFORM_USAGE_GUIDE.md)
+  - Complete guide on how to use the platform
+  - API keys management (system vs user-provided keys)
+  - Environment variables setup across all platforms
+  - Demo mode configuration for user-provided keys
+  - Step-by-step user workflow documentation
+  - Video generation and payment flow explanation
+  - 20+ troubleshooting solutions with examples
+  - 30+ FAQ questions with detailed answers
 
 ### Features
 
