@@ -272,6 +272,12 @@ export default function Index() {
     // Polling will handle the transition to video-preview when ready
   }, []);
 
+  const handleApiKeySubmit = (key: string | null) => {
+    setApiKey(key);
+    setShowApiKeyModal(false);
+    setCurrentPage("generate");
+  };
+
   const handleNextVideo = () => {
     setCurrentVideoIndex((prev) => (prev + 1) % SAMPLE_VIDEOS.length);
   };
