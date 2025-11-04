@@ -50,6 +50,7 @@ The Fashion AI Video Generator is a web application that allows users to:
 ### Prerequisites
 
 You need access to:
+
 1. **A modern web browser** (Chrome, Firefox, Safari, Edge)
 2. **An internet connection**
 3. **A payment method** (for Stripe payments)
@@ -99,11 +100,13 @@ Click the upload area → Select image file → Image preview shows
 ```
 
 **Supported Formats**:
+
 - JPEG (.jpg, .jpeg)
 - PNG (.png)
 - WebP (.webp)
 
 **Image Requirements**:
+
 - Minimum size: 100x100px
 - Maximum size: 10MB
 - Fashion/model focused images work best
@@ -114,17 +117,20 @@ Click the upload area → Select image file → Image preview shows
 **What**: Set video parameters
 
 **Duration Options**:
+
 - 5 seconds (fast preview)
 - 10 seconds (standard)
 - 15 seconds (extended)
 - 20 seconds (full showcase)
 
 **Quality Options**:
+
 - 720p (faster generation, smaller file)
 - 1080p (better quality, larger file)
 - 2K (ultra HD, requires more time)
 
 **Example Configuration**:
+
 ```
 Image: fashion-model.jpg
 Duration: 10 seconds
@@ -149,6 +155,7 @@ Email: your@email.com
 **What**: Pay for your video
 
 **Payment Methods Accepted**:
+
 - Credit/Debit cards (Visa, Mastercard, Amex)
 - Apple Pay
 - Google Pay
@@ -161,6 +168,7 @@ Email: your@email.com
 ✓ Professional quality output
 
 **Payment Security**:
+
 - PCI DSS compliant (Stripe)
 - Your card info never touches our servers
 - Encrypted transactions
@@ -171,6 +179,7 @@ Email: your@email.com
 **Duration**: 30-60 seconds typically
 
 **What's Happening**:
+
 1. Your image is sent to Fashion.ai API
 2. AI analyzes the image
 3. Video is generated with effects
@@ -178,6 +187,7 @@ Email: your@email.com
 5. Download link is created
 
 **Status Tracking**:
+
 - Loading screen shows progress
 - Status updates every 5 seconds
 - Real-time feedback on generation
@@ -192,6 +202,7 @@ Click "Download Video" button → File saved to your device
 ```
 
 **Video Details**:
+
 - Format: MP4 (H.264)
 - Duration: As configured
 - Quality: As selected
@@ -208,6 +219,7 @@ This section covers all aspects of API key management for the platform.
 ### What Are API Keys?
 
 API keys are authentication tokens that allow the application to:
+
 - Call the Fashion.ai service for video generation
 - Process payments through Stripe
 - Access databases and services
@@ -219,6 +231,7 @@ API keys are authentication tokens that allow the application to:
 **What**: Built-in API keys provided by the platform owner
 
 **Configuration**:
+
 ```env
 FASHN_AI_API_KEY=your_system_key_here
 STRIPE_SECRET_KEY=your_stripe_key_here
@@ -227,12 +240,14 @@ STRIPE_SECRET_KEY=your_stripe_key_here
 **Usage**: Users don't need to provide keys; the system uses built-in credentials
 
 **Advantages**:
+
 - ✓ No user configuration needed
 - ✓ Centralized key management
 - ✓ Consistent performance
 - ✓ Easier for end users
 
 **When to Use**:
+
 - Running the platform in production
 - Multi-user SaaS environment
 - When you want to manage costs centrally
@@ -244,11 +259,13 @@ STRIPE_SECRET_KEY=your_stripe_key_here
 **When Available**: When `DEMO` environment variable is set to `true`
 
 **Configuration**:
+
 ```env
 DEMO=true
 ```
 
 **How It Works**:
+
 1. User clicks "Start Generating"
 2. API Key modal appears
 3. User enters their Fashion.ai API key
@@ -256,12 +273,14 @@ DEMO=true
 5. Costs are charged to their account
 
 **Advantages**:
+
 - ✓ Users pay for their own usage
 - ✓ No platform cost for generation
 - ✓ Good for testing/demo purposes
 - ✓ Flexible API key management
 
 **When to Use**:
+
 - Demo/testing environment
 - Free tier with user-provided keys
 - Development environment
@@ -284,11 +303,13 @@ fashion_DATABASE_URL=postgresql://user:password@host:port/database
 ```
 
 **Example (Neon PostgreSQL)**:
+
 ```env
 DATABASE_URL=postgresql://neondb_owner:npg_abc123@ep-example.eu-central-1.aws.neon.tech/neondb?sslmode=require
 ```
 
 **How to Get**:
+
 1. Go to Neon dashboard (https://neon.tech)
 2. Create a PostgreSQL database
 3. Copy the connection string
@@ -310,6 +331,7 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
 ```
 
 **How to Get**:
+
 1. Sign up at https://stripe.com
 2. Go to Developers → API Keys
 3. Copy Secret Key → STRIPE_SECRET_KEY
@@ -320,6 +342,7 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
 8. Copy Signing Secret → STRIPE_WEBHOOK_SECRET
 
 **Key Types**:
+
 - `sk_test_*` = Test mode (for development)
 - `sk_live_*` = Production mode (real money)
 - `pk_test_*` = Test mode publishable
@@ -337,12 +360,14 @@ FASHN_AI_API_KEY=fa-your_api_key_here
 ```
 
 **How to Get**:
+
 1. Sign up at https://fashion.ai
 2. Go to API settings
 3. Generate API key
 4. Copy key to environment variable
 
 **Usage in Code**:
+
 - Stored securely on backend
 - Never exposed to frontend
 - Used for all video generation requests
@@ -358,12 +383,14 @@ DEMO=false # Disable demo mode (use system keys)
 ```
 
 **Effect When DEMO=true**:
+
 - 🔑 API Key modal appears when generating
 - 📝 Users can enter their Fashion.ai key
 - 💰 Generation uses their key
 - ⚠️ Users responsible for costs
 
 **Effect When DEMO=false**:
+
 - 🔑 No API key modal
 - 🔐 System key used automatically
 - 💳 Platform pays for generation
@@ -384,11 +411,13 @@ SMTP_SECURE=false
 ```
 
 **When Email is Optional**:
+
 - If SMTP variables not set, email verification is skipped
 - Users can access videos without email code
 - Clean experience for demo/testing
 
 **Gmail Setup Example**:
+
 ```env
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -399,6 +428,7 @@ SMTP_SECURE=false
 ```
 
 **SendGrid Setup Example**:
+
 ```env
 SMTP_HOST=smtp.sendgrid.net
 SMTP_PORT=587
@@ -409,6 +439,7 @@ SMTP_SECURE=false
 ```
 
 **Mailgun Setup Example**:
+
 ```env
 SMTP_HOST=smtp.mailgun.org
 SMTP_PORT=587
@@ -447,6 +478,7 @@ PORT=3000  # Server port
 4. Restart dev server: `pnpm dev`
 
 **.env Template**:
+
 ```env
 # Database
 DATABASE_URL=postgresql://neondb_owner:password@host/neondb?sslmode=require
@@ -486,14 +518,14 @@ DevServerControl → set_env_variable
 **Step 3**: Settings → Environment Variables
 **Step 4**: Add each variable:
 
-| Key | Value | Environments |
-|-----|-------|--------------|
-| DATABASE_URL | your_connection_string | Production, Preview, Development |
-| STRIPE_SECRET_KEY | sk_test_... | Production, Preview, Development |
-| STRIPE_PUBLISHABLE_KEY | pk_test_... | Production, Preview, Development |
-| STRIPE_WEBHOOK_SECRET | whsec_... | Production, Preview, Development |
-| FASHN_AI_API_KEY | fa_... | Production, Preview, Development |
-| DEMO | false | Production, Preview, Development |
+| Key                    | Value                  | Environments                     |
+| ---------------------- | ---------------------- | -------------------------------- |
+| DATABASE_URL           | your_connection_string | Production, Preview, Development |
+| STRIPE_SECRET_KEY      | sk*test*...            | Production, Preview, Development |
+| STRIPE_PUBLISHABLE_KEY | pk*test*...            | Production, Preview, Development |
+| STRIPE_WEBHOOK_SECRET  | whsec\_...             | Production, Preview, Development |
+| FASHN_AI_API_KEY       | fa\_...                | Production, Preview, Development |
+| DEMO                   | false                  | Production, Preview, Development |
 
 **Step 5**: Redeploy
 **Step 6**: Verify in logs
@@ -537,6 +569,7 @@ flyctl secrets unset VARIABLE_NAME
 Demo mode allows users to provide their own Fashion.ai API key instead of using the platform's system key.
 
 **Use Cases**:
+
 - ✓ Free tier with user-provided keys
 - ✓ Demo environment for testing
 - ✓ Educational/tutorial setup
@@ -547,16 +580,19 @@ Demo mode allows users to provide their own Fashion.ai API key instead of using 
 **Step 1**: Set Environment Variable
 
 Local development (`.env`):
+
 ```env
 DEMO=true
 ```
 
 Vercel:
+
 - Go to Settings → Environment Variables
 - Add: `DEMO` = `true`
 - Redeploy
 
 Netlify:
+
 - Go to Build & deploy → Environment
 - Add: `DEMO` = `true`
 - Redeploy
@@ -697,6 +733,7 @@ Now users won't see the API key modal and system key is used automatically.
 When you click "Start Generating", here's what happens:
 
 **Step 1: Configuration Saved** (Instant)
+
 ```
 Your image + settings stored in database
 You receive a unique video ID
@@ -704,6 +741,7 @@ Ready for payment
 ```
 
 **Step 2: Payment Processed** (5-30 seconds)
+
 ```
 Your card is charged
 Payment confirmed by Stripe
@@ -712,6 +750,7 @@ Video generation begins
 ```
 
 **Step 3: AI Processing** (30-60 seconds)
+
 ```
 Fashion.ai analyzes your image
 AI applies effects and transitions
@@ -721,6 +760,7 @@ Uploads to storage
 ```
 
 **Step 4: Availability** (Immediate)
+
 ```
 Video link created
 Frontend notified
@@ -729,6 +769,7 @@ Video accessible for 48 hours
 ```
 
 **Step 5: Auto-Cleanup** (48 hours later)
+
 ```
 Video expires
 Automatically deleted from storage
@@ -739,12 +780,14 @@ Space freed for new videos
 ### Monitoring Progress
 
 The loading screen shows:
+
 - Spinner animation
 - "Generating Your Video..." message
 - Time indicator (usually 30-60 seconds)
 - Live status updates
 
 **What You'll See**:
+
 ```
 Loading... ⏳
 Generating Your Video
@@ -756,6 +799,7 @@ Status: Processing... (Updates every 5 seconds)
 ### Possible Outcomes
 
 **✅ Success**
+
 ```
 Video is ready!
 [Download Video button appears]
@@ -763,6 +807,7 @@ Preview plays on page
 ```
 
 **❌ Failure**
+
 ```
 "Video generation failed"
 Error details shown
@@ -771,6 +816,7 @@ Contact support if persists
 ```
 
 **⏰ Timeout**
+
 ```
 "Generation taking longer than expected"
 Check "My Videos" page
@@ -810,12 +856,14 @@ Retry after a few minutes
 ### Payment Status
 
 **Processing**:
+
 ```
 "Processing payment..." ⏳
 (Usually 5-30 seconds)
 ```
 
 **Success**:
+
 ```
 Payment confirmed ✅
 "Generating your video..."
@@ -823,6 +871,7 @@ Loading screen shows
 ```
 
 **Failed**:
+
 ```
 "Payment failed" ��
 Reason shown (card declined, insufficient funds, etc.)
@@ -847,6 +896,7 @@ Try again with different card
 **Location**: Click "My Videos" in navigation
 
 **Access**:
+
 1. Enter your email address
 2. (Optional) Verify with email code if enabled
 3. View all your generated videos
@@ -855,6 +905,7 @@ Try again with different card
 ### Video Details
 
 Each video shows:
+
 - ✓ Thumbnail/preview
 - ✓ Duration
 - ✓ Quality/resolution
@@ -865,6 +916,7 @@ Each video shows:
 ### Downloading Videos
 
 **Steps**:
+
 1. Go to "My Videos" page
 2. Find your video
 3. Click "Download" button
@@ -872,6 +924,7 @@ Each video shows:
 5. Use in your project/business
 
 **Video Format**:
+
 - Format: MP4 (H.264 codec)
 - Container: MPEG-4
 - Playable in all modern devices
@@ -880,12 +933,14 @@ Each video shows:
 ### Video Expiration
 
 **48-Hour Window**:
+
 - Video is available for 48 hours after generation
 - Download and save your copy
 - After 48 hours, automatically deleted
 - Can always generate new video
 
 **Before Expiration**:
+
 ```
 My Videos page shows:
 [Video] - Generated 2 hours ago (Expires in 46 hours)
@@ -893,6 +948,7 @@ My Videos page shows:
 ```
 
 **After Expiration**:
+
 ```
 Video no longer listed
 Generate new video if needed
@@ -905,6 +961,7 @@ Generate new video if needed
 ### Image Upload Issues
 
 **Problem**: Image won't upload
+
 ```
 Solutions:
 1. Check file size (max 10MB)
@@ -915,6 +972,7 @@ Solutions:
 ```
 
 **Problem**: Image preview doesn't show
+
 ```
 Solutions:
 1. Image might be invalid
@@ -926,6 +984,7 @@ Solutions:
 ### Payment Issues
 
 **Problem**: "Payment Failed"
+
 ```
 Solutions:
 1. Check card details (number, expiry, CVC)
@@ -936,6 +995,7 @@ Solutions:
 ```
 
 **Problem**: "Payment Success but No Video"
+
 ```
 Solutions:
 1. Wait 2-3 minutes (sometimes delays)
@@ -946,6 +1006,7 @@ Solutions:
 ```
 
 **Problem**: Webhook not received
+
 ```
 Solutions:
 1. Check Stripe Dashboard → Webhooks
@@ -958,6 +1019,7 @@ Solutions:
 ### Video Generation Issues
 
 **Problem**: "Video Generation Failed"
+
 ```
 Solutions:
 1. Try again with different image
@@ -969,6 +1031,7 @@ Solutions:
 ```
 
 **Problem**: "Generation Taking Too Long"
+
 ```
 Solutions:
 1. Usually takes 30-60 seconds
@@ -980,6 +1043,7 @@ Solutions:
 ```
 
 **Problem**: "Invalid API Key" (Demo Mode)
+
 ```
 Solutions:
 1. Check key is copied correctly
@@ -992,6 +1056,7 @@ Solutions:
 ### Email Issues
 
 **Problem**: "Email Code Not Received"
+
 ```
 Solutions:
 1. Check spam/junk folder
@@ -1003,6 +1068,7 @@ Solutions:
 ```
 
 **Problem**: "Email Verification Not Working"
+
 ```
 Solutions:
 1. SMTP might not be configured
@@ -1015,6 +1081,7 @@ Solutions:
 ### Video Access Issues
 
 **Problem**: "Can't Download Video"
+
 ```
 Solutions:
 1. Check video is fully generated (shows thumbnail)
@@ -1026,6 +1093,7 @@ Solutions:
 ```
 
 **Problem**: "My Videos Page Shows No Videos"
+
 ```
 Solutions:
 1. Check you entered correct email
@@ -1038,6 +1106,7 @@ Solutions:
 ### General Issues
 
 **Problem**: "Page Won't Load"
+
 ```
 Solutions:
 1. Check internet connection
@@ -1049,6 +1118,7 @@ Solutions:
 ```
 
 **Problem**: "Slow Performance"
+
 ```
 Solutions:
 1. Check internet speed
@@ -1115,19 +1185,22 @@ A: Yes, you can generate the same image multiple times (each with separate payme
 
 **Q: What duration should I choose?**
 A: Depends on use case:
+
 - 5s: Social media clips, quick preview
 - 10s: Standard product video
 - 15s: Extended showcase
 - 20s: Full product walkthrough
 
 **Q: What quality should I choose?**
-A: 
+A:
+
 - 720p: Sufficient for most uses, faster, smaller file
 - 1080p: Better quality, social media recommended
 - 2K: Premium quality, largest file
 
 **Q: What's the difference between qualities?**
-A: 
+A:
+
 - 720p: 1280x720 pixels, fast generation, ~50MB file
 - 1080p: 1920x1080 pixels, professional, ~100MB file
 - 2K: 2560x1440 pixels, premium, ~150MB file
@@ -1147,11 +1220,12 @@ A: Refunds are handled by Stripe. Contact support with your payment ID for refun
 
 **Q: Why was my payment declined?**
 A: Common reasons:
+
 - Insufficient funds
 - Card expired or blocked
 - Bank declined transaction
 - 3D Secure required
-Contact your bank or try different card.
+  Contact your bank or try different card.
 
 **Q: Can I save my payment information?**
 A: Stripe offers to save card details for future payments (optional).
@@ -1181,6 +1255,7 @@ A: No, DEMO is either true or false. Can't mix both in same deployment.
 
 **Q: What is an API key?**
 A: Secure token that grants access to a service. Platform uses multiple keys:
+
 - FASHN_AI_API_KEY: For video generation
 - STRIPE_SECRET_KEY: For payment processing
 - STRIPE_WEBHOOK_SECRET: For webhook verification
@@ -1190,6 +1265,7 @@ A: Never! Keep them secret. Only set in environment variables.
 
 **Q: Where do I set environment variables?**
 A: Depends on deployment:
+
 - Local: `.env` file in project root
 - Vercel: Settings → Environment Variables
 - Netlify: Build & deploy → Environment
@@ -1197,6 +1273,7 @@ A: Depends on deployment:
 
 **Q: What if I leak an API key?**
 A: Regenerate immediately:
+
 - Stripe: Dashboard → API Keys → Regenerate
 - Fashion.ai: API Settings → Regenerate Key
 - GitHub: Rotate personal access tokens
@@ -1209,7 +1286,8 @@ A: Regenerate immediately:
 A: No, it's optional. If SMTP not configured, users access videos without verification code.
 
 **Q: How does email verification work?**
-A: 
+A:
+
 1. User enters email in "My Videos"
 2. System sends 6-digit code
 3. User enters code
@@ -1230,6 +1308,7 @@ A: Yes, click "Resend Code" button after code expires.
 
 **Q: What should I do if something doesn't work?**
 A: Follow these steps:
+
 1. Refresh page (Ctrl+F5)
 2. Clear browser cache
 3. Try different browser
@@ -1281,6 +1360,7 @@ If you encounter issues:
 ### Providing Good Support Details
 
 When contacting support, include:
+
 - What you were trying to do
 - What happened instead
 - Any error messages (take screenshot)

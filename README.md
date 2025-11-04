@@ -7,6 +7,7 @@ A full-stack SaaS application that generates professional fashion videos using A
 ## 📖 NEW: Complete Platform Usage Guide
 
 👉 **[Read the Platform Usage Guide](./PLATFORM_USAGE_GUIDE.md)** for comprehensive instructions on:
+
 - How to use the platform
 - API keys management (system vs user-provided)
 - Environment variables setup
