@@ -90,9 +90,10 @@ This software integrates with the following external services:
 ### No External Assets Included
 
 ✅ All visual assets (backgrounds, icons, etc.) are either:
-  - Custom designed for this product
-  - Generated from open-source icon libraries (Lucide React - MIT)
-  - Placeholder/template assets intended for user modification
+
+- Custom designed for this product
+- Generated from open-source icon libraries (Lucide React - MIT)
+- Placeholder/template assets intended for user modification
 
 ✅ All sample videos are placeholder content for demonstration purposes
 
@@ -126,6 +127,7 @@ I represent and warrant that:
 ### No Infringement
 
 I certify that this software does not:
+
 - ❌ Infringe any patents
 - ❌ Violate any copyrights
 - ❌ Breach any trademarks
