@@ -410,14 +410,17 @@ Complete feature list and descriptions for FashionAI: Image-to-Video Generator.
 
 ## 🔌 Integration Capabilities
 
-### Third-Party Services
+### External Services
 
-- **Stripe**: Payment processing
-- **Fashion.ai**: Video generation
-- **Neon**: PostgreSQL database
-- **Vercel**: Deployment platform
-- **Netlify**: Alternative deployment
-- **Fly.io**: Self-hosted option
+**AI Video Generation:**
+- **Fashion.ai**: Exclusive AI service for video generation (core feature)
+
+**Payment & Infrastructure:**
+- **Stripe**: Payment processing (optional)
+- **Neon**: PostgreSQL database (optional)
+- **Vercel**: Deployment platform (optional)
+- **Netlify**: Alternative deployment platform (optional)
+- **Fly.io**: Self-hosted deployment option (optional)
 
 ### API Integrations
 
