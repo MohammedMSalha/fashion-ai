@@ -23,25 +23,29 @@ A complete guide on how to use the FashionAI: Image-to-Video Generator platform,
 
 ## Platform Overview
 
-The Fashion AI Video Generator is a web application that allows users to:
+The Fashion AI Video Generator is a web application powered by **Fashion.ai** that allows users to:
 
 - **Upload Images**: Add fashion product or model images
 - **Configure Videos**: Set duration and quality preferences
-- **Generate Videos**: Create AI-powered videos from static images
-- **Pay for Videos**: Process payments through Stripe
+- **Generate Videos**: Create AI-powered videos from static images using Fashion.ai's advanced AI engine
+- **Pay for Videos**: Process payments securely through Stripe
 - **Download Videos**: Save and manage generated videos
 - **Access Videos**: Retrieve videos anytime within the 48-hour window
 
 ### Key Features
 
-✅ Fast AI video generation (30-60 seconds)
+✅ Fast AI video generation powered by Fashion.ai (30-60 seconds)
 ✅ Multiple quality options (720p, 1080p)
 ✅ Multiple duration options (5s, 10s, 15s, etc.)
-✅ Secure payment processing
+✅ Secure payment processing through Stripe
 ✅ Video management and download
 ✅ Email-based video access
 ✅ Automatic video expiration (48 hours)
 ✅ Optional email verification
+
+### AI Technology
+
+This platform uses **Fashion.ai** as its exclusive AI video generation engine. Fashion.ai is a specialized AI service that transforms static fashion images into dynamic, professional-quality videos.
 
 ---
 
@@ -706,7 +710,7 @@ Now users won't see the API key modal and system key is used automatically.
 │    Progress indicator                                           │
 │    Status updates every 5 seconds                               │
 │    Estimated time: 30-60 seconds                                │
-└─────────────────────────────────────────────────────────────────┘
+���─────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────��────────────────────────────────────────────────┐
 │ 7. VIDEO READY                                                  │
