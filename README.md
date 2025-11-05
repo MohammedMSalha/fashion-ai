@@ -1,6 +1,6 @@
-# Fashion AI Video Generator
+# FashionAI: Image-to-Video Generator
 
-A full-stack SaaS application that generates professional fashion videos using AI. Users can upload fashion images, configure video settings, and purchase generated videos through integrated Stripe payments.
+A full-stack SaaS application that transforms fashion images into professional videos using AI. Users can upload fashion images, configure video settings, and purchase generated videos through integrated Stripe payments.
 
 ---
 
