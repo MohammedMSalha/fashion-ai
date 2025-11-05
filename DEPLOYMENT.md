@@ -6,7 +6,7 @@ This guide covers deploying FashionAI: Image-to-Video Generator to production on
 
 - [ ] Database URL configured (Neon PostgreSQL)
 - [ ] Stripe API keys and webhook secret set
-- [ ] Fashion.ai API key configured
+- [ ] FASHN.ai API key configured (exclusive AI service)
 - [ ] SMTP variables set (optional)
 - [ ] CORS origin configured
 - [ ] Domain and SSL certificate ready
@@ -45,7 +45,7 @@ DATABASE_URL = postgresql://user:password@host/database
 STRIPE_SECRET_KEY = sk_live_your_secret_key
 STRIPE_PUBLISHABLE_KEY = pk_live_your_public_key
 STRIPE_WEBHOOK_SECRET = whsec_your_webhook_secret
-FASHN_AI_API_KEY = your_fashion_ai_api_key
+FASHN_AI_API_KEY = your_fashn_api_key  # FASHN.ai exclusive AI service
 ```
 
 Optional variables:
