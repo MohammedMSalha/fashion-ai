@@ -156,11 +156,11 @@ This License is governed by and construed in accordance with the laws of the jur
 
 This License constitutes the entire agreement between you and the copyright holder regarding the Software, and supersedes all prior agreements and understandings.
 
-## 16. Severability
+## 17. Severability
 
 If any provision of this License is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.
 
-## 17. No Support Obligation
+## 18. No Support Obligation
 
 The copyright holder is not obligated to provide any support, maintenance, updates, or improvements to the Software, though they may do so at their discretion.
 
