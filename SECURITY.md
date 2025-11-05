@@ -1,10 +1,10 @@
 # Security Documentation
 
-Comprehensive security information for Fashion AI Video Generator.
+Comprehensive security information for FashionAI: Image-to-Video Generator.
 
 ## 🔐 Security Overview
 
-Fashion AI Video Generator implements multiple layers of security to protect user data, payment information, and application integrity.
+FashionAI: Image-to-Video Generator implements multiple layers of security to protect user data, payment information, and application integrity.
 
 ## 🛡️ Built-In Security Features
 

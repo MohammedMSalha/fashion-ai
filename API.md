@@ -1,6 +1,6 @@
 # API Reference
 
-Complete API endpoint documentation for Fashion AI Video Generator.
+Complete API endpoint documentation for FashionAI: Image-to-Video Generator.
 
 ## Base URL
 

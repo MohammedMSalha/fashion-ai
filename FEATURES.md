@@ -1,6 +1,6 @@
 # Features Overview
 
-Complete feature list and descriptions for Fashion AI Video Generator.
+Complete feature list and descriptions for FashionAI: Image-to-Video Generator.
 
 ## 🎬 Video Generation Features
 

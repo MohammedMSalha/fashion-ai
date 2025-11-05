@@ -1,6 +1,6 @@
 # Installation Guide
 
-Complete step-by-step installation instructions for setting up Fashion AI Video Generator.
+Complete step-by-step installation instructions for setting up FashionAI: Image-to-Video Generator.
 
 ## 📋 Prerequisites
 

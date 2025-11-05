@@ -1,6 +1,6 @@
 # Verification & Testing Guide
 
-Complete verification procedures to ensure Fashion AI Video Generator is correctly installed and configured.
+Complete verification procedures to ensure FashionAI: Image-to-Video Generator is correctly installed and configured.
 
 ## ✅ Pre-Deployment Verification
 

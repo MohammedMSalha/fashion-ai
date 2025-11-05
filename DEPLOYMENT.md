@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide covers deploying Fashion AI Video Generator to production on Vercel, Netlify, or self-hosted platforms.
+This guide covers deploying FashionAI: Image-to-Video Generator to production on Vercel, Netlify, or self-hosted platforms.
 
 ## Quick Deployment Checklist
 

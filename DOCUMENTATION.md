@@ -1,6 +1,6 @@
 # Documentation Index
 
-Complete guide to all documentation files for Fashion AI Video Generator.
+Complete guide to all documentation files for FashionAI: Image-to-Video Generator.
 
 ---
 

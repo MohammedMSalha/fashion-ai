@@ -1,6 +1,6 @@
-# Fashion AI Video Generator - Complete Platform Usage Guide
+# FashionAI: Image-to-Video Generator - Complete Platform Usage Guide
 
-A complete guide on how to use the Fashion AI Video Generator platform, including API keys, environment variables, and step-by-step setup instructions.
+A complete guide on how to use the FashionAI: Image-to-Video Generator platform, including API keys, environment variables, and step-by-step setup instructions.
 
 ---
 
@@ -684,7 +684,7 @@ Now users won't see the API key modal and system key is used automatically.
 │    - User enters Fashion.ai key                                 │
 │    (If DEMO=false)                                              │
 │    - Skips directly to payment                                  │
-└─────────────────────────────────────────────────────────────────┘
+└─────────────────��───────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │ 4. ENTER PAYMENT DETAILS                                        │
