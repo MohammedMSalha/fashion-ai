@@ -167,24 +167,30 @@ There are no restrictions preventing commercial use of this software.
 
 While attribution is appreciated by many open-source maintainers, the fashion AI Video Generator's exclusive commercial license allows its use with or without attribution to third-party libraries.
 
-### Stripe Terms
+### Service Terms and Conditions
 
-The Stripe payment processing integration is subject to:
+**Fashion.ai (AI Video Generation)**
+- Users must have valid Fashion.ai API credentials
+- Subject to Fashion.ai's terms of service and usage policies
+- Fashion.ai is the exclusive AI service used for video generation
 
+**Stripe (Payment Processing - Optional)**
 - Stripe's Terms of Service: https://stripe.com/legal
 - Stripe's Privacy Policy: https://stripe.com/privacy
-- Stripe's Processing Agreement
+- Required only if implementing payment functionality
 
-Users of this software must comply with Stripe's terms when using payment functionality.
+Users of this software must comply with the terms of each service they choose to integrate.
 
-### Third-Party Services
+### External Services
 
-This software integrates with:
+This software integrates with the following external services:
 
-- **Stripe** (Payment Processing) - https://stripe.com
-- **Fashion.ai** (Video Generation) - https://fashion.ai
-- **Neon PostgreSQL** (Database) - https://neon.tech
-- **Vercel** (Deployment) - https://vercel.com
+- **Fashion.ai** (AI Video Generation Engine) - The core AI service that powers video generation from static images
+- **Stripe** (Payment Processing) - Optional payment integration for handling customer transactions
+- **Neon PostgreSQL** (Database) - Optional database service for video storage and management
+- **Vercel** (Deployment) - Optional deployment platform for hosting
+
+The primary AI service is **Fashion.ai**, which provides the video generation capabilities. Other services are optional infrastructure components.
 
 Users are responsible for compliance with each service's terms of use.
 
