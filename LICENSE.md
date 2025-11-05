@@ -177,17 +177,18 @@ If you use the Software for commercial purposes:
 
 The copyright holder reserves the right to change this License at any time. Changes will be effective upon publication. Continued use of the Software after changes constitutes acceptance of the new License.
 
-## 20. Compliance
+## 21. Compliance
 
 You agree to comply with:
 
 - All applicable laws and regulations
-- Payment processor terms (Stripe)
-- Platform terms (Vercel, Netlify, Fly.io, etc.)
+- Fashion.ai's terms of service and usage policies
+- Payment processor terms (Stripe, if using payment features)
+- Platform terms (Vercel, Netlify, Fly.io, etc., if using deployment services)
 - Data protection and privacy laws
 - Intellectual property laws
 
-## 21. Contact
+## 22. Contact
 
 For licensing questions, commercial inquiries, or licensing variations, please contact the copyright holder.
 
