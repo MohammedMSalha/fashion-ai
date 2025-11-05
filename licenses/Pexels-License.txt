@@ -1,0 +1,3 @@
+Pexels License (Template Placeholder)
+If you used Pexels media in PREVIEW ONLY, list their links in /CREDITS.md.
+Reference: https://www.pexels.com/license/

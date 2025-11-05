@@ -1,0 +1,3 @@
+Apache License 2.0 (Template Placeholder)
+Replace with actual license text if you redistribute Apache-2.0 assets.
+Reference: https://www.apache.org/licenses/LICENSE-2.0
