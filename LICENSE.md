@@ -164,7 +164,7 @@ If any provision of this License is held to be invalid or unenforceable, the rem
 
 The copyright holder is not obligated to provide any support, maintenance, updates, or improvements to the Software, though they may do so at their discretion.
 
-## 18. Commercial Use
+## 19. Commercial Use
 
 If you use the Software for commercial purposes:
 
