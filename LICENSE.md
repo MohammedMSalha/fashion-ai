@@ -148,11 +148,11 @@ Upon termination:
 - You must destroy or return all copies of the Software
 - All provisions that by their nature should survive termination shall survive
 
-## 14. Governing Law
+## 15. Governing Law
 
 This License is governed by and construed in accordance with the laws of the jurisdiction in which the copyright holder resides, without regard to its conflict of law provisions.
 
-## 15. Entire Agreement
+## 16. Entire Agreement
 
 This License constitutes the entire agreement between you and the copyright holder regarding the Software, and supersedes all prior agreements and understandings.
 
