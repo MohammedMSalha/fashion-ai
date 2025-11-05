@@ -20,9 +20,10 @@ You'll need to obtain these API keys before running the application:
    - Copy Secret Key and Publishable Key from Dashboard → API Keys
    - Generate Webhook Secret in Developers → Webhooks
 
-2. **Fashion.ai** (Video Generation)
-   - Register at [fashion.ai](https://fashion.ai)
-   - Copy your API key from dashboard
+2. **FASHN.ai** (AI Video Generation - Exclusive)
+   - Register at [fashn.ai](https://fashn.ai)
+   - Get your API key from your dashboard
+   - This is the exclusive AI service powering video generation
 
 3. **Neon Database** (PostgreSQL)
    - Create account at [neon.tech](https://neon.tech)
@@ -76,8 +77,8 @@ STRIPE_SECRET_KEY=sk_test_yourkey
 STRIPE_PUBLISHABLE_KEY=pk_test_yourkey
 STRIPE_WEBHOOK_SECRET=whsec_yourkey
 
-# Video Generation (Required)
-FASHN_AI_API_KEY=your_api_key_here
+# FASHN.ai Video Generation (Required - Exclusive AI Service)
+FASHN_AI_API_KEY=your_fashn_ai_api_key
 
 # Email Verification (Optional)
 SMTP_HOST=smtp.gmail.com
