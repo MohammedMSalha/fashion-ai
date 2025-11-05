@@ -8,7 +8,7 @@ FashionAI: Image-to-Video Generator - Exclusive Commercial License
 
 ## 1. Grant of License
 
-Subject to the terms and conditions of this License, the copyright holder (Mohammed Salha) grants you a non-exclusive, non-transferable, revocable license to use the Fashion AI Video Generator software (the "Software") in accordance with the provisions of this License.
+Subject to the terms and conditions of this License, the copyright holder (Mohammed Salha) grants you a non-exclusive, non-transferable, revocable license to use the FashionAI: Image-to-Video Generator software (the "Software") in accordance with the provisions of this License.
 
 **IMPORTANT**: This Software is an exclusive product. The copyright holder retains all ownership rights. You are granted a limited license to use this Software only as permitted under this Agreement.
 

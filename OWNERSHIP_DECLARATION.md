@@ -8,7 +8,7 @@
 
 I, **Mohammed Salha**, hereby declare under penalty of perjury that:
 
-1. **I am the sole copyright holder** of the Fashion AI Video Generator software and all associated intellectual property.
+1. **I am the sole copyright holder** of the FashionAI: Image-to-Video Generator software and all associated intellectual property.
 
 2. **I own all rights** to:
    - All source code (frontend and backend)
@@ -29,7 +29,7 @@ I, **Mohammed Salha**, hereby declare under penalty of perjury that:
 ## Copyright Notice
 
 ```
-Fashion AI Video Generator
+FashionAI: Image-to-Video Generator
 Copyright © 2025 Mohammed Salha
 All Rights Reserved
 ```
