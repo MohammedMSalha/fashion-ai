@@ -648,10 +648,10 @@ Once all verifications pass, you can confidently deploy to production and launch
 - [ ] Team trained and ready
 - [ ] Support process documented
 
-**Date Verified:** ******\_\_\_******
+**Date Verified:** **\*\***\_\_\_**\*\***
 
-**Verified By:** ******\_\_\_******
+**Verified By:** **\*\***\_\_\_**\*\***
 
-**Sign-Off:** ******\_\_\_******
+**Sign-Off:** **\*\***\_\_\_**\*\***
 
 See [README.md](./README.md) for more information.
