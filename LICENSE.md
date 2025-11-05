@@ -173,7 +173,7 @@ If you use the Software for commercial purposes:
 - You are responsible for support and maintenance of your deployment
 - You should maintain regular backups and security practices
 
-## 19. Changes to License
+## 20. Changes to License
 
 The copyright holder reserves the right to change this License at any time. Changes will be effective upon publication. Continued use of the Software after changes constitutes acceptance of the new License.
 
