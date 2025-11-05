@@ -68,17 +68,18 @@ STRIPE_WEBHOOK_SECRET=whsec_...        # Webhook signing secret
 - Restrict API key permissions in Stripe dashboard
 - Monitor API usage for unauthorized calls
 
-### Fashion.ai API Key
+### FASHN.ai API Key (Exclusive AI Service)
 
 ```
-FASHN_AI_API_KEY=fa-...                # Video generation API key
+FASHN_AI_API_KEY=your_fashn_api_key    # FASHN.ai video generation API key
 ```
 
 **Protection:**
 
 - Never commit to git
 - Store only in environment variables
-- Use IP whitelist if available
+- Use IP whitelist if available on FASHN.ai
+- Rotate keys regularly if supported by FASHN
 - Monitor usage for anomalies
 - Rotate periodically (every 6 months)
 
