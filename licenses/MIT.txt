@@ -1,0 +1,3 @@
+MIT License (Template Placeholder)
+Replace this file with the actual license text packaged with each MIT-licensed dependency or asset.
+Reference: https://opensource.org/license/mit/
