@@ -108,15 +108,25 @@ The Software includes third-party libraries and components that are subject to t
 
 You are responsible for complying with the licenses of all third-party components.
 
-## 11. Payment Processing
+## 11. AI Video Generation Service
 
-This Software integrates with Stripe for payment processing. Use of Stripe is subject to:
+This Software uses **Fashion.ai** as the exclusive AI service for video generation. Use of Fashion.ai is subject to:
+
+- Fashion.ai's Terms of Service
+- Fashion.ai's API Usage Policy
+- Fashion.ai's Privacy and Data Policy
+
+You are responsible for obtaining and maintaining valid Fashion.ai API credentials and complying with Fashion.ai's terms and conditions.
+
+## 12. Payment Processing (Optional)
+
+If implementing payment processing, this Software can integrate with Stripe. Use of Stripe is subject to:
 
 - Stripe's Terms of Service: https://stripe.com/legal
 - Stripe's Privacy Policy: https://stripe.com/privacy
 - Stripe's Processing Agreement
 
-You are responsible for your own compliance with Stripe's terms and conditions.
+You are responsible for your own compliance with Stripe's terms and conditions when using payment functionality.
 
 ## 12. Data and Privacy
 
