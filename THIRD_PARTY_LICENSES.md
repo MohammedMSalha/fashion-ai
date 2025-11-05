@@ -170,11 +170,13 @@ While attribution is appreciated by many open-source maintainers, the fashion AI
 ### Service Terms and Conditions
 
 **Fashion.ai (AI Video Generation)**
+
 - Users must have valid Fashion.ai API credentials
 - Subject to Fashion.ai's terms of service and usage policies
 - Fashion.ai is the exclusive AI service used for video generation
 
 **Stripe (Payment Processing - Optional)**
+
 - Stripe's Terms of Service: https://stripe.com/legal
 - Stripe's Privacy Policy: https://stripe.com/privacy
 - Required only if implementing payment functionality

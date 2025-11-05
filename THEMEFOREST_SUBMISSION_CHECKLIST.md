@@ -184,9 +184,11 @@ FashionAI: Image-to-Video Generator - Exclusive Commercial License
 ## External Services Integration
 
 **AI Video Generation:**
+
 - ✅ Fashion.ai (Exclusive AI service for video generation - Core feature)
 
 **Payment & Infrastructure:**
+
 - ✅ Stripe (Payment processing - Optional)
 - ✅ Neon (PostgreSQL database - Optional)
 - ✅ Vercel (Deployment - Optional)

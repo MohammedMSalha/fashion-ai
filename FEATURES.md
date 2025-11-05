@@ -413,9 +413,11 @@ Complete feature list and descriptions for FashionAI: Image-to-Video Generator.
 ### External Services
 
 **AI Video Generation:**
+
 - **Fashion.ai**: Exclusive AI service for video generation (core feature)
 
 **Payment & Infrastructure:**
+
 - **Stripe**: Payment processing (optional)
 - **Neon**: PostgreSQL database (optional)
 - **Vercel**: Deployment platform (optional)
