@@ -1,0 +1,8 @@
+ThemeForest Submission — Ownership & Licensing Notes
+
+• I own the copyright for all original source code in this item.
+• Third‑party libraries bundled in the download are enumerated in /CREDITS.md and each license file is included in /licenses/.
+• All preview/demo media (stock or AI‑generated) are listed in /CREDITS.md and are NOT included in the customer download unless license permits redistribution.
+• If AI‑generated media were used, they were created with Fashn.ai and are permitted for commercial use under the provider's terms (see /CREDITS.md).
+
+Prepared: 2025-11-05
