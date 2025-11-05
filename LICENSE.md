@@ -128,7 +128,7 @@ If implementing payment processing, this Software can integrate with Stripe. Use
 
 You are responsible for your own compliance with Stripe's terms and conditions when using payment functionality.
 
-## 12. Data and Privacy
+## 13. Data and Privacy
 
 You are responsible for:
 
@@ -138,7 +138,7 @@ You are responsible for:
 - Maintaining security of user information
 - Providing privacy notices to your users
 
-## 13. Termination
+## 14. Termination
 
 This License is effective until terminated. Your rights under this License will terminate automatically without notice if you fail to comply with any term(s) of this License.
 
