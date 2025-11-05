@@ -1,6 +1,6 @@
 # Third-Party Licenses and Dependencies
 
-This document lists all third-party libraries, components, and dependencies used in the Fashion AI Video Generator, along with their respective licenses.
+This document lists all third-party libraries, components, and dependencies used in the FashionAI: Image-to-Video Generator, along with their respective licenses.
 
 **Project Owner**: Mohammed Salha
 **Copyright**: © 2025 Mohammed Salha - All Rights Reserved

@@ -1,6 +1,6 @@
 # License Agreement
 
-Fashion AI Video Generator - Exclusive Commercial License
+FashionAI: Image-to-Video Generator - Exclusive Commercial License
 
 **Copyright © 2025 Mohammed Salha - All Rights Reserved**
 

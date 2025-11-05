@@ -1,6 +1,6 @@
-# Fashion AI Video Generator - ThemeForest Edition
+# FashionAI: Image-to-Video Generator - ThemeForest Edition
 
-Thank you for purchasing Fashion AI Video Generator! This document provides quick-start instructions for getting your application up and running.
+Thank you for purchasing FashionAI: Image-to-Video Generator! This document provides quick-start instructions for getting your application up and running.
 
 ## 📦 What You Get
 

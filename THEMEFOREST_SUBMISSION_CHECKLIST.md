@@ -1,6 +1,6 @@
 # ThemeForest Submission Checklist
 
-Fashion AI Video Generator - Exclusive Commercial License
+FashionAI: Image-to-Video Generator - Exclusive Commercial License
 **Copyright © 2025 Mohammed Salha - All Rights Reserved**
 
 ---
@@ -239,7 +239,7 @@ All required environment variables documented:
   ├── SECURITY.md
   ├── SMTP_SETUP.md
   ├── VERIFICATION.md
-  ├── THEMEFOREST_README.md
+  ├���─ THEMEFOREST_README.md
   ├── package.json
   ├── vercel.json
   ├── vite.config.ts
