@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Full-stack video generation application with React + Express
-- AI-powered fashion video generation using Fashion.ai API
+- AI-powered fashion video generation using FASHN.ai exclusive AI service
 - Stripe PaymentIntent and Checkout integration
 - PostgreSQL database with Neon connection
 - Email verification system (optional SMTP)
@@ -214,8 +214,8 @@ Built with:
 - React and the React community
 - Express.js and Node.js
 - Stripe for payment processing
-- Fashion.ai for video generation
-- PostgreSQL and Neon
+- FASHN.ai for exclusive AI video generation
+- PostgreSQL and Neon for database services
 - Vercel, Netlify, and Fly.io platforms
 
 ## License

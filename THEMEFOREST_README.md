@@ -38,11 +38,11 @@ A complete, production-ready SaaS application for generating professional fashio
 - Go to Developers → Webhooks
 - Note the signing secret → Keep for step 3
 
-**C) Fashion.ai** (Contact their sales)
+**C) FASHN.ai** (Exclusive AI Video Generation Service)
 
-- Go to https://fashion.ai
-- Create account or contact sales
-- Get your API key → Keep for step 3
+- Go to https://fashn.ai
+- Create account and get API key
+- Copy your API key → Keep for step 3
 
 ### 2. Deploy to Vercel (Easiest!)
 
@@ -63,7 +63,7 @@ DATABASE_URL = [Neon connection string from step 1A]
 STRIPE_SECRET_KEY = [Stripe secret key from step 1B]
 STRIPE_PUBLISHABLE_KEY = [Stripe public key from step 1B]
 STRIPE_WEBHOOK_SECRET = [Webhook signing secret from step 1B]
-FASHN_AI_API_KEY = [Fashion.ai API key from step 1C]
+FASHN_AI_API_KEY = [FASHN.ai API key from step 1C]
 ```
 
 ### 4. Configure Stripe Webhook
