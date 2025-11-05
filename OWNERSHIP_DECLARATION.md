@@ -71,21 +71,24 @@ See `THIRD_PARTY_LICENSES.md` for the complete list of all dependencies, their v
 
 This software integrates with the following external services:
 
-1. **Stripe** (Payment Processing)
-   - Terms: https://stripe.com/legal
-   - Users must comply with Stripe's terms
-
-2. **Fashion.ai** (Video Generation)
+1. **Fashion.ai** (AI Video Generation - Primary Service)
+   - Fashion.ai is the exclusive AI engine that powers video generation from static images
    - Users must have valid Fashion.ai API credentials
-   - Subject to Fashion.ai's terms of service
+   - Subject to Fashion.ai's terms of service and usage policies
+   - All AI video generation capabilities are provided by Fashion.ai
 
-3. **Neon PostgreSQL** (Database)
-   - Optional external database service
-   - Users responsible for their own Neon account
+2. **Stripe** (Payment Processing - Optional)
+   - Only required if implementing payment functionality
+   - Terms: https://stripe.com/legal
+   - Users must comply with Stripe's terms when using payment features
 
-4. **Vercel** (Deployment Platform)
-   - Optional deployment platform
-   - Users must comply with Vercel's terms
+3. **Neon PostgreSQL** (Database - Optional)
+   - Optional external database service for data persistence
+   - Users responsible for their own Neon account and compliance
+
+4. **Vercel** (Deployment Platform - Optional)
+   - Optional deployment platform for hosting
+   - Users must comply with Vercel's terms when deploying
 
 ### No External Assets Included
 
