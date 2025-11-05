@@ -183,11 +183,14 @@ FashionAI: Image-to-Video Generator - Exclusive Commercial License
 
 ## External Services Integration
 
-- ✅ Stripe (Payment processing)
-- ✅ Fashion.ai (Video generation)
-- ✅ Neon (PostgreSQL database)
-- ✅ Vercel (Deployment)
-- ✅ Netlify (Alternative deployment)
+**AI Video Generation:**
+- ✅ Fashion.ai (Exclusive AI service for video generation - Core feature)
+
+**Payment & Infrastructure:**
+- ✅ Stripe (Payment processing - Optional)
+- ✅ Neon (PostgreSQL database - Optional)
+- ✅ Vercel (Deployment - Optional)
+- ✅ Netlify (Alternative deployment - Optional)
 
 ---
 
@@ -247,7 +250,7 @@ All required environment variables documented:
   ├── tailwind.config.ts
   ├── postcss.config.js
   ├── .env.example
-  ├── client/
+  ├─��� client/
   │   ├── pages/
   │   ├── components/
   │   ├── config/
