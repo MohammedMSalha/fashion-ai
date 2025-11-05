@@ -55,12 +55,13 @@ STRIPE PAYMENT PROCESSING
 - No Stripe assets are redistributed in this item
 - Buyers must have their own Stripe account
 
-FASHN.AI VIDEO GENERATION
-- Integrated via Fashn.ai official API
-- Uses Fashion.ai video generation service
-- No Fashn.ai assets are redistributed in this item
-- Buyers must have their own Fashn.ai API credentials
-- Subject to Fashn.ai's terms of service
+FASHN.AI VIDEO GENERATION (Exclusive AI Service)
+- Integrated via FASHN.ai official API (https://fashn.ai)
+- Uses FASHN.ai as the exclusive AI video generation service
+- No FASHN.ai assets are redistributed in this item
+- Buyers must have their own FASHN.ai API credentials
+- Subject to FASHN.ai's terms of service
+- FASHN.ai is the sole AI service used for video generation
 
 ================================================================================
 OPEN-SOURCE DEPENDENCIES
@@ -126,8 +127,8 @@ DATA RETENTION
 - Comply with privacy laws regarding data deletion
 
 THIRD-PARTY SERVICES
-- Set up and maintain your own Stripe account
-- Obtain and manage your own Fashn.ai API credentials
+- Set up and maintain your own Stripe account (optional payment service)
+- Obtain and manage your own FASHN.ai API credentials (exclusive AI video generation service)
 - Configure your own database (optional, can use Neon PostgreSQL)
 - Comply with terms of service for all integrated services
 
